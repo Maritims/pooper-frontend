@@ -2,7 +2,7 @@ FROM node:latest AS develop-stage
 ARG API_BASE_URL
 ARG MAPBOX_ACCESS_TOKEN
 WORKDIR /usr/src/app
-COPY package.json yarn.lock rollup.config.js ./
+COPY package.json rollup.config.js ./
 COPY . .
 RUN yarn install --pure-lockfile --non-interactive
 
