@@ -15,8 +15,3 @@ RUN yarn build \
     && rm -rf node_modules \
     && yarn install --production --ignore-scripts --prefer-offline \
     && yarn cache clean
-
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /usr/src/app/public /usr/share/nginx/html
-EXPOSE 80
-RUN nginx -g "daemon off;"
