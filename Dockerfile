@@ -17,6 +17,6 @@ RUN yarn build \
     && yarn cache clean
 
 FROM nginx:stable-alpine AS production-stage
-COPY --from=build-stage  /usr/src/app/public /usr/share/nginx/html
-EXPOSE 80
+COPY --from=build-stage /usr/src/app/public /usr/share/nginx/html
 CMD nginx -g "daemon off;"
+EXPOSE 80
