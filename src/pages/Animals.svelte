@@ -34,9 +34,11 @@
     <span slot="title">Create new animal</span>
     <form slot="body" on:submit|preventDefault={handleOnSubmit}>
         <div class="row mb-2">
-            <label for="name" class="col-sm-4 col-form-label">Name</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" bind:value={newAnimalName} />
+            <div class="col">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="newAnimalName" bind:value={newAnimalName} />
+                    <label for="newAnimalName">Name</label>
+                </div>
             </div>
         </div>
     </form>
@@ -52,7 +54,7 @@
             <button type="button" class="btn btn-lg btn-success" on:click={modal.show}>Create animal</button>
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-2">
         <div class="col">
             <table class="table table-striped">
                 <thead>

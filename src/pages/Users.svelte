@@ -45,33 +45,43 @@
     <span slot="title">Create new user</span>
     <form slot="body" on:submit|preventDefault={handleOnSubmit}>
         <div class="row mb-2">
-            <label for="firstName" class="col-sm-4 col-form-label">First name</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" bind:value={newUserFirstName} autocomplete="given-name" />
+            <div class="col">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="firstName" bind:value={newUserFirstName} autocomplete="given-name" />
+                    <label for="firstName">First name</label>
+                </div>
             </div>
         </div>
         <div class="row mb-2">
-            <label for="lastName" class="col-sm-4 col-form-label">Last name</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" bind:value={newUserLastName} autocomplete="family-name" />
+            <div class="col">
+                <div class="form-floating">
+                    <input type="text" class="form-control" bind:value={newUserLastName} autocomplete="family-name" />
+                    <label for="lastName">Last name</label>
+                </div>
             </div>
         </div>
         <div class="row mb-2">
-            <label for="emailAddress" class="col-sm-4 col-form-label">E-mail address</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" bind:value={newUserEmailAddress} autocomplete="email" />
+            <div class="col">
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="emailAddress" autocomplete="email" bind:value={newUserEmailAddress} />
+                    <label for="emailAddress">E-mail address</label>
+                </div>
             </div>
         </div>
         <div class="row mb-2">
-            <label for="password" class="col-sm-4 col-form-label">Password</label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" bind:value={newUserPassword} autocomplete="new-password" />
+            <div class="col">
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" autocomplete="new-password" bind:value={newUserPassword} />
+                    <label for="password">Password</label>
+                </div>
             </div>
         </div>
         <div class="row mb-2">
-            <label for="passwordRepeated" class="col-sm-4 col-form-label">Repeat password</label>
-            <div class="col-sm-8">
-                <input type="password" class="form-control" bind:value={newUserPasswordRepeated} autocomplete="new-password" />
+            <div class="col">
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="passwordRepeated" autocomplete="new-password" bind:value={newUserPasswordRepeated} />
+                    <label for="passwordRepeated">Repeat password</label>
+                </div>
             </div>
         </div>
     </form>

@@ -1,29 +1,30 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { AnimalRead, AnimalsService } from "../api";
 	import EventButton from '../components/EventButton.svelte';
-	import Map, { MapLocation } from '../components/Map.svelte';
-	import { onMount } from 'svelte';
+	import Map from '../components/Map.svelte';
 	import { getAllEventTypes } from "../services/events";
-import { accessToken } from "mapbox-gl";
+	import { getCurrentPosition } from "../services/navigation";
 
-	let animals = [];
+	let animals: Array<AnimalRead> = [];
 	let eventTypes = getAllEventTypes();
-
-    onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
+	let map: Map;
+	
+	onMount(async () => {
+		animals = await AnimalsService.getAllAnimalsGet();
+	});
 
 	async function handleOnDone(e: CustomEvent): Promise<void> {
 		if(!e.detail.success) return;
 		animals = await AnimalsService.getAllAnimalsGet();
 	};
-
-	let division = 12;
-	$: if(animals.length > 1) division = 6;
 </script>
 
 
 <div class="container-fluid">
 	<div class="row mt-2">
 		{#each animals as animal}
+			{@const division = animals.length > 1 ? 6 : 12}
 			<div class="col-12 col-sm-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-2">
 				<div class="card">
 					<div class="card-body">
@@ -44,7 +45,9 @@ import { accessToken } from "mapbox-gl";
 	</div>
 </div>
 
-<Map accessToken={globalThis['mapboxAccessToken']} minHeightPx={600} events={animals.flatMap(animal => animal.events)} />
+{#await getCurrentPosition() then position}
+	<Map minHeightPx={600} center={position} />
+{/await}
 
 <style lang="scss">
 	.card-body {

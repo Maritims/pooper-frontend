@@ -1,13 +1,53 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { EventRead, EventsService } from "../api";
-    import { getEnrichedEventType } from "../services/events";
+    import { AnimalRead, AnimalsService, EventCreate, EventRead, EventsService } from "../api";
+    import { getAllEventTypes, getEnrichedEventType } from "../services/events";
+    import { getCurrentPosition } from "../services/navigation";
+    import { MapMouseEvent, Marker, Popup } from "mapbox-gl";
+    import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";
+    import Map from "../components/Map.svelte";
+    import Modal from "../components/Modal.svelte";
 
+    let animals: Array<AnimalRead> = [];
     let confirmation: Confirmation;
     let events: Array<EventRead> = [];
+    let eventTypes = getAllEventTypes();
+    let map: Map;
+    let modal: Modal;
 
-    onMount(async () => events = await EventsService.getAllEventsGet());
+    let eventCreate: EventCreate = {
+        animal_id: undefined,
+        longitude: undefined,
+        latitude: undefined,
+        event_type: undefined
+    };
+
+    onMount(async () => {
+        animals = await AnimalsService.getAllAnimalsGet();
+        events = await EventsService.getAllEventsGet();
+    });
+
+    function getEventMarkers(events: Array<EventRead>): Array<Marker> {
+        const groupedEvents = events.reduce((acc, event) => {
+            const key = `${event.longitude},${event.latitude},${event.event_type}`;
+            if(!acc[key]) acc[key] = 0;
+            acc[key]++;
+            return acc;
+        }, {});
+    
+        const eventMarkers = Object.keys(groupedEvents).map(key => {
+            const keyParts = key.split(',');
+            const lng = parseFloat(keyParts[0]);
+            const lat = parseFloat(keyParts[1]);
+            const eventType = keyParts[2];
+            return new Marker()
+            .setLngLat([lng, lat])
+            .setPopup(new Popup().setHTML(`Count: ${groupedEvents[key]} - Type: ${eventType}`));
+        });
+
+        return eventMarkers;
+    };
 
     function handleOnClick(id: number): void {
         confirmation.confirm(async () => {
@@ -15,11 +55,92 @@
             events = await EventsService.getAllEventsGet();
         });
     };
+
+    function handleOnMapClick(e: CustomEvent<MapMouseEvent>): void {
+        map.setCenter(e.detail.lngLat);
+        eventCreate.longitude = e.detail.lngLat.lng;
+        eventCreate.latitude = e.detail.lngLat.lat;
+    }
+
+    async function createEvent(): Promise<void> {
+        const event = await EventsService.createEventsPost(eventCreate);
+        events = await EventsService.getAllEventsGet();
+        Object.keys(eventCreate).forEach(key => eventCreate[key] = undefined);
+        modal.hide();
+        addToast({
+            id: new Date().getTime(),
+            type: 'success',
+            body: `Successfully registered event '${event.event_type}' for ${event.animal_name}`,
+            durationInMs: 3000
+        });
+    }
 </script>
 
 <Confirmation bind:this={confirmation} />
 
+<Modal bind:this={modal}>
+    <span slot="title">Create new event</span>
+    <form slot="body" on:submit|preventDefault={createEvent}>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="form-floating">
+                    <select class="form-select" id="animal" bind:value={eventCreate.animal_id}>
+                        <option>Choose animal</option>
+                        {#each animals as animal}
+                            <option value={animal.id}>{animal.name}</option>
+                        {/each}
+                    </select>
+                    <label for="animal">Animal</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="form-floating">
+                    <select class="form-select" id="eventType" bind:value={eventCreate.event_type}>
+                        <option>Choose event type</option>
+                        {#each eventTypes as eventType}
+                            <option value={eventType.eventType}>{eventType.eventType}</option>
+                        {/each}
+                    </select>
+                    <label for="eventType">Event type</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="longitude" bind:value={eventCreate.longitude} readonly />
+                    <label for="longitude">Longitude</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="form-floating">
+                    <input type="text" class="form-control" bind:value={eventCreate.latitude} readonly />
+                    <label for="latitude">Latitude</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            {#await getCurrentPosition() then position}
+                <Map bind:this={map} on:click={handleOnMapClick} center={position} markers={getEventMarkers(events)} />
+            {/await}
+        </div>
+    </form>
+    <span slot="footer">
+        <button type="button" class="btn btn-danger" on:click={modal.hide}>Cancel</button>
+        <button type="submit" class="btn btn-success" on:click={createEvent}>Submit</button>
+    </span>
+</Modal>
+
 <div class="container-fluid">
+    <div class="row mt-2">
+        <div class="col">
+            <button type="button" class="btn btn-lg btn-success" on:click={modal.show}>Create event</button>
+        </div>
+    </div>
     <div class="row mt-2">
         <div class="col">
             <div class="table-responsive">

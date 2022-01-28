@@ -30,13 +30,13 @@
                     <img src="gfx/pooper.png" alt="Pooper" class="img-fluid" style="height:150px"/>
                 </div>
 
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                <div class="mb-3 form-floating">
                     <input type="text" id="username" class="form-control" bind:value={username} autocomplete="username" use:registerFocus />
+                    <label for="username">Username</label>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                <div class="mb-3 form-floating">
                     <input type="password" id="password" class="form-control" bind:value={password} autocomplete="current-password" />
+                    <label for="password">Password</label>
                     <div id="forgottenPassword" class="form-text">Click <a href="reset-password/">here</a> if you've forgotten your password</div>
                 </div>
                 <div class="d-grid">

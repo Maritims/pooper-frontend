@@ -9,6 +9,18 @@ import { request as __request } from '../core/request';
 export class UsersService {
 
     /**
+     * Get Me
+     * @returns UserRead Successful Response
+     * @throws ApiError
+     */
+    public static getMeUsersMeGet(): CancelablePromise<UserRead> {
+        return __request({
+            method: 'GET',
+            path: `/users/me`,
+        });
+    }
+
+    /**
      * Get All Users
      * @param page
      * @param pageSize
@@ -44,6 +56,26 @@ export class UsersService {
         return __request({
             method: 'POST',
             path: `/users/`,
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Update
+     * @param requestBody
+     * @returns UserRead Successful Response
+     * @throws ApiError
+     */
+    public static updateUsersUpdatePatch(
+        requestBody: UserCreate,
+    ): CancelablePromise<UserRead> {
+        return __request({
+            method: 'PATCH',
+            path: `/users/update`,
             body: requestBody,
             mediaType: 'application/json',
             errors: {

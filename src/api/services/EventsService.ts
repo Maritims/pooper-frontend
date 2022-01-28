@@ -60,12 +60,14 @@ export class EventsService {
      * Get All
      * @param page
      * @param pageSize
+     * @param sortOrder
      * @returns EventRead Successful Response
      * @throws ApiError
      */
     public static getAllEventsGet(
         page?: number,
         pageSize: number = 100,
+        sortOrder: string = 'desc',
     ): CancelablePromise<Array<EventRead>> {
         return __request({
             method: 'GET',
@@ -73,6 +75,7 @@ export class EventsService {
             query: {
                 'page': page,
                 'page_size': pageSize,
+                'sort_order': sortOrder,
             },
             errors: {
                 422: `Validation Error`,

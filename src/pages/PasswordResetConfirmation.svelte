@@ -25,13 +25,13 @@
                 <p>Password reset complete. Click <a href="/">here</a> to log in.</p>
             {:else}
                 <form on:submit|preventDefault={handleOnSubmit}>
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">New password</label>
+                    <div class="mb-3 form-floating">
                         <input type="password" class="form-control" bind:value={newPassword} autocomplete="new-password" use:registerFocus />
+                        <label for="newPassword">New password</label>
                     </div>
                     <div class="mb-3">
-                        <label for="newPasswordRepeated" class="form-label">Confirm new password</label>
                         <input type="password" class="form-control" bind:value={newPasswordRepeated} autocomplete="new-password" />
+                        <label for="newPasswordRepeated">Confirm new password</label>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success">Reset password</button>

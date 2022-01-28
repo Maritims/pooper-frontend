@@ -25,9 +25,9 @@
                 <p>A confirmation link has been sent to your e-mail address.</p>
             {:else}
                 <form on:submit|preventDefault={handleOnSubmit}>
-                    <div class="mb-3">
-                        <label for="newPasswordRepeated" class="form-label">E-mail address</label>
+                    <div class="mb-3 form-floating">
                         <input type="emailAddress" class="form-control" bind:value={emailAddress} autocomplete="email" />
+                        <label for="newPasswordRepeated">E-mail address</label>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success">Reset password</button>

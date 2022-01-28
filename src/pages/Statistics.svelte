@@ -40,19 +40,25 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col col-sm-4">
-            <select class="form-select" bind:value={currentAnimal}>
-                <option selected>Choose an animal</option>
-                {#each animals as animal}
-                    <option value={animal}>{animal.name}</option>
-                {/each}
-            </select>
+            <div class="form-floating">
+                <select class="form-select" id="currentAnimal" bind:value={currentAnimal}>
+                    <option selected>Choose an animal</option>
+                    {#each animals as animal}
+                        <option value={animal}>{animal.name}</option>
+                    {/each}
+                </select>
+                <label for="currentAnimal">Animal</label>
+            </div>
         </div>
         <div class="col col-sm-4">
-            <select class="form-select" bind:value={days}>
-                <option value={7}>Last 7 days</option>
-                <option value={14}>Last 14 days</option>
-                <option value={30}>Last 30 days</option>
-            </select>
+            <div class="form-floating">
+                <select class="form-select" bind:value={days}>
+                    <option value={7}>Last 7 days</option>
+                    <option value={14}>Last 14 days</option>
+                    <option value={30}>Last 30 days</option>
+                </select>
+                <label for="days">Days</label>
+            </div>
         </div>
     </div>
     <div class="row mt-2">
