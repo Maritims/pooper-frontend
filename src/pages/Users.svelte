@@ -1,34 +1,27 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { AuthService, UserRead, UsersService } from "../api";
+    import { UserCreate, UserRead, UsersService } from "../api";
     import Confirmation from "../components/Confirmation.svelte";
     import Modal from "../components/Modal.svelte";
 
     let users: Array<UserRead> = [];
-    let newUserFirstName: string;
-    let newUserLastName: string;
-    let newUserEmailAddress: string;
-    let newUserPassword: string;
-    let newUserPasswordRepeated: string;
+    let userCreate: UserCreate = {
+        first_name: undefined,
+        last_name: undefined,
+        email_address: undefined,
+        password: undefined,
+        password_repeated: undefined
+    };
     let modal: Modal;
     let confirmation: Confirmation;
 
     onMount(async () => users = await UsersService.getAllUsersUsersGet());
 
     async function handleOnSubmit(): Promise<void> {
-        await UsersService.createUsersPost({
-            first_name: newUserFirstName,
-            last_name: newUserLastName,
-            email_address: newUserEmailAddress,
-            password: newUserPassword,
-            password_repeated: newUserPasswordRepeated
-        });
-        newUserFirstName = '';
-        newUserLastName = '';
-        newUserEmailAddress = '';
-        newUserPassword = '';
-        newUserPasswordRepeated = '';
+        await UsersService.createUsersPost(userCreate);
+        Object.keys(userCreate).forEach(key => userCreate[key] = undefined);
         users = await UsersService.getAllUsersUsersGet();
+        modal.hide();
     };
 
     function handleOnClick(id: number): void {
@@ -47,7 +40,7 @@
         <div class="row mb-2">
             <div class="col">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="firstName" bind:value={newUserFirstName} autocomplete="given-name" />
+                    <input type="text" class="form-control" id="firstName" bind:value={userCreate.first_name} autocomplete="given-name" />
                     <label for="firstName">First name</label>
                 </div>
             </div>
@@ -55,7 +48,7 @@
         <div class="row mb-2">
             <div class="col">
                 <div class="form-floating">
-                    <input type="text" class="form-control" bind:value={newUserLastName} autocomplete="family-name" />
+                    <input type="text" class="form-control" bind:value={userCreate.last_name} autocomplete="family-name" />
                     <label for="lastName">Last name</label>
                 </div>
             </div>
@@ -63,7 +56,7 @@
         <div class="row mb-2">
             <div class="col">
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="emailAddress" autocomplete="email" bind:value={newUserEmailAddress} />
+                    <input type="email" class="form-control" id="emailAddress" autocomplete="email" bind:value={userCreate.email_address} />
                     <label for="emailAddress">E-mail address</label>
                 </div>
             </div>
@@ -71,7 +64,7 @@
         <div class="row mb-2">
             <div class="col">
                 <div class="form-floating">
-                    <input type="password" class="form-control" id="password" autocomplete="new-password" bind:value={newUserPassword} />
+                    <input type="password" class="form-control" id="password" autocomplete="new-password" bind:value={userCreate.password} />
                     <label for="password">Password</label>
                 </div>
             </div>
@@ -79,7 +72,7 @@
         <div class="row mb-2">
             <div class="col">
                 <div class="form-floating">
-                    <input type="password" class="form-control" id="passwordRepeated" autocomplete="new-password" bind:value={newUserPasswordRepeated} />
+                    <input type="password" class="form-control" id="passwordRepeated" autocomplete="new-password" bind:value={userCreate.password_repeated} />
                     <label for="passwordRepeated">Repeat password</label>
                 </div>
             </div>

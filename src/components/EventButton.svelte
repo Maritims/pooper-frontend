@@ -7,6 +7,7 @@
     import type { EnrichedEventType } from "../services/events";
 
     export let animal: AnimalRead;
+    export let compact = false;
     export let eventType: EnrichedEventType;
 
     let nextEventDueInHoursText = 'Due now';
@@ -54,8 +55,8 @@
     });
 </script>
 
-<button class="btn btn-lg {cssClass} w-100" on:click={handleOnClick}>
-    <i class="fas {eventType.iconClass} fa-2x"></i>
-    <div class="fs-3">{eventType.eventType}</div>
-    <div class="fs-6 d-none d-sm-block">{nextEventDueInHoursText}</div>
+<button type="button" class="btn btn-lg btn-event {cssClass} {compact ? '' : 'w-100'}" on:click={handleOnClick}>
+    <i class="fas {eventType.iconClass} {compact ? '' : 'fa-2x'}"></i>
+    <div class="d-none {compact ? 'd-sm-inline-block' : 'd-sm-block fs-3'}">{eventType.eventType}</div>
+    <div class="d-none {compact ? '' : 'd-sm-block fs-6'}">{nextEventDueInHoursText}</div>
 </button>

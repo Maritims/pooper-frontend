@@ -32,9 +32,11 @@
 						<div class="container-fluid p-0">
 							<div class="row">
 								{#each eventTypes as eventType}
-									<div class="col">
-										<EventButton {animal} {eventType} on:done={handleOnDone} />
-									</div>
+									{#if eventType.showOnHomeScreen}
+										<div class="col">
+											<EventButton {animal} {eventType} on:done={handleOnDone} />
+										</div>
+									{/if}
 								{/each}
 							</div>
 						</div>
