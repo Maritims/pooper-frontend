@@ -50,7 +50,7 @@
         chart = new Chart(context, {
             type: 'line',
             data: {
-                labels: getDates().map(date => date.toLocaleString()),
+                labels: getDates().map(date => date.toLocaleDateString()),
                 datasets: getDataSets()
             },
             options: {

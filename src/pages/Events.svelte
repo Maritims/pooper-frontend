@@ -145,7 +145,7 @@
                                 </td>
                                 <td class="align-middle d-none d-md-table-cell">{event.latitude}</td>
                                 <td class="align-middle d-none d-md-table-cell">{event.longitude}</td>
-                                <td class="align-middle">{event.created}</td>
+                                <td class="align-middle">{new Date(Date.parse(event.created)).toLocaleString()}</td>
                                 <td class="align-middle text-end">
                                     <button class="btn btn-lg btn-danger" on:click={() => handleOnClick(event.id)}>Remove</button>
                                 </td>

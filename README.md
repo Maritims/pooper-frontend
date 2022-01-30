@@ -33,7 +33,7 @@ yarn cache clean
 This project comes with a Dockerfile based on the [multistage technique](https://docs.docker.com/develop/develop-images/multistage-build/) for running the project as a Docker container.
 
 ### Building the image
-To build the image you must specify the build arguments for the expected API_BASE_URL and MAPBOX_ACCESS_TOKEN.
+To build the image you must specify the build arguments `API_BASE_URL` and `MAPBOX_ACCESS_TOKEN`.
 ```shell
 docker build . -t pooper-frontend:lates --build-arg API_BASE_URL=foo --build-arg MAPBOX_ACCESS_TOKEN=bar
 ```

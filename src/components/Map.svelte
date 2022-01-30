@@ -2,7 +2,7 @@
     import 'mapbox-gl/dist/mapbox-gl.css';
     import mapboxgl, { Map, Marker, MapMouseEvent} from 'mapbox-gl';
     import { createEventDispatcher, onMount } from 'svelte';
-    import type { Position } from '../services/navigation';
+    import type { Position } from '../models/Position';
 
     export let center: Position = undefined;
     export let markers: Array<Marker> = [];

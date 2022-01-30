@@ -1,4 +1,3 @@
-import { navigate } from "svelte-navigator";
 import { writable } from "svelte/store";
 import { AuthService, OpenAPI } from "../api";
 

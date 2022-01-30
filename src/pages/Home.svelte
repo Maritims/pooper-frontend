@@ -1,30 +1,22 @@
 <script lang="ts">
+	import type { AnimalRead } from '../api';
+	import type { Position } from '../models/Position';
+
 	import { onMount } from "svelte";
-	import type { AnimalRead } from '../api';
 	import { AnimalsService } from "../api";
+	import { getAllEventTypes, getEventMarkers } from "../services/events";
+	import { getCurrentPosition } from "../models/Position";
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
-	import { getAllEventTypes, getEventMarkers } from "../services/events";
-	import type { Position } from '../models/Position';
-	import { getCurrentPosition } from "../models/Position";
 
 	let animals: Array<AnimalRead> = [];
 	let eventTypes = getAllEventTypes();
-	let map: Map;
 	let position: Position = undefined;
 	
-	onMount(async () => {
-		animals = await AnimalsService.getAllAnimalsGet();
-	});
+	onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
 
-	async function handleOnDone(e: CustomEvent): Promise<void> {
-		if(!e.detail.success) return;
-		animals = await AnimalsService.getAllAnimalsGet();
-	};
-
-	async function loadMap(): Promise<void> {
-		position = await getCurrentPosition();
-	}
+	const handleOnDone = async (e: CustomEvent) => animals = e.detail.success ? (await AnimalsService.getAllAnimalsGet()) : [];
+	const loadMap = async () => position = await getCurrentPosition();
 </script>
 
 

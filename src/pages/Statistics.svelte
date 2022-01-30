@@ -1,9 +1,10 @@
 <script lang="ts">
-    import type { AnimalRead } from '../api';
+    import type { AnimalRead } from '../api';
     import { AnimalsService } from "../api";
     import { getAllEventTypes } from "../services/events";
     import ChartJs from "../components/ChartJs.svelte";
-    import { getTimeSpan } from "../models/TimeSpan";
+    import { getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds } from "../utils/TimeUtils";
+    import { getMeanOfDifferences } from '../utils/NumberUtils';
 
     let currentAnimal: AnimalRead;
     let days = 7;
@@ -15,7 +16,7 @@
         {@const eventTypes = getAllEventTypes()}
 
         <div class="row mt-2">
-            <div class="col-12 col-md-6">
+            <div class="col">
                 <div class="form-floating">
                     <select class="form-select" id="currentAnimal" bind:value={currentAnimal}>
                         <option selected>Choose an animal</option>
@@ -33,27 +34,37 @@
                     </select>
                     <label for="days">Days</label>
                 </div>
-                <ChartJs events={currentAnimal?.events || animals.flatMap(animal => animal.events)} days={days} />
             </div>
+        </div>
+        <div class="row mt-2">
             <div class="col-12 col-md-6">
                 <table class="table table-striped mt-2">
                     <thead>
                         <th>Event type</th>
                         <th>Total</th>
                         <th>Average per day</th>
+                        <th>Average time between events</th>
                     </thead>
                     <tbody>
                         {#each eventTypes as et}
-                            {@const eventsInChosenPeriod = allEvents.filter(e => e.event_type == et.eventType && getTimeSpan(new Date().getTime(), Date.parse(e.created)).totalDays <= days)}
+                            {@const eventsInChosenPeriod = allEvents.filter(e => e.event_type == et.eventType && getTimeSpanFromDatePair({
+                                latest: new Date(),
+                                earliest: new Date(Date.parse(e.created))
+                            }).totalDays <= days)}
                             {@const averageEvents = eventsInChosenPeriod.length / days}
+                            {@const meanTimeBetweenEvents = getMeanOfDifferences(eventsInChosenPeriod.sort((a, b) => Date.parse(b.created) - Date.parse(a.created)).map(e => Date.parse(e.created)))}
                             <tr>
                                 <td>{et.eventType}</td>
                                 <td>{eventsInChosenPeriod.length}</td>
-                                <td>{averageEvents}</td>
+                                <td>{averageEvents.toFixed(2)}</td>
+                                <td>{getTimeSpanStringFromMilliseconds(meanTimeBetweenEvents)}</td>
                             </tr>
                         {/each}
                     </tbody>
                 </table>
+            </div>
+            <div class="col-12 col-md-6">
+                <ChartJs events={currentAnimal?.events || animals.flatMap(animal => animal.events)} days={days} />
             </div>
         </div>
     {/await}

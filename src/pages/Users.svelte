@@ -110,8 +110,8 @@
                             <td class="align-middle">{user.first_name}</td>
                             <td class="align-middle">{user.last_name}</td>
                             <td class="align-middle">{user.email_address}</td>
-                            <td class="align-middle">{user.created}</td>
-                            <td class="align-middle">{user.updated}</td>
+                            <td class="align-middle">{new Date(Date.parse(user.created)).toLocaleString()}</td>
+                            <td class="align-middle">{new Date(Date.parse(user.updated)).toLocaleString()}</td>
                             <td class="align-middle">
                                 <button class="btn btn-lg btn-danger" on:click={() => handleOnClick(user.id)}>Remove</button>
                             </td>
