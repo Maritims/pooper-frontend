@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { AnimalRead, AnimalsService, EventCreate, EventRead, EventsService } from "../api";
-    import { getAllEventTypes } from "../services/events";
+    import { getAllEventTypes, getEventMarkers } from "../services/events";
     import { getCurrentPosition } from "../services/navigation";
-    import { MapMouseEvent, Marker, Popup } from "mapbox-gl";
+    import type { MapMouseEvent } from "mapbox-gl";
     import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";
     import Map from "../components/Map.svelte";
@@ -28,27 +28,6 @@
         animals = await AnimalsService.getAllAnimalsGet();
         events = await EventsService.getAllEventsGet();
     });
-
-    function getEventMarkers(events: Array<EventRead>): Array<Marker> {
-        const groupedEvents = events.reduce((acc, event) => {
-            const key = `${event.longitude},${event.latitude},${event.event_type}`;
-            if(!acc[key]) acc[key] = 0;
-            acc[key]++;
-            return acc;
-        }, {});
-    
-        const eventMarkers = Object.keys(groupedEvents).map(key => {
-            const keyParts = key.split(',');
-            const lng = parseFloat(keyParts[0]);
-            const lat = parseFloat(keyParts[1]);
-            const eventType = keyParts[2];
-            return new Marker()
-            .setLngLat([lng, lat])
-            .setPopup(new Popup().setHTML(`Count: ${groupedEvents[key]} - Type: ${eventType}`));
-        });
-
-        return eventMarkers;
-    };
 
     function handleOnClick(id: number): void {
         confirmation.confirm(async () => {

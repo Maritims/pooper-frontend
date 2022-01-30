@@ -3,7 +3,7 @@
 	import { AnimalRead, AnimalsService } from "../api";
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
-	import { getAllEventTypes } from "../services/events";
+	import { getAllEventTypes, getEventMarkers } from "../services/events";
 	import { getCurrentPosition } from "../services/navigation";
 
 	let animals: Array<AnimalRead> = [];
@@ -48,7 +48,7 @@
 </div>
 
 {#await getCurrentPosition() then position}
-	<Map minHeightPx={600} center={position} />
+	<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 {/await}
 
 <style lang="scss">
