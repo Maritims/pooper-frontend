@@ -7,8 +7,12 @@ export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalIn
 };
 
 export function getText(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
-    const timeSpan = getTimeSpanFromDateOrNumber(intervalInMilliseconds - millisecondsSincePreviousEvent);
-    const timeSpanString = getTimeSpanString(timeSpan, false, true, false, false);
+    const timeSpan          = getTimeSpanFromDateOrNumber(intervalInMilliseconds - millisecondsSincePreviousEvent);
+    const includeDays       = !!timeSpan.days;
+    const includeHours      = !includeDays && !!timeSpan.hours;
+    const includeMinutes    = !includeHours && !!timeSpan.minutes;
+    const includeSeconds    = false;
+    const timeSpanString    = getTimeSpanString(timeSpan, includeDays, includeHours, includeMinutes, includeSeconds);
     const text = 'Due ' + (timeSpanString ? `in ${timeSpanString}` : 'now');
     return text;
 };
