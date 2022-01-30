@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, afterUpdate } from "svelte";
-    import { AnimalRead, EventsService } from "../api";
+    import type { AnimalRead } from '../api';
+    import { EventsService } from "../api";
     import { addToast } from "../services/toasts";
     import { getTimeSpanForNextEvent } from '../services/animals';
     import { getCssPostfix, getText } from "../models/TimeSpan";

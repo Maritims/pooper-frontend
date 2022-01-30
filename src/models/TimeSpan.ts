@@ -2,6 +2,7 @@ export type TimeSpan = {
     hours: number
     minutes: number
     seconds: number
+    totalDays: number
     totalHours: number
     totalMinutes: number
     totalSeconds: number
@@ -24,6 +25,7 @@ export const getTimeSpan = (latestMilliseconds: number, earliestMilliseconds: nu
         hours: hours,
         minutes: minutes,
         seconds: seconds,
+        totalDays: (latestMilliseconds - earliestMilliseconds) / 1000 / 60 / 60 / 24,
         totalHours: (latestMilliseconds - earliestMilliseconds) / 1000 / 60 / 60,
         totalMinutes: (latestMilliseconds - earliestMilliseconds) / 1000 / 60,
         totalSeconds: (latestMilliseconds - earliestMilliseconds) / 1000,

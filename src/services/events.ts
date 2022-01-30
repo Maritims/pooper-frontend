@@ -1,6 +1,8 @@
 import { Marker, Popup } from "mapbox-gl";
-import { EventRead, EventType } from "../api";
-import { EnrichedEventType, getEnrichedEventType } from "../models/EnrichedEventType";
+import type { EventRead } from '../api';
+import { EventType } from "../api";
+import type { EnrichedEventType } from "../models/EnrichedEventType";
+import { getEnrichedEventType } from "../models/EnrichedEventType";
 
 export const getAllEventTypes = (): Array<EnrichedEventType> => Object.values(EventType).map(eventType => getEnrichedEventType(eventType));
 

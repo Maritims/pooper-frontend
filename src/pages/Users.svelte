@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { UserCreate, UserRead, UsersService } from "../api";
+    import type { UserCreate, UserRead } from "../api";
+    import { UsersService } from "../api";
     import Confirmation from "../components/Confirmation.svelte";
     import Modal from "../components/Modal.svelte";
 

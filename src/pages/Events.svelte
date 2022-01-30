@@ -1,8 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { AnimalRead, AnimalsService, EventCreate, EventRead, EventsService } from "../api";
+    import type { AnimalRead, EventCreate, EventRead } from "../api";
+    import { AnimalsService, EventsService } from "../api";
     import { getAllEventTypes, getEventMarkers } from "../services/events";
-    import { getCurrentPosition } from "../services/navigation";
+    import { getCurrentPosition } from "../models/Position";
     import type { MapMouseEvent } from "mapbox-gl";
     import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";

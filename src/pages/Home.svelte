@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { AnimalRead, AnimalsService } from "../api";
+	import type { AnimalRead } from '../api';
+	import { AnimalsService } from "../api";
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
 	import { getAllEventTypes, getEventMarkers } from "../services/events";
-	import { getCurrentPosition } from "../services/navigation";
+	import type { Position } from '../models/Position';
+	import { getCurrentPosition } from "../models/Position";
 
 	let animals: Array<AnimalRead> = [];
 	let eventTypes = getAllEventTypes();
 	let map: Map;
+	let position: Position = undefined;
 	
 	onMount(async () => {
 		animals = await AnimalsService.getAllAnimalsGet();
@@ -18,6 +21,10 @@
 		if(!e.detail.success) return;
 		animals = await AnimalsService.getAllAnimalsGet();
 	};
+
+	async function loadMap(): Promise<void> {
+		position = await getCurrentPosition();
+	}
 </script>
 
 
@@ -45,13 +52,16 @@
 			</div>
 		{/each}
 	</div>
+	<div class="row mt-2">
+		<div class="col text-center">
+			{#if position}
+				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
+			{:else}
+				<button class="btn btn-lg btn-primary" on:click={loadMap}>Load map</button>
+			{/if}
+		</div>
+	</div>
 </div>
-
-{#if animals.length}
-	{#await getCurrentPosition() then position}
-		<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
-	{/await}
-{/if}
 
 <style lang="scss">
 	.card-body {

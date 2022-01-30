@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { useFocus } from "svelte-navigator";
-    import { UserCreate, UserRead, UsersService } from "../api";
+    import type { UserCreate, UserRead } from "../api";
+    import { UsersService } from "../api";
     import { addToast } from "../services/toasts";
 
     let userRead: UserRead;
