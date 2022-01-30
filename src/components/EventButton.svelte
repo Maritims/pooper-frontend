@@ -1,10 +1,10 @@
 <script lang="ts">
     import { createEventDispatcher, afterUpdate } from "svelte";
-    import { AnimalRead, EventsService, EventType } from "../api";
+    import { AnimalRead, EventsService } from "../api";
     import { addToast } from "../services/toasts";
     import { getTimeSpanForNextEvent } from '../services/animals';
-    import { getCssPostfix, getText } from "../models/TimeFunctions";
-    import type { EnrichedEventType } from "../services/events";
+    import { getCssPostfix, getText } from "../models/TimeSpan";
+    import type { EnrichedEventType } from "../models/EnrichedEventType";
 
     export let animal: AnimalRead;
     export let compact = false;
@@ -50,8 +50,8 @@
 
     afterUpdate(() => {
         const timeSpanForNextEvent = getTimeSpanForNextEvent(animal, eventType);
-        nextEventDueInHoursText = getText(timeSpanForNextEvent);
-        cssClass = `btn-${getCssPostfix(timeSpanForNextEvent)}`;
+        nextEventDueInHoursText = getText(timeSpanForNextEvent.totalMilliseconds, eventType.intervalInMilliseconds);
+        cssClass = `btn-${getCssPostfix(timeSpanForNextEvent.totalMilliseconds, eventType.intervalInMilliseconds)}`;
     });
 </script>
 

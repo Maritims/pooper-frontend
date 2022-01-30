@@ -1,13 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { AnimalRead, AnimalsService, EventCreate, EventRead, EventsService } from "../api";
-    import { getAllEventTypes, getEnrichedEventType } from "../services/events";
+    import { getAllEventTypes } from "../services/events";
     import { getCurrentPosition } from "../services/navigation";
     import { MapMouseEvent, Marker, Popup } from "mapbox-gl";
     import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";
     import Map from "../components/Map.svelte";
     import Modal from "../components/Modal.svelte";
+    import { getEnrichedEventType } from "../models/EnrichedEventType";
 
     let animals: Array<AnimalRead> = [];
     let confirmation: Confirmation;

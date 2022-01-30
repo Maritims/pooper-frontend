@@ -4,7 +4,8 @@ ARG MAPBOX_ACCESS_TOKEN
 WORKDIR /usr/src/app
 COPY package.json rollup.config.js ./
 COPY . .
-RUN yarn install --pure-lockfile --non-interactive
+RUN yarn install --pure-lockfile --non-interactive \
+    && yarn test
 
 FROM develop-stage AS build-stage
 ARG API_BASE_URL
