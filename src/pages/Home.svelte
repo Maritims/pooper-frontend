@@ -47,9 +47,11 @@
 	</div>
 </div>
 
-{#await getCurrentPosition() then position}
-	<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
-{/await}
+{#if animals.length}
+	{#await getCurrentPosition() then position}
+		<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
+	{/await}
+{/if}
 
 <style lang="scss">
 	.card-body {
