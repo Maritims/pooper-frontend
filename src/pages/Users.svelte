@@ -4,15 +4,10 @@
     import { UsersService } from "../api";
     import Confirmation from "../components/Confirmation.svelte";
     import Modal from "../components/Modal.svelte";
+    import { getUserCreate } from "../factories/UserCreateFactory";
 
     let users: Array<UserRead> = [];
-    let userCreate: UserCreate = {
-        first_name: undefined,
-        last_name: undefined,
-        email_address: undefined,
-        password: undefined,
-        password_repeated: undefined
-    };
+    let userCreate: UserCreate = getUserCreate();
     let modal: Modal;
     let confirmation: Confirmation;
 
@@ -20,7 +15,7 @@
 
     async function handleOnSubmit(): Promise<void> {
         await UsersService.createUsersPost(userCreate);
-        Object.keys(userCreate).forEach(key => userCreate[key] = undefined);
+        userCreate = getUserCreate();
         users = await UsersService.getAllUsersUsersGet();
         modal.hide();
     };

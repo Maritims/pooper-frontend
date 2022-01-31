@@ -51,6 +51,5 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             showOnHomeScreen: false,
             showOnAnimalScreen: true
         };
-        default: return;
     }
 };

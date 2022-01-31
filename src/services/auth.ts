@@ -21,6 +21,6 @@ authStore.subscribe((value) => {
         OpenAPI.TOKEN = value;
     } else {
         localStorage.removeItem('accessToken');
-        OpenAPI.TOKEN = null;
+        OpenAPI.TOKEN = undefined;
     }
 });

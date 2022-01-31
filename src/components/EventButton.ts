@@ -1,4 +1,6 @@
-import { getTimeSpanFromDateOrNumber, getTimeSpanString } from '../utils/TimeUtils';
+import type { AnimalRead } from '../api';
+import type { EnrichedEventType } from '../models/EnrichedEventType';
+import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString, type TimeSpan } from '../utils/TimeUtils';
 
 export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
     if(millisecondsSincePreviousEvent > intervalInMilliseconds) return 'danger';
@@ -15,4 +17,21 @@ export function getText(millisecondsSincePreviousEvent: number, intervalInMillis
     const timeSpanString    = getTimeSpanString(timeSpan, includeDays, includeHours, includeMinutes, includeSeconds);
     const text = 'Due ' + (timeSpanString ? `in ${timeSpanString}` : 'now');
     return text;
+};
+
+export function getTimeSpanForNextEvent(animal: AnimalRead, eventType: EnrichedEventType): TimeSpan | undefined {
+    if(!animal.events.length) return;
+
+    const previousEventTimestamp: Date = (
+        animal.events
+        .filter(event => event.event_type == eventType.eventType)
+        .sort((olderEvent, newerEvent) => Date.parse(newerEvent.created) - Date.parse(olderEvent.created))
+        .map(event => new Date(event.created)) || [undefined]
+    )[0];
+    if(!previousEventTimestamp) return;
+
+    return getTimeSpanFromDatePair({
+        latest: new Date(),
+        earliest: previousEventTimestamp
+    });
 };

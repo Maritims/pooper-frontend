@@ -1,10 +1,9 @@
 <script lang="ts">
     import type { EnrichedEventType } from "../models/EnrichedEventType";
-    import { getCssPostfix, getText } from "./EventButton";
+    import { getCssPostfix, getText, getTimeSpanForNextEvent } from "./EventButton";
     import { createEventDispatcher, afterUpdate } from "svelte";
     import { EventsService, type AnimalRead } from "../api";
     import { addToast } from "../services/toasts";
-    import { getTimeSpanFromDatePair, type TimeSpan } from "../utils/TimeUtils";
 
     export let animal: AnimalRead;
     export let compact = false;
@@ -48,25 +47,10 @@
         );
     }
 
-    function getTimeSpanForNextEvent(animal: AnimalRead, eventType: EnrichedEventType): TimeSpan {
-        if(!animal.events.length) return;
-
-        const previousEventTimestamp: Date = (
-            animal.events
-            .filter(event => event.event_type == eventType.eventType)
-            .sort((olderEvent, newerEvent) => Date.parse(newerEvent.created) - Date.parse(olderEvent.created))
-            .map(event => new Date(event.created)) || [undefined]
-        )[0];
-        if(!previousEventTimestamp) return;
-
-        return getTimeSpanFromDatePair({
-            latest: new Date(),
-            earliest: previousEventTimestamp
-        });
-    };
-
     afterUpdate(() => {
         const timeSpanForNextEvent = getTimeSpanForNextEvent(animal, eventType);
+        if(!timeSpanForNextEvent) return;
+
         nextEventDueInHoursText = getText(timeSpanForNextEvent.totalMilliseconds, eventType.intervalInMilliseconds);
         cssClass = `btn-${getCssPostfix(timeSpanForNextEvent.totalMilliseconds, eventType.intervalInMilliseconds)}`;
     });

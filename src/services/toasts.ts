@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 
 export type Toast = {
     id: number
@@ -7,7 +7,7 @@ export type Toast = {
     durationInMs: number
 };
 
-export const toastStore = writable([]);
+export const toastStore: Writable<Array<Toast>> = writable([]);
 
 export const addToast = (toast: Toast): void => {
     toastStore.update(toasts => [...toasts, toast]);

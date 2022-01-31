@@ -26,3 +26,4 @@ _output
 dist/
 *.lock
 build/
+.env

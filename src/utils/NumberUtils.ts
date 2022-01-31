@@ -5,7 +5,7 @@
  * @returns The mean value of the difference between the number pairs in the provided data set.
  */
 export function getMeanOfDifferences(nums: Array<number>): number {
-    const diffs = nums.reduce((accumulator, num, i) => {
+    const diffs = nums.reduce<Array<number>>((accumulator, num, i) => {
         if((i + 1) == nums.length) return accumulator;
         
         accumulator.push(num - nums[i + 1]);
