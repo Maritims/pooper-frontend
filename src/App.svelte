@@ -19,41 +19,49 @@
 <Toasts />
 
 <Router>
-	<NavigationBar />
+	<header>
+		<NavigationBar />
+	</header>
 
-	{#if $authStore}
-		<Route path="/" primary={false}>
-			<Home />
-		</Route>
-		<Route path="/animals">
-			<Animals />
-		</Route>
-		<Route path="/events">
-			<Events />
-		</Route>
-		<Route path="/users">
-			<Users />
-		</Route>
-		<Route path="/statistics">
-			<Statistics />
-		</Route>
-		<Route path="/profile">
-			<Profile />
-		</Route>
-		<Route path="/logout">
-			<Logout />
-		</Route>
-	{:else}
-		<Route path="/reset-password">
-			<PasswordResetRequest />
-		</Route>
-		<Route path="/confirm-password-reset/:token" let:params>
-			<PasswordResetConfirmation token={params.token} />
-		</Route>
-		<Route primary={true}>
-			<Login />
-		</Route>
-	{/if}
+	<main class="flex-shrink-0 pt-2">
+		{#if $authStore}
+			<Route path="/" primary={false}>
+				<Home />
+			</Route>
+			<Route path="/animals">
+				<Animals />
+			</Route>
+			<Route path="/events">
+				<Events />
+			</Route>
+			<Route path="/users">
+				<Users />
+			</Route>
+			<Route path="/statistics">
+				<Statistics />
+			</Route>
+			<Route path="/profile">
+				<Profile />
+			</Route>
+			<Route path="/logout">
+				<Logout />
+			</Route>
+		{:else}
+			<Route path="/reset-password">
+				<PasswordResetRequest />
+			</Route>
+			<Route path="/confirm-password-reset/:token" let:params>
+				<PasswordResetConfirmation token={params.token} />
+			</Route>
+			<Route primary={true}>
+				<Login />
+			</Route>
+		{/if}
+	</main>
+
+	<footer class="footer mt-auto bg-light d-sm-none fixed-bottom" style="z-index:1002">
+		<NavigationBar bottom={true} />
+	</footer>
 </Router>
 
 {#if $modalStore.isBackdropVisible}

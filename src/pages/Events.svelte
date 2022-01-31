@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { AnimalRead, EventCreate, EventRead } from "../api";
-    import { AnimalsService, EventsService } from "../api";
+    import { type AnimalRead, type EventRead, AnimalsService, EventsService } from "../api";
     import { getAllEventTypes, getEventMarkers } from "../services/events";
     import { getCurrentPosition } from "../models/Position";
     import type { MapMouseEvent } from "mapbox-gl";
@@ -10,6 +9,7 @@
     import Map from "../components/Map.svelte";
     import Modal from "../components/Modal.svelte";
     import { getEnrichedEventType } from "../models/EnrichedEventType";
+    import { getEventCreate } from "../factories/EventCreateFactory";
 
     let animals: Array<AnimalRead> = [];
     let confirmation: Confirmation;
@@ -18,12 +18,7 @@
     let map: Map;
     let modal: Modal;
 
-    let eventCreate: EventCreate = {
-        animal_id: undefined,
-        longitude: undefined,
-        latitude: undefined,
-        event_type: undefined
-    };
+    let eventCreate = getEventCreate();
 
     onMount(async () => {
         animals = await AnimalsService.getAllAnimalsGet();
@@ -46,7 +41,7 @@
     async function createEvent(): Promise<void> {
         const event = await EventsService.createEventsPost(eventCreate);
         events = await EventsService.getAllEventsGet();
-        Object.keys(eventCreate).forEach(key => eventCreate[key] = undefined);
+        eventCreate = getEventCreate();
         modal.hide();
         addToast({
             id: new Date().getTime(),
