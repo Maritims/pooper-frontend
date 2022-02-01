@@ -3,8 +3,9 @@
     import { AnimalsService } from "../api";
     import { getAllEventTypes } from "../services/events";
     import ChartJs from "../components/ChartJs.svelte";
-    import { getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds } from "../utils/TimeUtils";
+    import { getMostFrequentHourFromDates, getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds } from "../utils/TimeUtils";
     import { getMeanOfDifferences } from '../utils/NumberUtils';
+import Map from '../components/Map.svelte';
 
     let currentAnimal: AnimalRead;
     let days = 7;
@@ -28,6 +29,7 @@
                 </div>
                 <div class="form-floating mt-2">
                     <select class="form-select" bind:value={days}>
+                        <option value={1}>Today</option>
                         <option value={7}>Last 7 days</option>
                         <option value={14}>Last 14 days</option>
                         <option value={30}>Last 30 days</option>
@@ -44,6 +46,7 @@
                         <th>Total</th>
                         <th>Average per day</th>
                         <th>Average time between events</th>
+                        <th>Most active hours</th>
                     </thead>
                     <tbody>
                         {#each eventTypes as et}
@@ -58,6 +61,7 @@
                                 <td>{eventsInChosenPeriod.length}</td>
                                 <td>{averageEvents.toFixed(2)}</td>
                                 <td>{getTimeSpanStringFromMilliseconds(meanTimeBetweenEvents)}</td>
+                                <td>{getMostFrequentHourFromDates(eventsInChosenPeriod.map(event => new Date(Date.parse(event.created)))) || ''}</td>
                             </tr>
                         {/each}
                     </tbody>

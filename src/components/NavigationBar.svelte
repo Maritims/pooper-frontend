@@ -19,6 +19,20 @@
         <div class="collapse navbar-collapse {show ? "show" : ""}">
             {#if $authStore}
                 <ul class="navbar-nav me-auto">
+                    {#if bottom}
+                        <li class="nav-item">
+                            <NavLink to="profile" class="nav-link">
+                                <div class="icon"><i class="fas fa-user-cog"></i></div> My profile
+                            </NavLink>
+                        </li>
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" on:click={logout}>
+                                <div class="icon"><i class="fas fa-sign-out-alt"></i></div> Log out
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider text-white"></li>
+                    {/if}
                     <li class="nav-item">
                         <NavLink to="animals" class="nav-link">
                             <div class="icon"><i class="fas fa-paw"></i></div> Animals
@@ -39,22 +53,25 @@
                             <div class="icon"><i class="fas fa-chart-line"></i></div> Statistics
                         </NavLink>
                     </li>
-                </ul>
-            {/if}
-            {#if $authStore}
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li><hr class="dropdown-divider text-white"></li>
-                    <li class="nav-item">
-                        <NavLink to="profile" class="nav-link">
-                            <div class="icon"><i class="fas fa-user-cog"></i></div> My profile
-                        </NavLink>
-                    </li>
-                    <!-- svelte-ignore a11y-invalid-attribute -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" on:click={logout}>
-                            <div class="icon"><i class="fas fa-sign-out-alt"></i></div> Log out
-                        </a>
-                    </li>
+                    {#if bottom}
+                        <li class="nav-item">
+                            <NavLink to="/" class="nav-link">
+                                <div class="icon"><i class="fas fa-home"></i></div> Home
+                            </NavLink>
+                        </li>
+                    {:else}
+                        <li class="nav-item">
+                            <NavLink to="profile" class="nav-link">
+                                <div class="icon"><i class="fas fa-user-cog"></i></div> My profile
+                            </NavLink>
+                        </li>
+                        <!-- svelte-ignore a11y-invalid-attribute -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" on:click={logout}>
+                                <div class="icon"><i class="fas fa-sign-out-alt"></i></div> Log out
+                            </a>
+                        </li>
+                    {/if}
                 </ul>
             {/if}
         </div>

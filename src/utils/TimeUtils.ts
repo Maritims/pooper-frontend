@@ -76,3 +76,20 @@ export function getTimeSpanStringFromMilliseconds(ms: number): string {
     const timeSpanString = getTimeSpanString(timeSpan);
     return timeSpanString;
 };
+
+export function getMostFrequentHourFromDates(dates: Array<Date>): number | undefined {
+    type Count = {
+        key: number
+        value: number
+    };
+
+    return dates.reduce<Array<Count>>((acc, date) => {
+        const obj = acc.find(count => count.key === date.getHours());
+        if(obj) obj.value += 1;
+        else acc.push({
+            key: date.getHours(),
+            value: 1
+        }); 
+        return acc;
+    }, []).sort((a, b) => b.value - a.value)[0]?.key;
+};

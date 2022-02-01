@@ -39,7 +39,7 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             eventType: eventType,
             iconClass: 'fa-fish',
             intervalInMilliseconds: 24 * 60 * 60 * 1000,
-            color: '#000000',
+            color: '#81C0D8',
             showOnHomeScreen: false,
             showOnAnimalScreen: true
         };
@@ -47,7 +47,7 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             eventType: eventType,
             iconClass: 'fa-capsules',
             intervalInMilliseconds: 24 * 60 * 60 * 1000,
-            color: '#000000',
+            color: '#95D9BC',
             showOnHomeScreen: false,
             showOnAnimalScreen: true
         };
