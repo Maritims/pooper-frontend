@@ -5,7 +5,6 @@
     import ChartJs from "../components/ChartJs.svelte";
     import { getMostFrequentHourFromDates, getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds } from "../utils/TimeUtils";
     import { getMeanOfDifferences } from '../utils/NumberUtils';
-import Map from '../components/Map.svelte';
 
     let currentAnimal: AnimalRead;
     let days = 7;
