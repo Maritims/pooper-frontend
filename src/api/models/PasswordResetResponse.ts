@@ -4,4 +4,4 @@
 
 export type PasswordResetResponse = {
     success: boolean;
-}
+};

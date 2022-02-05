@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { authStore, logout } from '../services/auth';
+    import { authStore, logout } from '../../services/auth';
     import NavLink from './NavLink.svelte';
 
     export let bottom = false;

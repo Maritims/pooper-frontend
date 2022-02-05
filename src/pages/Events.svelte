@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { type AnimalRead, type EventRead, AnimalsService, EventsService, EventType } from "../api";
     import { getAllEventTypes, getEventMarkers } from "../services/events";
-    import { getCurrentPosition } from "../models/Position";
+    import { getCurrentPosition, type Position } from "../models/Position";
     import type { MapMouseEvent } from "mapbox-gl";
     import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";
@@ -10,8 +10,8 @@
     import Modal from "../components/Modal.svelte";
     import { getEnrichedEventType } from "../models/EnrichedEventType";
     import { getEventCreate } from "../factories/EventCreateFactory";
-    import { getTimeSpanFromDatePair } from "../utils/TimeUtils";
-import Pagination from "../components/Pagination.svelte";
+    import Pagination from "../components/table/Pagination.svelte";
+    import DropdownFilter from "../components/table/DropdownFilter.svelte";
 
     let animals: Array<AnimalRead> = [];
     let confirmation: Confirmation;
@@ -21,14 +21,19 @@ import Pagination from "../components/Pagination.svelte";
     let enrichedEventTypes = getAllEventTypes();
     let map: Map;
     let modal: Modal;
+    let position: Position;
 
     let currentPageNumber = 0;
     const pageSize = 10;
     let totalEventCount = 0;
 
-    let filterByAnimal: AnimalRead;
-    let filterByDays: number;
-    let filterByEventType: EventType;
+    let filterByAnimal: AnimalRead | undefined;
+    let filterByEventType: EventType | undefined;
+    let filterByDays: number | undefined;
+    let animalFilter: DropdownFilter;
+    let eventTypeFilter: DropdownFilter;
+    let daysFilter: DropdownFilter;
+    
 
     const firstColumnClass = 'col-4 col-sm-4 col-md-3 col-xxl-2';
     const secondColumnClass = firstColumnClass;
@@ -37,7 +42,6 @@ import Pagination from "../components/Pagination.svelte";
 
     onMount(async () => {
         animals = await AnimalsService.getAllAnimalsGet();
-        totalEventCount = await EventsService.getCountEventsCountGet();
     });
 
     function handleOnClick(id: number): void {
@@ -66,14 +70,14 @@ import Pagination from "../components/Pagination.svelte";
         });
     }
 
-    $: EventsService.getAllEventsGet(currentPageNumber, pageSize).then((newEvents) => events = newEvents);
-    $: filteredEvents = events
-        .filter(event => !filterByAnimal || event.animal_id === filterByAnimal.id)
-        .filter(event => !filterByDays || getTimeSpanFromDatePair({
-            latest: new Date(),
-            earliest: new Date(Date.parse(event.created))
-        }).totalDays <= filterByDays)
-        .filter(event => !filterByEventType || event.event_type === filterByEventType);
+    function resetFilters() {
+        animalFilter.reset();
+        eventTypeFilter.reset();
+        daysFilter.reset();
+    }
+
+    $: EventsService.getAllEventsGet(filterByAnimal?.id, filterByEventType || undefined, filterByDays || undefined, currentPageNumber, pageSize).then((newEvents) => events = newEvents);
+    $: EventsService.getCountEventsCountGet(filterByAnimal?.id, filterByEventType || undefined, filterByDays || undefined).then((count) => totalEventCount = count);
 </script>
 
 <Confirmation bind:this={confirmation} />
@@ -124,9 +128,11 @@ import Pagination from "../components/Pagination.svelte";
             </div>
         </div>
         <div class="row mb-2">
-            {#await getCurrentPosition() then position}
-                <Map bind:this={map} on:click={handleOnMapClick} center={position} markers={getEventMarkers(events)} />
-            {/await}
+            {#if position}
+				<Map bind:this={map} on:click={handleOnMapClick} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
+			{:else}
+				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
+			{/if}
         </div>
     </form>
     <span slot="footer">
@@ -136,46 +142,50 @@ import Pagination from "../components/Pagination.svelte";
 </Modal>
 
 <div class="container-fluid">
-    <div class="row mt-2">
+    <div class="row">
         <div class="col">
             <button type="button" class="btn btn-lg btn-success" on:click={modal.show}>Create event</button>
         </div>
     </div>
-    <div class="bg-dark mt-2 py-2 row text-light">
+    <div class="align-items-center bg-dark mt-2 pt-2 row text-light">
         <div class={firstColumnClass}>Animal</div>
         <div class={secondColumnClass}>Event type</div>
         <div class={thirdColumnClass}>Created</div>
         <div class={fourthColumnClass}></div>
     </div>
-    <div class="row bg-dark py-2">
+    <div class="align-items-center row bg-dark py-2">
         <div class={firstColumnClass}>
-            <select class="form-select" id="filterByAnimal" bind:value={filterByAnimal}>
-                <option value="" selected>Filter</option>
-                {#each animals as animal}
-                    <option value={animal}>{animal.name}</option>
-                {/each}
-            </select>
+            <DropdownFilter bind:this={animalFilter} bind:selectedOption={filterByAnimal} options={animals.map(animal => {
+                return {
+                    description: animal.name,
+                    value: animal
+                }
+            })} />
         </div>
         <div class={secondColumnClass}>
-            <select class="form-select" id="filterByEventType" bind:value={filterByEventType}>
-                <option value="" selected>Filter</option>
-                {#each enrichedEventTypes as enrichedEventType}
-                    <option value={enrichedEventType.eventType}>{enrichedEventType.eventType}</option>
-                {/each}
-            </select>
+            <DropdownFilter bind:this={eventTypeFilter} bind:selectedOption={filterByEventType} options={enrichedEventTypes.map(enrichedEventType => {
+                return {
+                    description: enrichedEventType.eventType,
+                    value: enrichedEventType.eventType
+                }
+            })} />
         </div>
         <div class={thirdColumnClass}>
-            <select class="form-select" id="filterByDays" bind:value={filterByDays}>
-                <option value="" selected>Filter</option>
-                {#each days as day}
-                    <option value={day}>Last {day} days</option>
-                {/each}
-            </select>
+            <DropdownFilter bind:this={daysFilter} bind:selectedOption={filterByDays} options={days.map(day => {
+                return {
+                    description: `Last ${day.toString()} days`,
+                    value: day
+                }
+            })} />
         </div>
-        <div class={fourthColumnClass}></div>
+        <div class={fourthColumnClass}>
+            <button class="btn btn-lg btn-danger" on:click={() => resetFilters()}>
+                <i class="fas fa-undo"></i><span class="d-none d-md-inline">&nbsp;Reset</span>
+            </button>
+        </div>
     </div>
-    {#each filteredEvents as event}
-        <div class="align-items-center bg-odd-colored p-2 row">
+    {#each events as event}
+        <div class="align-items-center bg-odd-colored pt-2 pb-2 row">
             <div class={firstColumnClass}>{event.animal_name}</div>
             <div class={secondColumnClass}>
                 <i class="fas {getEnrichedEventType(event.event_type).iconClass} fa-2x"></i>
@@ -190,7 +200,7 @@ import Pagination from "../components/Pagination.svelte";
     {/each}
     <div class="row mt-2">
         <div class="col">
-            <Pagination currentPageNumber={currentPageNumber} pageSize={10} totalCount={totalEventCount} on:changePage={(e) => currentPageNumber = e.detail} />
+            <Pagination bind:currentPageNumber pageSize={10} bind:totalCount={totalEventCount} />
         </div>
     </div>
 </div>

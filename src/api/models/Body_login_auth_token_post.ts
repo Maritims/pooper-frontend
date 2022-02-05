@@ -9,4 +9,4 @@ export type Body_login_auth_token_post = {
     scope?: string;
     client_id?: string;
     client_secret?: string;
-}
+};

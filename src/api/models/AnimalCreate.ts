@@ -4,4 +4,4 @@
 
 export type AnimalCreate = {
     name: string;
-}
+};

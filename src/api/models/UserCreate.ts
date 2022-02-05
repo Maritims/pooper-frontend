@@ -8,4 +8,4 @@ export type UserCreate = {
     email_address: string;
     password: string;
     password_repeated: string;
-}
+};

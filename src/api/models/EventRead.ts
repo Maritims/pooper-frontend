@@ -12,4 +12,4 @@ export type EventRead = {
     id: number;
     created: string;
     animal_name: string;
-}
+};

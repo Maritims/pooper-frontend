@@ -3,7 +3,9 @@
 /* eslint-disable */
 import type { UserCreate } from '../models/UserCreate';
 import type { UserRead } from '../models/UserRead';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class UsersService {
@@ -14,9 +16,9 @@ export class UsersService {
      * @throws ApiError
      */
     public static getMeUsersMeGet(): CancelablePromise<UserRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/users/me`,
+            url: '/users/me',
         });
     }
 
@@ -31,9 +33,9 @@ export class UsersService {
         page?: number,
         pageSize: number = 100,
     ): CancelablePromise<Array<UserRead>> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/users/`,
+            url: '/users/',
             query: {
                 'page': page,
                 'page_size': pageSize,
@@ -53,9 +55,9 @@ export class UsersService {
     public static createUsersPost(
         requestBody: UserCreate,
     ): CancelablePromise<UserRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/users/`,
+            url: '/users/',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -73,9 +75,9 @@ export class UsersService {
     public static updateUsersUpdatePatch(
         requestBody: UserCreate,
     ): CancelablePromise<UserRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'PATCH',
-            path: `/users/update`,
+            url: '/users/update',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -93,9 +95,12 @@ export class UsersService {
     public static deleteUsersIdDelete(
         id: any,
     ): CancelablePromise<void> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/users/${id}`,
+            url: '/users/{_id}',
+            path: {
+                '_id': id,
+            },
             errors: {
                 422: `Validation Error`,
             },

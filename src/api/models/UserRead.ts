@@ -10,4 +10,4 @@ export type UserRead = {
     is_disabled: boolean;
     created: string;
     updated: string;
-}
+};

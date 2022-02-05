@@ -6,21 +6,21 @@ import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
-import { OpenAPI } from './OpenAPI';
+import type { OpenAPIConfig } from './OpenAPI';
 
-function isDefined<T>(value: T | null | undefined): value is Exclude<T, null | undefined> {
+const isDefined = <T>(value: T | null | undefined): value is Exclude<T, null | undefined> => {
     return value !== undefined && value !== null;
-}
+};
 
-function isString(value: any): value is string {
+const isString = (value: any): value is string => {
     return typeof value === 'string';
-}
+};
 
-function isStringWithValue(value: any): value is string {
+const isStringWithValue = (value: any): value is string => {
     return isString(value) && value !== '';
-}
+};
 
-function isBlob(value: any): value is Blob {
+const isBlob = (value: any): value is Blob => {
     return (
         typeof value === 'object' &&
         typeof value.type === 'string' &&
@@ -31,64 +31,83 @@ function isBlob(value: any): value is Blob {
         /^(Blob|File)$/.test(value.constructor.name) &&
         /^(Blob|File)$/.test(value[Symbol.toStringTag])
     );
-}
+};
 
-function isFormData(value: any): value is FormData {
+const isFormData = (value: any): value is FormData => {
     return value instanceof FormData;
-}
+};
 
-function isSuccess(status: number): boolean {
+const isSuccess = (status: number): boolean => {
     return status >= 200 && status < 300;
-}
+};
 
-function base64(str: string): string {
+const base64 = (str: string): string => {
     try {
         return btoa(str);
     } catch (err) {
         // @ts-ignore
         return Buffer.from(str).toString('base64');
     }
-}
+};
 
-function getQueryString(params: Record<string, any>): string {
+const getQueryString = (params: Record<string, any>): string => {
     const qs: string[] = [];
 
     const append = (key: string, value: any) => {
         qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
     };
 
-    Object.entries(params)
-        .filter(([_, value]) => isDefined(value))
-        .forEach(([key, value]) => {
+    const process = (key: string, value: any) => {
+        if (isDefined(value)) {
             if (Array.isArray(value)) {
-                value.forEach(v => append(key, v));
+                value.forEach(v => {
+                    process(key, v);
+                });
+            } else if (typeof value === 'object') {
+                Object.entries(value).forEach(([k, v]) => {
+                    process(`${key}[${k}]`, v);
+                });
             } else {
                 append(key, value);
             }
-        });
+        }
+    };
+
+    Object.entries(params).forEach(([key, value]) => {
+        process(key, value);
+    });
 
     if (qs.length > 0) {
         return `?${qs.join('&')}`;
     }
 
     return '';
-}
+};
 
-function getUrl(options: ApiRequestOptions): string {
-    const path = OpenAPI.ENCODE_PATH ? OpenAPI.ENCODE_PATH(options.path) : options.path;
-    const url = `${OpenAPI.BASE}${path}`;
+const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
+    const encoder = config.ENCODE_PATH || encodeURI;
+
+    const path = options.url
+        .replace('{api-version}', config.VERSION)
+        .replace(/{(.*?)}/g, (substring: string, group: string) => {
+            if (options.path?.hasOwnProperty(group)) {
+                return encoder(String(options.path[group]));
+            }
+            return substring;
+        });
+
+    const url = `${config.BASE}${path}`;
     if (options.query) {
         return `${url}${getQueryString(options.query)}`;
     }
-
     return url;
-}
+};
 
-function getFormData(options: ApiRequestOptions): FormData | undefined {
+const getFormData = (options: ApiRequestOptions): FormData | undefined => {
     if (options.formData) {
         const formData = new FormData();
 
-        const append = (key: string, value: any) => {
+        const process = (key: string, value: any) => {
             if (isString(value) || isBlob(value)) {
                 formData.append(key, value);
             } else {
@@ -100,33 +119,33 @@ function getFormData(options: ApiRequestOptions): FormData | undefined {
             .filter(([_, value]) => isDefined(value))
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
-                    value.forEach(v => append(key, v));
+                    value.forEach(v => process(key, v));
                 } else {
-                    append(key, value);
+                    process(key, value);
                 }
             });
 
         return formData;
     }
     return;
-}
+};
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
-async function resolve<T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> {
+const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
     if (typeof resolver === 'function') {
         return (resolver as Resolver<T>)(options);
     }
     return resolver;
-}
+};
 
-async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
-    const token = await resolve(options, OpenAPI.TOKEN);
-    const username = await resolve(options, OpenAPI.USERNAME);
-    const password = await resolve(options, OpenAPI.PASSWORD);
-    const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
+const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Headers> => {
+    const token = await resolve(options, config.TOKEN);
+    const username = await resolve(options, config.USERNAME);
+    const password = await resolve(options, config.PASSWORD);
+    const additionalHeaders = await resolve(options, config.HEADERS);
 
-    const defaultHeaders = Object.entries({
+    const headers = Object.entries({
         Accept: 'application/json',
         ...additionalHeaders,
         ...options.headers,
@@ -137,33 +156,31 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
             [key]: String(value),
         }), {} as Record<string, string>);
 
-    const headers = new Headers(defaultHeaders);
-
     if (isStringWithValue(token)) {
-        headers.append('Authorization', `Bearer ${token}`);
+        headers['Authorization'] = `Bearer ${token}`;
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
         const credentials = base64(`${username}:${password}`);
-        headers.append('Authorization', `Basic ${credentials}`);
+        headers['Authorization'] = `Basic ${credentials}`;
     }
 
     if (options.body) {
         if (options.mediaType) {
-            headers.append('Content-Type', options.mediaType);
+            headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
-            headers.append('Content-Type', options.body.type || 'application/octet-stream');
+            headers['Content-Type'] = options.body.type || 'application/octet-stream';
         } else if (isString(options.body)) {
-            headers.append('Content-Type', 'text/plain');
+            headers['Content-Type'] = 'text/plain';
         } else if (!isFormData(options.body)) {
-            headers.append('Content-Type', 'application/json');
+            headers['Content-Type'] = 'application/json';
         }
     }
 
-    return headers;
-}
+    return new Headers(headers);
+};
 
-function getRequestBody(options: ApiRequestOptions): any {
+const getRequestBody = (options: ApiRequestOptions): any => {
     if (options.body) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
@@ -175,19 +192,20 @@ function getRequestBody(options: ApiRequestOptions): any {
     }
 
     return;
-}
+};
 
-async function sendRequest(
+export const sendRequest = async (
+    config: OpenAPIConfig,
     options: ApiRequestOptions,
     url: string,
-    formData: FormData | undefined,
     body: any,
+    formData: FormData | undefined,
     headers: Headers,
     onCancel: OnCancel
-): Promise<XMLHttpRequest> {
+): Promise<XMLHttpRequest> => {
     const xhr = new XMLHttpRequest();
     xhr.open(options.method, url, true);
-    xhr.withCredentials = OpenAPI.WITH_CREDENTIALS;
+    xhr.withCredentials = config.WITH_CREDENTIALS;
 
     headers.forEach((value, key) => {
         xhr.setRequestHeader(key, value);
@@ -195,15 +213,15 @@ async function sendRequest(
 
     return new Promise<XMLHttpRequest>((resolve, reject) => {
         xhr.onload = () => resolve(xhr);
-        xhr.onabort = () => reject(new Error('The user aborted a request.'));
-        xhr.onerror = () => reject(new Error('Network error.'));
-        xhr.send(body || formData);
+        xhr.onabort = () => reject(new Error('Request aborted'));
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.send(body ?? formData);
 
         onCancel(() => xhr.abort());
     });
-}
+};
 
-function getResponseHeader(xhr: XMLHttpRequest, responseHeader?: string): string | undefined {
+const getResponseHeader = (xhr: XMLHttpRequest, responseHeader?: string): string | undefined => {
     if (responseHeader) {
         const content = xhr.getResponseHeader(responseHeader);
         if (isString(content)) {
@@ -211,9 +229,9 @@ function getResponseHeader(xhr: XMLHttpRequest, responseHeader?: string): string
         }
     }
     return;
-}
+};
 
-function getResponseBody(xhr: XMLHttpRequest): any {
+const getResponseBody = (xhr: XMLHttpRequest): any => {
     if (xhr.status !== 204) {
         try {
             const contentType = xhr.getResponseHeader('Content-Type');
@@ -230,9 +248,9 @@ function getResponseBody(xhr: XMLHttpRequest): any {
         }
     }
     return;
-}
+};
 
-function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
+const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
     const errors: Record<number, string> = {
         400: 'Bad Request',
         401: 'Unauthorized',
@@ -252,24 +270,25 @@ function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
     if (!result.ok) {
         throw new ApiError(result, 'Generic Error');
     }
-}
+};
 
 /**
- * Request using XHR client
- * @param options The request options from the the service
+ * Request method
+ * @param config The OpenAPI configuration object
+ * @param options The request options from the service
  * @returns CancelablePromise<T>
  * @throws ApiError
  */
-export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<T> => {
     return new CancelablePromise(async (resolve, reject, onCancel) => {
         try {
-            const url = getUrl(options);
+            const url = getUrl(config, options);
             const formData = getFormData(options);
             const body = getRequestBody(options);
-            const headers = await getHeaders(options);
+            const headers = await getHeaders(config, options);
 
             if (!onCancel.isCancelled) {
-                const response = await sendRequest(options, url, formData, body, headers, onCancel);
+                const response = await sendRequest(config, options, url, body, formData, headers, onCancel);
                 const responseBody = getResponseBody(response);
                 const responseHeader = getResponseHeader(response, options.responseHeader);
 
@@ -278,10 +297,10 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
                     ok: isSuccess(response.status),
                     status: response.status,
                     statusText: response.statusText,
-                    body: responseHeader || responseBody,
+                    body: responseHeader ?? responseBody,
                 };
 
-                catchErrors(options, result);
+                catchErrorCodes(options, result);
 
                 resolve(result.body);
             }
@@ -289,4 +308,4 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
             reject(error);
         }
     });
-}
+};

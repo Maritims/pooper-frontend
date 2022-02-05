@@ -7,7 +7,7 @@
 	import Home from './pages/Home.svelte';
 	import Login from './pages/Login.svelte';
 	import Logout from './pages/Logout.svelte';
-	import NavigationBar from './components/NavigationBar.svelte';
+	import NavigationBar from './components/navigation/NavigationBar.svelte';
 	import PasswordResetConfirmation from './pages/PasswordResetConfirmation.svelte';
 	import PasswordResetRequest from './pages/PasswordResetRequest.svelte';
 	import Profile from './pages/Profile.svelte';

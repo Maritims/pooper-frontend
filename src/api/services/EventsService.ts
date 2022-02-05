@@ -3,20 +3,38 @@
 /* eslint-disable */
 import type { EventCreate } from '../models/EventCreate';
 import type { EventRead } from '../models/EventRead';
+import type { EventType } from '../models/EventType';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class EventsService {
 
     /**
      * Get Count
+     * @param animalId
+     * @param eventType
+     * @param days
      * @returns number Successful Response
      * @throws ApiError
      */
-    public static getCountEventsCountGet(): CancelablePromise<number> {
-        return __request({
+    public static getCountEventsCountGet(
+        animalId?: number,
+        eventType?: EventType,
+        days?: number,
+    ): CancelablePromise<number> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/events/count`,
+            url: '/events/count',
+            query: {
+                'animal_id': animalId,
+                'event_type': eventType,
+                'days': days,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
         });
     }
 
@@ -29,9 +47,12 @@ export class EventsService {
     public static getEventEventsIdGet(
         id: number,
     ): CancelablePromise<EventRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/events/${id}`,
+            url: '/events/{_id}',
+            path: {
+                '_id': id,
+            },
             errors: {
                 422: `Validation Error`,
             },
@@ -47,9 +68,12 @@ export class EventsService {
     public static deleteEventsIdDelete(
         id: any,
     ): CancelablePromise<void> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/events/${id}`,
+            url: '/events/{_id}',
+            path: {
+                '_id': id,
+            },
             errors: {
                 422: `Validation Error`,
             },
@@ -58,6 +82,9 @@ export class EventsService {
 
     /**
      * Get All
+     * @param animalId
+     * @param eventType
+     * @param days
      * @param page
      * @param pageSize
      * @param sortOrder
@@ -65,14 +92,20 @@ export class EventsService {
      * @throws ApiError
      */
     public static getAllEventsGet(
+        animalId?: number,
+        eventType?: EventType,
+        days?: number,
         page?: number,
         pageSize: number = 100,
         sortOrder: string = 'desc',
     ): CancelablePromise<Array<EventRead>> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/events/`,
+            url: '/events/',
             query: {
+                'animal_id': animalId,
+                'event_type': eventType,
+                'days': days,
                 'page': page,
                 'page_size': pageSize,
                 'sort_order': sortOrder,
@@ -92,9 +125,9 @@ export class EventsService {
     public static createEventsPost(
         requestBody: EventCreate,
     ): CancelablePromise<EventRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/events/`,
+            url: '/events/',
             body: requestBody,
             mediaType: 'application/json',
             errors: {

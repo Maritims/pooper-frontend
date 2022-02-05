@@ -3,7 +3,9 @@
 /* eslint-disable */
 import type { AnimalCreate } from '../models/AnimalCreate';
 import type { AnimalRead } from '../models/AnimalRead';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class AnimalsService {
@@ -14,9 +16,9 @@ export class AnimalsService {
      * @throws ApiError
      */
     public static getCountAnimalsCountGet(): CancelablePromise<number> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/animals/count`,
+            url: '/animals/count',
         });
     }
 
@@ -31,9 +33,9 @@ export class AnimalsService {
         page?: number,
         pageSize: number = 100,
     ): CancelablePromise<Array<AnimalRead>> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/animals/`,
+            url: '/animals/',
             query: {
                 'page': page,
                 'page_size': pageSize,
@@ -53,9 +55,9 @@ export class AnimalsService {
     public static createAnimalsPost(
         requestBody: AnimalCreate,
     ): CancelablePromise<AnimalRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/animals/`,
+            url: '/animals/',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -73,9 +75,12 @@ export class AnimalsService {
     public static getByIdAnimalsIdGet(
         id: any,
     ): CancelablePromise<AnimalRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/animals/${id}`,
+            url: '/animals/{_id}',
+            path: {
+                '_id': id,
+            },
             errors: {
                 422: `Validation Error`,
             },
@@ -93,9 +98,12 @@ export class AnimalsService {
         id: number,
         requestBody: AnimalCreate,
     ): CancelablePromise<AnimalRead> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'PUT',
-            path: `/animals/${id}`,
+            url: '/animals/{_id}',
+            path: {
+                '_id': id,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -113,9 +121,12 @@ export class AnimalsService {
     public static deleteAnimalsIdDelete(
         id: any,
     ): CancelablePromise<void> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/animals/${id}`,
+            url: '/animals/{_id}',
+            path: {
+                '_id': id,
+            },
             errors: {
                 422: `Validation Error`,
             },

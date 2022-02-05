@@ -10,4 +10,4 @@ export type AnimalRead = {
     created: string;
     updated: string;
     events: Array<EventRead>;
-}
+};
