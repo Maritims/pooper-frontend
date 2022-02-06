@@ -12,6 +12,7 @@
     import { getEventCreate } from "../factories/EventCreateFactory";
     import Pagination from "../components/table/Pagination.svelte";
     import DropdownFilter from "../components/table/DropdownFilter.svelte";
+    import Rating from "../components/Rating.svelte";
 
     let animals: Array<AnimalRead> = [];
     let confirmation: Confirmation;
@@ -33,7 +34,6 @@
     let animalFilter: DropdownFilter;
     let eventTypeFilter: DropdownFilter;
     let daysFilter: DropdownFilter;
-    
 
     const firstColumnClass = 'col-4 col-sm-4 col-md-3 col-xxl-2';
     const secondColumnClass = firstColumnClass;
@@ -78,6 +78,8 @@
 
     $: EventsService.getAllEventsGet(filterByAnimal?.id, filterByEventType || undefined, filterByDays || undefined, currentPageNumber, pageSize).then((newEvents) => events = newEvents);
     $: EventsService.getCountEventsCountGet(filterByAnimal?.id, filterByEventType || undefined, filterByDays || undefined).then((count) => totalEventCount = count);
+    $: isRatingRequired = enrichedEventTypes.find(enrichedEventType => enrichedEventType.eventType === eventCreate.event_type)?.isRatingRequired;
+    $: eventCreate.rating = enrichedEventTypes.find(enrichedEventType => enrichedEventType.eventType === eventCreate.event_type)?.isRatingRequired ? eventCreate.rating : 0;
 </script>
 
 <Confirmation bind:this={confirmation} />
@@ -127,6 +129,13 @@
                 </div>
             </div>
         </div>
+        {#if isRatingRequired}
+            <div class="row mb-2">
+                <div class="col">
+                    <Rating bind:rating={eventCreate.rating} label="Rating" />
+                </div>
+            </div>
+        {/if}
         <div class="row mb-2">
             {#if position}
 				<Map bind:this={map} on:click={handleOnMapClick} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />

@@ -4,7 +4,7 @@
     import { getAllEventTypes } from "../services/events";
     import ChartJs from "../components/ChartJs.svelte";
     import { getMostFrequentHourFromDates, getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds } from "../utils/TimeUtils";
-    import { getMeanOfDifferences } from '../utils/NumberUtils';
+    import { getAverage, getMeanOfDifferences } from '../utils/NumberUtils';
 
     let currentAnimal: AnimalRead;
     let days = 7;
@@ -43,21 +43,25 @@
                     <thead>
                         <th>Event type</th>
                         <th>Total</th>
+                        <th>Average rating</th>
                         <th>Average per day</th>
                         <th>Average time between events</th>
                         <th>Most active hours</th>
                     </thead>
                     <tbody>
+                        <!-- svelte-ignore missing-declaration -->
                         {#each eventTypes as et}
                             {@const eventsInChosenPeriod = allEvents.filter(e => e.event_type == et.eventType && getTimeSpanFromDatePair({
                                 latest: new Date(),
                                 earliest: new Date(Date.parse(e.created))
                             }).totalDays <= days)}
+                            {@const averageRating = getAverage(eventsInChosenPeriod.map(e => e.rating))}
                             {@const averageEvents = eventsInChosenPeriod.length / days}
                             {@const meanTimeBetweenEvents = getMeanOfDifferences(eventsInChosenPeriod.sort((a, b) => Date.parse(b.created) - Date.parse(a.created)).map(e => Date.parse(e.created)))}
                             <tr>
                                 <td>{et.eventType}</td>
                                 <td>{eventsInChosenPeriod.length}</td>
+                                <td>{averageRating?.toFixed(2) || ''}</td>
                                 <td>{averageEvents.toFixed(2)}</td>
                                 <td>{getTimeSpanStringFromMilliseconds(meanTimeBetweenEvents)}</td>
                                 <td>{getMostFrequentHourFromDates(eventsInChosenPeriod.map(event => new Date(Date.parse(event.created)))) || ''}</td>

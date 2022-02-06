@@ -9,6 +9,7 @@ export type EventRead = {
     longitude: number;
     animal_id: number;
     event_type: EventType;
+    rating?: number;
     id: number;
     created: string;
     animal_name: string;

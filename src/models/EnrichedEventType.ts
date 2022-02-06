@@ -7,6 +7,7 @@ export type EnrichedEventType = {
     color: string
     showOnHomeScreen: boolean
     showOnAnimalScreen: boolean
+    isRatingRequired: boolean
 };
 
 export const getEnrichedEventType = (eventType: EventType): EnrichedEventType => {
@@ -17,7 +18,8 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             intervalInMilliseconds: 12 * 60 * 60 * 1000,
             color: '#000000',
             showOnHomeScreen: true,
-            showOnAnimalScreen: false
+            showOnAnimalScreen: false,
+            isRatingRequired: false
         };
         case EventType.PEE: return {
             eventType: eventType,
@@ -25,7 +27,8 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             intervalInMilliseconds: 4 * 60 * 60 * 1000,
             color: '#CDCD22',
             showOnHomeScreen: true,
-            showOnAnimalScreen: false
+            showOnAnimalScreen: false,
+            isRatingRequired: false
         };
         case EventType.POO: return {
             eventType: eventType,
@@ -33,7 +36,8 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             intervalInMilliseconds: 8 * 60 * 60 * 1000,
             color: '#7A5901',
             showOnHomeScreen: true,
-            showOnAnimalScreen: false
+            showOnAnimalScreen: false,
+            isRatingRequired: true
         };
         case EventType.FISH_OIL: return {
             eventType: eventType,
@@ -41,7 +45,8 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             intervalInMilliseconds: 24 * 60 * 60 * 1000,
             color: '#81C0D8',
             showOnHomeScreen: false,
-            showOnAnimalScreen: true
+            showOnAnimalScreen: true,
+            isRatingRequired: false
         };
         case EventType.VITAMIN_B: return {
             eventType: eventType,
@@ -49,7 +54,8 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             intervalInMilliseconds: 24 * 60 * 60 * 1000,
             color: '#95D9BC',
             showOnHomeScreen: false,
-            showOnAnimalScreen: true
+            showOnAnimalScreen: true,
+            isRatingRequired: false
         };
     }
 };

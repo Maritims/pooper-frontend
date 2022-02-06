@@ -41,7 +41,26 @@ function serve() {
 	};
 }
 
-export default {
+export default [{
+	input: 'src/serviceWorker.ts',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'serviceWorker',
+		file: 'public/build/serviceWorker.js'
+	},
+	plugins: [
+		replace({
+			globalThis: JSON.stringify({
+				apiKey: ''
+			})
+		}),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production
+		})
+	]
+}, {
 	input: 'src/main.ts',
 	output: {
 		sourcemap: true,
@@ -99,4 +118,4 @@ export default {
 	watch: {
 		clearScreen: false
 	}
-};
+}];

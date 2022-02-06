@@ -9,4 +9,5 @@ export type EventCreate = {
     longitude: number;
     animal_id: number;
     event_type: EventType;
+    rating?: number;
 };

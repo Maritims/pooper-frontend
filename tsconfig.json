@@ -4,6 +4,7 @@
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
     "strict": true,
+    "lib": ["DOM", "WebWorker"],
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true
