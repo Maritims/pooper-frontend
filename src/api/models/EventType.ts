@@ -11,4 +11,5 @@ export enum EventType {
     POO = 'Poo',
     FISH_OIL = 'Fish oil',
     VITAMIN_B = 'Vitamin B',
+    BRUSH_TEETH = 'Brush teeth',
 }

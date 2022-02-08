@@ -1,13 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { AnimalsService } from '../api';
+    import { AnimalsService, type AnimalRead } from '../api';
     import Modal from '../components/Modal.svelte';
     import Confirmation from '../components/Confirmation.svelte';
-    import EventButton from '../components/EventButton.svelte';
-    import { getAllEventTypes } from '../services/events';
 
-    let animals = [];
-    let eventTypes = getAllEventTypes();
+    let animals: Array<AnimalRead> = [];
     let newAnimalName: string;
     let modal: Modal;
     let confirmation: Confirmation;
@@ -28,10 +25,6 @@
             await AnimalsService.deleteAnimalsIdDelete(id);
             animals = await AnimalsService.getAllAnimalsGet();
         });
-    };
-
-    async function handleOnDone(): Promise<void> {
-        animals = await AnimalsService.getAllAnimalsGet();
     };
 </script>
 
@@ -75,11 +68,7 @@
                         <tr>
                             <td class="align-middle">{animal.name}</td>
                             <td class="align-middle text-end">
-                                {#each eventTypes as eventType}
-                                    {#if eventType.showOnAnimalScreen}
-                                        <EventButton {animal} {eventType} compact={true} on:done={handleOnDone} />
-                                    {/if}
-                                {/each}<button type="button" class="btn btn-lg btn-danger" on:click={() => handleOnClick(animal.id)}>
+                                <button type="button" class="btn btn-lg btn-danger" on:click={() => handleOnClick(animal.id)}>
                                     <i class="fas fa-trash"></i> <span class="d-none d-md-inline-block">Remove</span>
                                 </button>
                             </td>

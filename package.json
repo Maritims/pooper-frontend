@@ -1,13 +1,13 @@
 {
-  "name": "svelte-app",
+  "name": "pooper",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "rollup -c",
     "dev": "HOST=0.0.0.0 rollup -c -w",
-    "start": "sirv public -s --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "openapi --input http://127.0.0.1:8000/openapi.json --output ./src/api --client xhr",
+    "start": "sirv public -s --no-clear",
     "test": "jest"
   },
   "devDependencies": {
@@ -18,9 +18,9 @@
     "@tsconfig/svelte": "^3.0.0",
     "@types/jest": "^27.4.0",
     "@types/mapbox-gl": "^2.6.0",
-    "dotenv": "^14.0.0",
+    "dotenv": "^16.0.0",
     "jest": "^27.4.7",
-    "openapi-typescript-codegen": "^0.18.0",
+    "openapi-typescript-codegen": "^0.19.0",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
