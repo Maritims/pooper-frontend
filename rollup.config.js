@@ -14,11 +14,16 @@ dotenv.config();
 
 const production = !process.env.ROLLUP_WATCH;
 
-const apiUrl = process.env.API_BASE_URL;
-if(!apiUrl) throw new Error('Environment variable API_BASE_URL is not set. Unable to continue bundling process.');
-
-const mapboxAccessToken = process.env.MAPBOX_ACCESS_TOKEN;
-if(!mapboxAccessToken) throw new Error('Environment variable MAPBOX_ACCESS_TOKEN is not set. Unable to continue bundling process.');
+const envVars = {
+	API_BASE_URL: process.env.API_BASE_URL,
+	MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
+	VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY
+};
+console.log(envVars);
+Object.entries(envVars).forEach(entry => {
+	const [key, val] = entry;
+	if(!val) throw new Error(`Environment variable ${key} is not set. Unable to continue bundling process.`);
+});
 
 function serve() {
 	let server;
@@ -52,7 +57,7 @@ export default [{
 	plugins: [
 		replace({
 			globalThis: JSON.stringify({
-				apiKey: ''
+				
 			})
 		}),
 		typescript({
@@ -72,8 +77,9 @@ export default [{
 		replace({
 			preventAssignment: true,
 			globalThis: JSON.stringify({
-				apiUrl: process.env.API_BASE_URL,
-				mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN
+				API_BASE_URL: process.env.API_BASE_URL,
+				VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY,
+				MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN
 			})
 		}),
 		svelte({

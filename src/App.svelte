@@ -14,6 +14,9 @@
 	import Statistics from './pages/Statistics.svelte';
 	import Toasts from './components/Toasts.svelte';
 	import Users from './pages/Users.svelte';
+	import registerServiceWorker from './utils/ServiceWorkerUtil';
+
+	registerServiceWorker();
 </script>
 
 <Toasts />

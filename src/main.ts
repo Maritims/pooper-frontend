@@ -3,7 +3,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { OpenAPI } from './api';
 
-OpenAPI.BASE = globalThis['apiUrl'];
+OpenAPI.BASE = globalThis['API_BASE_URL'];
 
 const app = new App({
 	target: document.body,

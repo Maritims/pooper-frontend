@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EventType, type AnimalRead } from '../api';
+	import type { AnimalRead } from '../api';
 	import type { Position } from '../models/Position';
 
 	import { onMount } from "svelte";
@@ -31,6 +31,8 @@
 	}
 
 	function getAdditionalEventTypesCssClass(animal: AnimalRead): string {
+		if(!animal.events?.length) return 'danger';
+
 		for(let i = 0; i < eventTypes.length; i++) {
 			if(eventTypes[i].showOnHomeScreen) continue;
 			

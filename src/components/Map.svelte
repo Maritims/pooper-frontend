@@ -4,7 +4,7 @@
     import { createEventDispatcher, onMount } from 'svelte';
     import type { Position } from '../models/Position';
 
-    export let center: Position = undefined;
+    export let center: Position | undefined = undefined;
     export let markers: Array<Marker> = [];
     export let minHeightPx: number = 400;
 
@@ -24,7 +24,7 @@
     let map: mapboxgl.Map;
 
     onMount(async () => {
-        mapboxgl.accessToken = globalThis['mapboxAccessToken'];
+        mapboxgl.accessToken = globalThis['MAPBOX_ACCESS_TOKEN'];
         map = new Map({
             container: mapContainer,
             style: 'mapbox://styles/mapbox/streets-v11',

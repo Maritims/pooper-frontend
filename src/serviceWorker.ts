@@ -50,11 +50,11 @@ function onFetch(e: FetchEvent): void {
     );
 };
 
-function onPush(e: PushEvent) {
+async function onPush(e: PushEvent) {    
     const data = e.data?.json();
     e.waitUntil(self.registration.showNotification(data.title, {
         body: data.message,
-        icon: './gfx/pooper.png',
+        icon: '/gfx/pooper.png',
         tag: 'pooper'
     }));
 };
