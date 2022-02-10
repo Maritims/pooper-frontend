@@ -1,9 +1,15 @@
-.idea
+*.lock
+**/build.*
+**/serviceWorker.js
 .DS_Store
+.env
+.idea
 .nyc_output
 .vscode
-node_modules
 *.map
+build/
+dist/
+node_modules
 /src/compiler/compile/internal_exports.ts
 /compiler.d.ts
 /compiler.*js
@@ -23,7 +29,3 @@ node_modules
 _actual*.*
 _output
 /types
-dist/
-*.lock
-build/
-.env

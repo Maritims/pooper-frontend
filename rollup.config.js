@@ -52,7 +52,7 @@ export default [{
 		sourcemap: true,
 		format: 'iife',
 		name: 'serviceWorker',
-		file: 'public/build/serviceWorker.js'
+		file: 'public/serviceWorker.js'
 	},
 	plugins: [
 		replace({

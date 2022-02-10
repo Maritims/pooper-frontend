@@ -42,10 +42,15 @@ export default async function registerServiceWorker(): Promise<void> {
         return;
     }
 
-    window.addEventListener('load', async () => {
-        const serviceWorker = await navigator.serviceWorker.register('/build/serviceWorker.js');
-        await serviceWorker.pushManager.getSubscription() || await subscribeToPushNotifications(serviceWorker.pushManager);
+    const serviceWorkerRegistration = await navigator.serviceWorker.register('/serviceWorker.js');
+    if(!serviceWorkerRegistration.showNotification) {
+        console.warn("Notifications aren't supported");
+        return;
+    }
 
-        console.log('ServiceWorker registration successful with scope: ', serviceWorker.scope);
+    await navigator.serviceWorker.ready;
+    navigator.serviceWorker.ready.then(async (registration) => {
+        const subscription = await registration.pushManager.getSubscription();
+        if(!subscription) await subscribeToPushNotifications(registration.pushManager);
     });
 }
