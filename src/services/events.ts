@@ -12,15 +12,17 @@ export function getEventMarkers(events: Array<EventRead>): Array<Marker> {
         acc.set(key, (acc.get(key) || 0) + 1);
         return acc;
     }, new Map<string, number>());
-    
-    const eventMarkers = Object.keys(groupedEventsMap).map(key => {
+
+    const eventMarkers = [...groupedEventsMap.keys()].map(key => {
         const keyParts = key.split(',');
         const lng = parseFloat(keyParts[0]);
         const lat = parseFloat(keyParts[1]);
         const eventType = keyParts[2];
-        return new Marker()
+        const marker = new Marker()
         .setLngLat([lng, lat])
         .setPopup(new Popup().setHTML(`Count: ${groupedEventsMap.get(key)} - Type: ${eventType}`));
+        console.log(marker);
+        return marker;
     });
 
     return eventMarkers;
