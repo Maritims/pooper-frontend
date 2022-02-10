@@ -4,7 +4,7 @@
     export let totalCount: number;
 
     $: pageNumbers = totalCount > 0 ? Array(Math.ceil(totalCount / pageSize)) : [];
-    $: if(currentPageNumber > pageNumbers.length) currentPageNumber = 0;
+    $: if(currentPageNumber > (pageNumbers.length - 1)) currentPageNumber = 0;
 </script>
 
 <nav aria-label="Pagination">

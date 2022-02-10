@@ -3,7 +3,7 @@
     export let maximum = 5;
     export let rating = 0;
     export let label = '';
-    export let isEditable: boolean;
+    export let isEditable = false;
 
     function setRating(i: number): void {
         if(!isEditable || i > maximum || i < minimum) return;

@@ -93,3 +93,9 @@ export function getMostFrequentHourFromDates(dates: Array<Date>): number | undef
         return acc;
     }, []).sort((a, b) => b.value - a.value)[0]?.key;
 };
+
+export function isToday(milliseconds: number): boolean {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const thatDay = new Date(milliseconds).setHours(0, 0, 0, 0);
+    return today === thatDay;
+};

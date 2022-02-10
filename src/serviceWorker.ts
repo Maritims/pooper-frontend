@@ -3,7 +3,7 @@ declare var self: ServiceWorkerGlobalScope;
 const CACHE_NAME = 'static-cache-v1';
 
 function onInstall(e: ExtendableEvent) {
-    console.log('[ServiceWorker] Install');
+    //console.log('[ServiceWorker] Install');
 
     e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -16,7 +16,7 @@ function onInstall(e: ExtendableEvent) {
 };
 
 function onActivate(e: ExtendableEvent) {
-    console.log('[ServiceWorker] Activate');
+    //console.log('[ServiceWorker] Activate');
     
     // Remove previous cached data from disk.
     e.waitUntil(
@@ -35,7 +35,8 @@ function onActivate(e: ExtendableEvent) {
 };
 
 function onFetch(e: FetchEvent): void {
-    console.log('[ServiceWorker] Fetch', e.request.url);
+    //console.log('[ServiceWorker] Fetch', e.request.url);
+    
     if (e.request.mode !== 'navigate') {
         // Not a page navigation, bail.
         return;

@@ -76,8 +76,17 @@
         daysFilter.reset();
     }
 
-    $: EventsService.getAllEventsGet(filterByAnimal?.id, filterByEventType || undefined, filterByDays || undefined, currentPageNumber, pageSize).then((newEvents) => events = newEvents);
-    $: EventsService.getCountEventsCountGet(filterByAnimal?.id, filterByEventType || undefined, filterByDays || undefined).then((count) => totalEventCount = count);
+    $: EventsService.getAllEventsGet(
+        filterByAnimal?.id,
+        filterByEventType || undefined,
+        filterByDays || undefined,
+        currentPageNumber, pageSize
+        ).then((newEvents) => events = newEvents);
+    $: EventsService.getCountEventsCountGet(
+        filterByAnimal?.id,
+        filterByEventType || undefined,
+        filterByDays || undefined
+        ).then((count) => totalEventCount = count);
     $: isRatingRequired = enrichedEventTypes.find(enrichedEventType => enrichedEventType.eventType === eventCreate.event_type)?.isRatingRequired;
     $: eventCreate.rating = enrichedEventTypes.find(enrichedEventType => enrichedEventType.eventType === eventCreate.event_type)?.isRatingRequired ? eventCreate.rating : 0;
 </script>
@@ -182,7 +191,7 @@
         <div class={thirdColumnClass}>
             <DropdownFilter bind:this={daysFilter} bind:selectedOption={filterByDays} options={days.map(day => {
                 return {
-                    description: `Last ${day.toString()} days`,
+                    description: day == 1 ? 'Today' : `Last ${day.toString()} days`,
                     value: day
                 }
             })} />
