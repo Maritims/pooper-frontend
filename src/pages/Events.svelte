@@ -138,6 +138,14 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="form-floating">
+                    <input type="datetime-local" class="form-control" bind:value={eventCreate.created} />
+                    <label for="created">Created</label>
+                </div>
+            </div>
+        </div>
         {#if isRatingRequired}
             <div class="row mb-2">
                 <div class="col">

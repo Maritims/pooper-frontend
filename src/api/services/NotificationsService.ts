@@ -50,4 +50,16 @@ export class NotificationsService {
         });
     }
 
+    /**
+     * Test
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static testNotificationsTestGet(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/notifications/test',
+        });
+    }
+
 }

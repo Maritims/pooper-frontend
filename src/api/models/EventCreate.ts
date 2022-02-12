@@ -10,4 +10,5 @@ export type EventCreate = {
     animal_id: number;
     event_type: EventType;
     rating?: number;
+    created?: string;
 };

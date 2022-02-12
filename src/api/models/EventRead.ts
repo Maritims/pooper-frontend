@@ -10,7 +10,9 @@ export type EventRead = {
     animal_id: number;
     event_type: EventType;
     rating?: number;
-    id: number;
     created: string;
+    id: number;
+    created_by_user_id: number;
+    created_by_user_name: string;
     animal_name: string;
 };
