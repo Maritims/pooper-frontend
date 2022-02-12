@@ -4,6 +4,7 @@ import type { EventRead } from '../api';
 import { EventType } from "../api";
 import type { EnrichedEventType } from "../models/EnrichedEventType";
 import { getEnrichedEventType } from "../models/EnrichedEventType";
+import { getAverage } from "../utils/NumberUtils";
 
 export const getAllEventTypes = (): Array<EnrichedEventType> => Object.values(EventType).map(eventType => getEnrichedEventType(eventType));
 
@@ -68,11 +69,12 @@ export function getPoopRatingDataSets(days: number, events: Array<EventRead>, di
     if(!events?.length) return [];
 
     const counts = getDates(days).map(date => {
-        return events.filter(e => {
+        const ratings = events.filter(e => {
             const eventDate = new Date(Date.parse(e.created));
             eventDate.setHours(0, 0, 0, 0);
             return e.event_type === EventType.POO && eventDate.getTime() === date.getTime();
-        }).length / divisionFactor;
+        }).map(e => e.rating!);
+        return getAverage(ratings) || 0;
     });
 
     return [{
