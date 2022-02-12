@@ -4,6 +4,7 @@ import type { EventRead } from '../api';
 import { EventType } from "../api";
 import type { EnrichedEventType } from "../models/EnrichedEventType";
 import { getEnrichedEventType } from "../models/EnrichedEventType";
+import type { Trip } from "../models/Trip";
 import { getAverage } from "../utils/NumberUtils";
 
 export const getAllEventTypes = (): Array<EnrichedEventType> => Object.values(EventType).map(eventType => getEnrichedEventType(eventType));
