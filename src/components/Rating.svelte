@@ -1,7 +1,7 @@
 <script lang="ts">
-    export let minimum = 0;
+    export let minimum = 1;
     export let maximum = 5;
-    export let rating = 0;
+    export let rating = 1;
     export let label = '';
     export let isEditable = false;
 

@@ -1,64 +1,50 @@
 <script lang="ts">
-    import { Chart, registerables } from 'chart.js'
+    import { Chart, registerables, type ChartDataset, type ChartTypeRegistry } from 'chart.js';
+    import annotationPlugin, { type AnnotationOptions } from 'chartjs-plugin-annotation';
     import { onMount } from 'svelte';
-    import type { EventRead } from "../api";
-    import { getAllEventTypes } from "../services/events";
 
-    export let events: Array<EventRead>;
-    export let days: number;
+    export let annotations: Array<AnnotationOptions> = [];
+    export let datasets: Array<ChartDataset>;
+    export let labels: Array<string>;
+    export let title: string;    
+    export let type: keyof ChartTypeRegistry;
+    
+    export let x: string;
+    export let y: string;
+
+    export let yMin: number | undefined = undefined;
+    export let yMax: number | undefined = undefined;
+    export let yStep: number | undefined = undefined;
 
     Chart.register(...registerables);
+    Chart.register(annotationPlugin);
 
     let canvas: HTMLCanvasElement;
-    let chart: any;
+    let chart: Chart;
 
     onMount(() => configureChart());
 
-    function getDates() {
-        return [...Array(days).keys()].map(day => {
-            const date = new Date();
-            date.setDate(date.getDate() - day);
-            date.setHours(0, 0, 0, 0);
-            return date;
-        }).reverse();
-    }
-
-    function getDataSets() {
-        if(!events?.length) return;
-
-        return getAllEventTypes().map(enrichedEventType => {
-            const counts = getDates().map(date => {       
-                return events.filter(event => {
-                    const eventDate = new Date(Date.parse(event.created));
-                    eventDate.setHours(0, 0, 0, 0)
-                    return event.event_type === enrichedEventType.eventType && eventDate.getTime() === date.getTime();
-                }).length;
-            });
-
-            return {
-                label: enrichedEventType.eventType,
-                data: counts,
-                backgroundColor: enrichedEventType.color,
-                borderColor: enrichedEventType.color
-            };
-        });
-    }
-
     function configureChart() {
         if(chart) chart.destroy();
+        
         const context = canvas.getContext('2d');
+        if(!context) return;
+
         chart = new Chart(context, {
-            type: 'line',
+            type: type,
             data: {
-                labels: getDates().map(date => date.toLocaleDateString()),
-                datasets: getDataSets()
+                labels: labels,
+                datasets: datasets
             },
-            options: {
+            options: type === 'line' ? {
                 responsive: true,
                 plugins: {
+                    annotation: {
+                        annotations: annotations
+                    },
                     title: {
                         display: true,
-                        text: 'Events'
+                        text: title
                     }
                 },
                 scales: {
@@ -66,22 +52,27 @@
                         display: true,
                         title: {
                             display: true,
-                            text: 'Date'
+                            text: x
                         }
                     },
-                    yAxis: {
+                    y: {
                         display: true,
+                        min: yMin,
+                        max: yMax,
+                        ticks: {
+                            stepSize: yStep
+                        },
                         title: {
                             display: true,
-                            text: 'Amount'
+                            text: y
                         }
                     }
                 }
-            }
+            } : {}
         });
     };
 
-    $: if(canvas && events && days) configureChart();
+    $: if(canvas && datasets && labels) configureChart();
 </script>
 
 <div class="container-fluid">
