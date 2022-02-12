@@ -92,7 +92,7 @@
                             x="Date"
                             y="Amount"
                             datasets={getAllEventTypesDataSets(days, currentAnimal?.events || animals.flatMap(foo => foo.events))}
-                            labels={getLabels(7)} />
+                            labels={getLabels(days)} />
                     </Tab>
                     <Tab id="poopRating" show={activeTabId == 'poopRating'}>
                         <ChartJs title="Poop rating"
@@ -102,42 +102,8 @@
                             yMin={0}
                             yMax={5}
                             yStep={1}
-                            annotations={[{
-                                type: 'box',
-                                xMin: 0,
-                                xMax: 6,
-                                yMin: 1,
-                                yMax: 1,
-                                borderColor: '#ff4545',
-                                borderWidth: 4
-                            }, {
-                                type: 'box',
-                                xMin: 0,
-                                xMax: 6,
-                                yMin: 2,
-                                yMax: 2,
-                                borderColor: '#ffa534',
-                                borderWidth: 4
-                            }, {
-                                type: 'box',
-                                xMin: 0,
-                                xMax: 6,
-                                yMin: 3,
-                                yMax: 3,
-                                borderColor: '#ffe234',
-                                borderWidth: 4
-                            },
-                            {
-                                type: 'box',
-                                xMin: 0,
-                                xMax: 6,
-                                yMin: 4,
-                                yMax: 4,
-                                borderColor: '#57e32c',
-                                borderWidth: 4
-                            }]}
                             datasets={getPoopRatingDataSets(days, currentAnimal?.events || animals.flatMap(foo => foo.events), currentAnimal?.events ? 1 : animals.length)}
-                            labels={getLabels(7)}
+                            labels={getLabels(days)}
                         />
                     </Tab>
                 </Tabs>
