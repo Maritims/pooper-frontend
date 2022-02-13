@@ -13,6 +13,7 @@
     import Pagination from "../components/table/Pagination.svelte";
     import DropdownFilter from "../components/table/DropdownFilter.svelte";
     import Rating from "../components/Rating.svelte";
+    import { firstColumnClass, secondColumnClass, thirdColumnClass, fourthColumnClass } from "./loaders/Events";
 
     let animals: Array<AnimalRead> = [];
     let confirmation: Confirmation;
@@ -21,7 +22,7 @@
     let events: Array<EventRead> = [];
     let enrichedEventTypes = getAllEventTypes();
     let map: Map;
-    let modal: Modal;
+    let isModalVisible = false;
     let position: Position;
 
     let currentPageNumber = 0;
@@ -34,11 +35,6 @@
     let animalFilter: DropdownFilter;
     let eventTypeFilter: DropdownFilter;
     let daysFilter: DropdownFilter;
-
-    const firstColumnClass = 'col-4 col-sm-4 col-md-3 col-xxl-2';
-    const secondColumnClass = firstColumnClass;
-    const thirdColumnClass = 'col col-md-3 col-xxl-2 d-none d-md-block';
-    const fourthColumnClass = 'col-4 col-md-3 col-xxl-6 text-end';
 
     onMount(async () => {
         animals = await AnimalsService.getAllAnimalsGet();
@@ -61,7 +57,7 @@
         const event = await EventsService.createEventsPost(eventCreate);
         events = await EventsService.getAllEventsGet();
         eventCreate = getEventCreate();
-        modal.hide();
+        isModalVisible = false;
         addToast({
             id: new Date().getTime(),
             type: 'success',
@@ -80,6 +76,7 @@
         filterByAnimal?.id,
         filterByEventType || undefined,
         filterByDays || undefined,
+        undefined,
         currentPageNumber, pageSize
         ).then((newEvents) => events = newEvents);
     $: EventsService.getCountEventsCountGet(
@@ -93,7 +90,7 @@
 
 <Confirmation bind:this={confirmation} />
 
-<Modal bind:this={modal}>
+<Modal isVisible={isModalVisible}>
     <span slot="title">Create new event</span>
     <form slot="body" on:submit|preventDefault={createEvent}>
         <div class="row mb-2">
@@ -157,12 +154,12 @@
             {#if position}
 				<Map bind:this={map} on:click={handleOnMapClick} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
-				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
+				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
 			{/if}
         </div>
     </form>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={modal.hide}>Cancel</button>
+        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
         <button type="submit" class="btn btn-success" on:click={createEvent}>Submit</button>
     </span>
 </Modal>
@@ -170,7 +167,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={modal.show}>Create event</button>
+            <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>Create event</button>
         </div>
     </div>
     <div class="align-items-center bg-dark mt-2 pt-2 row text-light">

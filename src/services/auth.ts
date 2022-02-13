@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
-import { AuthService, OpenAPI } from "../api";
+import { AuthService, OpenAPI, type UserRead } from "../api";
+import { getUserRead } from "../factories/UserReadFactory";
 
 let accessToken = localStorage.getItem('accessToken');
 
@@ -14,6 +15,19 @@ export const login = async (username: string, password: string) => {
 };
 
 export const logout = () => authStore.set(null);
+
+export function getDecodedToken(): {
+    user: UserRead
+} {
+    if(!OpenAPI.TOKEN) return {
+        user: getUserRead()
+    };
+    
+    const payload = JSON.parse(window.atob(OpenAPI.TOKEN?.toString().split('.')[1]));
+    return {
+        user: JSON.parse(payload.user)
+    };
+}
 
 authStore.subscribe((value) => {
     if(value) {

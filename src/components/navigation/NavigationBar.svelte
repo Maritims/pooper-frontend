@@ -44,13 +44,18 @@
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink to="users" class="nav-link">
-                            <div class="icon"><i class="fas fa-users"></i></div> Users
+                        <NavLink to="statistics" class="nav-link">
+                            <div class="icon"><i class="fas fa-chart-line"></i></div> Statistics
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink to="statistics" class="nav-link">
-                            <div class="icon"><i class="fas fa-chart-line"></i></div> Statistics
+                        <NavLink to="/trips" class="nav-link">
+                            <div class="icon"><i class="fas fa-hiking"></i> Trips</div>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink to="users" class="nav-link">
+                            <div class="icon"><i class="fas fa-users"></i></div> Users
                         </NavLink>
                     </li>
                     {#if bottom}

@@ -15,6 +15,7 @@
 	import Toasts from './components/Toasts.svelte';
 	import Users from './pages/Users.svelte';
 	import registerServiceWorker from './utils/ServiceWorkerUtil';
+	import Trips from './pages/Trips.svelte';
 
 	registerServiceWorker();
 </script>
@@ -37,24 +38,27 @@
 			<Route path="/events">
 				<Events />
 			</Route>
-			<Route path="/users">
-				<Users />
-			</Route>
-			<Route path="/statistics">
-				<Statistics />
+			<Route path="/logout">
+				<Logout />
 			</Route>
 			<Route path="/profile">
 				<Profile />
 			</Route>
-			<Route path="/logout">
-				<Logout />
+			<Route path="/statistics">
+				<Statistics />
 			</Route>
+			<Route path="/trips">
+				<Trips />
+			</Route>
+			<Route path="/users">
+				<Users />
+			</Route>			
 		{:else}
-			<Route path="/reset-password">
-				<PasswordResetRequest />
-			</Route>
 			<Route path="/confirm-password-reset/:token" let:params>
 				<PasswordResetConfirmation token={params.token} />
+			</Route>
+			<Route path="/reset-password">
+				<PasswordResetRequest />
 			</Route>
 			<Route primary={true}>
 				<Login />

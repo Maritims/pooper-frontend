@@ -8,7 +8,7 @@
 
     let users: Array<UserRead> = [];
     let userCreate: UserCreate = getUserCreate();
-    let modal: Modal;
+    let isModalVisible = false;
     let confirmation: Confirmation;
 
     onMount(async () => users = await UsersService.getAllUsersUsersGet());
@@ -17,7 +17,7 @@
         await UsersService.createUsersPost(userCreate);
         userCreate = getUserCreate();
         users = await UsersService.getAllUsersUsersGet();
-        modal.hide();
+        isModalVisible = false;
     };
 
     function handleOnClick(id: number): void {
@@ -30,7 +30,7 @@
 
 <Confirmation bind:this={confirmation} />
 
-<Modal bind:this={modal}>
+<Modal isVisible={isModalVisible}>
     <span slot="title">Create new user</span>
     <form slot="body" on:submit|preventDefault={handleOnSubmit}>
         <div class="row mb-2">
@@ -75,7 +75,7 @@
         </div>
     </form>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={modal.hide}>Cancel</button>
+        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
         <button type="submit" class="btn btn-success" on:click={handleOnSubmit}>Submit</button>
     </span>
 </Modal>
@@ -83,7 +83,7 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button class="btn btn-lg btn-success" on:click={modal.show}>Create user</button>
+            <button class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>Create user</button>
         </div>
     </div>
     <div class="row mt-2">

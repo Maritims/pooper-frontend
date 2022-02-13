@@ -19,7 +19,8 @@ describe('getTripFromEvents', () => {
 
     expect(trip.durationInMs).toBe(945000);
     expect(trip.events.length).toBe(5);
-    expect(trip.date.toISOString()).toBe('2022-01-29T00:13:21.000Z');
+    expect(trip.startTime.toISOString()).toBe('2022-01-29T00:13:21.000Z');
+    expect(trip.stopTime.toISOString()).toBe('2022-01-29T00:14:06.000Z');
   });
 });
 

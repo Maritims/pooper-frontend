@@ -16,6 +16,7 @@ export class EventsService {
      * @param animalId
      * @param eventType
      * @param days
+     * @param hasTrip
      * @returns number Successful Response
      * @throws ApiError
      */
@@ -23,6 +24,7 @@ export class EventsService {
         animalId?: number,
         eventType?: EventType,
         days?: number,
+        hasTrip?: boolean,
     ): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -31,6 +33,7 @@ export class EventsService {
                 'animal_id': animalId,
                 'event_type': eventType,
                 'days': days,
+                'has_trip': hasTrip,
             },
             errors: {
                 422: `Validation Error`,
@@ -85,6 +88,7 @@ export class EventsService {
      * @param animalId
      * @param eventType
      * @param days
+     * @param hasTrip
      * @param page
      * @param pageSize
      * @param sortOrder
@@ -95,6 +99,7 @@ export class EventsService {
         animalId?: number,
         eventType?: EventType,
         days?: number,
+        hasTrip?: boolean,
         page?: number,
         pageSize: number = 100,
         sortOrder: string = 'desc',
@@ -106,6 +111,7 @@ export class EventsService {
                 'animal_id': animalId,
                 'event_type': eventType,
                 'days': days,
+                'has_trip': hasTrip,
                 'page': page,
                 'page_size': pageSize,
                 'sort_order': sortOrder,

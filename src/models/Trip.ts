@@ -1,7 +1,8 @@
 import type { EventRead } from "../api";
 
 export type Trip = {
-    date: Date
+    startTime: Date
+    stopTime: Date
     durationInMs: number
     events: Array<EventRead>
 };

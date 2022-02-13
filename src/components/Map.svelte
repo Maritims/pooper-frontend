@@ -1,6 +1,6 @@
 <script lang="ts">
     import 'mapbox-gl/dist/mapbox-gl.css';
-    import mapboxgl, { Map, Marker, MapMouseEvent} from 'mapbox-gl';
+    import mapboxgl, { Map, Marker, MapMouseEvent, MapboxEvent} from 'mapbox-gl';
     import { createEventDispatcher, onMount } from 'svelte';
     import type { Position } from '../models/Position';
 
@@ -17,7 +17,36 @@
         personalMarker.setLngLat([position.lng, position.lat]).addTo(map);
     };
 
-    const dispatch = createEventDispatcher<{click: MapMouseEvent}>();
+    export function addRoute(positions: Array<Position>): void {
+        const sourceId = new Date().getTime().toString();
+        map.addSource(sourceId, {
+            type: 'geojson',
+            data: {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                    type: 'LineString',
+                    coordinates: positions.map(pos => [pos.lng, pos.lat])
+                }
+            }
+        });
+        map.addLayer({
+            id: sourceId,
+            type: 'line',
+            source: sourceId,
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': '#888',
+                'line-width': 4
+            }
+        });
+    }
+
+    const dispatchOnLoadEvent = createEventDispatcher();
+    const dispatchMapMouseEvent = createEventDispatcher<{click: MapMouseEvent}>();
     const personalMarker = new Marker({ color: '#FF0000' });
 
     let mapContainer: HTMLDivElement;
@@ -34,7 +63,8 @@
         if(center) setCenter(center);
         if(markers) markers.forEach(marker => marker.addTo(map));
 
-        map.on('click', (e: MapMouseEvent) => dispatch('click', e));
+        map.on('click', (e: MapMouseEvent) => dispatchMapMouseEvent('click', e));
+        map.on('load', (e: MapboxEvent) => dispatchOnLoadEvent('load', e));
     });
 </script>
 

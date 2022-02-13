@@ -10,11 +10,12 @@
 	import Map from '../components/Map.svelte';
 	import Modal from '../components/Modal.svelte';
 	import { getTimeSpanForNextEvent } from '../components/EventButton';
+	import TripAlert from '../components/TripAlert.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let eventTypes = getAllEventTypes();
-	let modal: Modal;
+	let isModalVisible = false;
 	let position: Position | undefined = undefined;
 	
 	onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
@@ -22,12 +23,15 @@
 	async function handleOnDone(e: CustomEvent): Promise<void> {
 		animals = e.detail.success ? (await AnimalsService.getAllAnimalsGet()) : [];
 		currentAnimal = undefined;
-		modal.hide();
+		isModalVisible = false;
 	}
-	const loadMap = async () => position = await getCurrentPosition();
+	async function loadMap(): Promise<void> {
+		position = await getCurrentPosition();
+	}
+	
 	function showModal(animal: AnimalRead): void {
 		currentAnimal = animal;
-		modal.show();
+		isModalVisible = true;
 	}
 
 	function getAdditionalEventTypesCssClass(animal: AnimalRead): string {
@@ -46,7 +50,7 @@
 </script>
 
 
-<Modal bind:this={modal}>
+<Modal isVisible={isModalVisible}>
 	<span slot="title">Additional event types</span>
 	<div slot="body" class="container-fluid p-0">
 		{#each eventTypes as eventType}
@@ -60,12 +64,14 @@
 		{/each}
 	</div>
 	<span slot="footer">
-		<button type="button" class="btn btn-danger" on:click={modal.hide}>Cancel</button>
+		<button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
 	</span>
 </Modal>
 
 <div class="container-fluid">
 	<div class="row mt-2">
+		<TripAlert events={animals.flatMap(a => a.events)} estimatedMsBeforeFirstEvent={1000 * 60 * 5} estimatedMsAfterLastEvent={1000 * 60 * 10} />
+
 		{#each animals as animal}
 			{@const division = animals.length > 1 ? 6 : 12}
 			<div class="col-12 col-sm-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-2">

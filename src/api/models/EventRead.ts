@@ -15,4 +15,5 @@ export type EventRead = {
     created_by_user_id: number;
     created_by_user_name: string;
     animal_name: string;
+    trip_id: number;
 };

@@ -13,7 +13,7 @@
 
     let nextEventDueInHoursText = 'Due now';
     let cssClass = 'btn-danger';
-    let modal: Modal;
+    let isModalVisible = false;
     let rating = 0;
 
     const dispatch = createEventDispatcher();
@@ -37,7 +37,7 @@
                 dispatch('done', {
                     success: true
                 });
-                modal?.hide();
+                isModalVisible = false;
                 rating = 0;
             },
             error => {
@@ -50,14 +50,14 @@
                 dispatch('done', {
                     success: false
                 });
-                modal?.hide();
+                isModalVisible = false;
                 rating = 0;
             }
         );
     }
 
     async function handleOnClick(): Promise<void> {
-        if(eventType.isRatingRequired) modal.show();
+        if(eventType.isRatingRequired) isModalVisible = true;
         else await createEvent();
     }
 
@@ -71,7 +71,7 @@
 </script>
 
 {#if eventType.isRatingRequired}
-    <Modal bind:this={modal}>
+    <Modal isVisible={isModalVisible}>
         <span slot="title">Rate the event: {eventType.eventType}</span>
         <div class="row mb-2" slot="body">
             <div class="col">
@@ -79,7 +79,7 @@
             </div>
         </div>
         <span slot="footer">
-            <button type="button" class="btn btn-danger" on:click={modal.hide}>Cancel</button>
+            <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
             <button type="submit" class="btn btn-success" on:click={() => createEvent()}>Submit</button>
         </span>
     </Modal>

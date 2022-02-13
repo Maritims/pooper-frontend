@@ -5,6 +5,8 @@ export function getUserCreate(): UserCreate {
         first_name: '',
         last_name: '',
         email_address: '',
+        home_longitude: 0,
+        home_latitude: 0,
         password: '',
         password_repeated: ''
     }

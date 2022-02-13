@@ -8,7 +8,7 @@ export function getTripEvents(events: Array<EventRead>, maxMsBetweenEvents: numb
     const currentEvent = !identifiedEvents.length ? events.shift() : identifiedEvents[0];
     const indexesToRemove: Array<number> = [];
     const newEventsInTrip = events.filter((e, i) => {
-        const expr = (Date.parse(e.created) - Date.parse(currentEvent!.created)) <= maxMsBetweenEvents;
+        const expr = !e.trip_id && (Date.parse(e.created) - Date.parse(currentEvent!.created)) <= maxMsBetweenEvents;
         if(expr) indexesToRemove.push(i);
         return expr;
     });
@@ -22,10 +22,12 @@ export function getTripEvents(events: Array<EventRead>, maxMsBetweenEvents: numb
 }
 
 export function getTripFromEvents(eventsInTrip: Array<EventRead>, estimatedMsBeforeFirstEvent: number, estimatedMsAfterLastEvent: number): Trip {
-    const date = new Date(Date.parse(eventsInTrip[0].created));
-    const durationInMs = Date.parse(eventsInTrip[eventsInTrip.length - 1].created) - Date.parse(eventsInTrip[0].created);
+    const startTime = Date.parse(eventsInTrip[0].created);
+    const stopTime = Date.parse(eventsInTrip[eventsInTrip.length - 1].created);
+    const durationInMs = stopTime - startTime;
     return {
-        date: date,
+        startTime: new Date(startTime),
+        stopTime: new Date(stopTime),
         durationInMs: durationInMs + estimatedMsBeforeFirstEvent + estimatedMsAfterLastEvent,
         events: eventsInTrip
     };
