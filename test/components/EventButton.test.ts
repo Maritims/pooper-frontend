@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { getCssPostfix, getText } from '../../src/components/EventButton';
+import { getCssPostfix, getText } from '../../src/components/loaders/EventButton';
 
 describe('getCssPostfix', () => {
     it('should return danger when time since previous event is greater than interval', () => {

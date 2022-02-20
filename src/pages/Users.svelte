@@ -4,12 +4,13 @@
     import { UsersService } from "../api";
     import Confirmation from "../components/Confirmation.svelte";
     import Modal from "../components/Modal.svelte";
+import RemoveButton from "../components/RemoveButton.svelte";
     import { getUserCreate } from "../factories/UserCreateFactory";
 
+    let idToRemove: number | undefined;
     let users: Array<UserRead> = [];
     let userCreate: UserCreate = getUserCreate();
     let isModalVisible = false;
-    let confirmation: Confirmation;
 
     onMount(async () => users = await UsersService.getAllUsersUsersGet());
 
@@ -20,17 +21,16 @@
         isModalVisible = false;
     };
 
-    function handleOnClick(id: number): void {
-        confirmation.confirm(async () => {
-            await UsersService.deleteUsersIdDelete(id);
-            users = await UsersService.getAllUsersUsersGet();
-        });
-    };
+    $: isConfirmationVisible = !!idToRemove;
 </script>
 
-<Confirmation bind:this={confirmation} />
+<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
+    await UsersService.deleteUsersIdDelete(idToRemove);
+    users = await UsersService.getAllUsersUsersGet();
+    idToRemove = undefined;
+}} on:cancel={() => idToRemove = undefined}/>
 
-<Modal isVisible={isModalVisible}>
+<Modal bind:isVisible={isModalVisible}>
     <span slot="title">Create new user</span>
     <form slot="body" on:submit|preventDefault={handleOnSubmit}>
         <div class="row mb-2">
@@ -107,8 +107,8 @@
                             <td class="align-middle">{user.email_address}</td>
                             <td class="align-middle">{new Date(Date.parse(user.created)).toLocaleString()}</td>
                             <td class="align-middle">{new Date(Date.parse(user.updated)).toLocaleString()}</td>
-                            <td class="align-middle">
-                                <button class="btn btn-lg btn-danger" on:click={() => handleOnClick(user.id)}>Remove</button>
+                            <td class="align-middle text-end">
+                                <RemoveButton id={user.id} on:click={() => idToRemove = user.id} />
                             </td>
                         </tr>
                     {/each}

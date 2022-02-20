@@ -1,98 +1,114 @@
 <script lang="ts">
-    import { EventsService } from "../api";
+    import Map from '../components/Map.svelte';
     import Modal from "../components/Modal.svelte";
     import { getTimeSpanFromDateOrNumber, getTimeSpanString } from "../utils/TimeUtils";
-    import { getTripsFromEvents } from "../utils/TripUtils";
-    import Map from '../components/Map.svelte';
-    import type { Trip } from "../models/Trip";
-    import { getDecodedToken } from "../services/auth";
-    import { getEventMarkers } from '../services/events';
-    import Tabs from "../components/tabs/Tabs.svelte";
-    import Tab from "../components/tabs/Tab.svelte";
+    import { addRouteForEvents, getAllUnconfirmedTrips, getEventsInTrip, type Trip } from './loaders/Trips';
+    import { getEventMarkers } from '../components/loaders/Map';
+    import { onMount } from "svelte";
+    import { EventsService, TripsService } from '../api';
+    import { getDecodedToken } from '../services/auth';
 
     let activeTabId = 'new-trips';
-    let isVisible = false;
-    let map: Map;
-    let selectedTrip: Trip;
+    let selectedTrip: Trip | undefined;
+    let trips: Array<Trip> = [];
+    let homeLongitude: number;
+    let homeLatitude: number;
+    const user = getDecodedToken().user;
 
-    function reviewTrip(trip: Trip) {
-        selectedTrip = trip;
-        isVisible = true;
-    }
-
-    function addRoute() {
-        const user = getDecodedToken().user;
-        map.addRoute([{
-            lng: user.home_longitude,
-            lat: user.home_latitude
-        }, ...selectedTrip.events.map(e => {
-            return {
-                lng: e.longitude,
-                lat: e.latitude
-            }
-        }), {
-            lng: user.home_longitude,
-            lat: user.home_latitude
-        }]);
-    }
+    onMount(async () => {
+        homeLongitude = user.home_longitude!;
+        homeLatitude = user.home_latitude!;
+        const totalEventCount = await EventsService.getCountEventsCountGet(undefined, undefined, undefined, false);
+        const events = await EventsService.getAllEventsGet(undefined, undefined, undefined, false, 0, totalEventCount);
+        let eventsInTrips = getEventsInTrip(events,1000*60*60);
+        trips = [{
+            startTime: new Date(Date.parse(eventsInTrips[0].created)),
+            stopTime: new Date(Date.parse(eventsInTrips[eventsInTrips.length - 1].created)),
+            durationInMs: Date.parse(eventsInTrips[eventsInTrips.length - 1].created) - Date.parse(eventsInTrips[0].created),
+            events: eventsInTrips
+        }];
+        trips = await getAllUnconfirmedTrips();
+    });
 
     $: center = {
         lng: selectedTrip?.events?.length ? selectedTrip.events[0].longitude : 0,
         lat: selectedTrip?.events?.length ? selectedTrip.events[0].latitude : 0
     };
+    $: isModalVisible = !!selectedTrip;
 </script>
 
-<Modal bind:isVisible isLarge={true}>
-    <span slot="title">Review trip</span>
+<Modal bind:isVisible={isModalVisible} isLarge={true}>
+    <span slot="title">Review trip: {selectedTrip?.startTime.toLocaleString()}, {getTimeSpanString(getTimeSpanFromDateOrNumber(selectedTrip?.durationInMs || 0))}, {selectedTrip?.events?.length} events</span>
     <span slot="body">
-        {#if isVisible}
-            <Map bind:this={map} {center} markers={getEventMarkers(selectedTrip.events)} on:load={addRoute} />
+        {#if isModalVisible && selectedTrip}
+            <Map {center} markers={getEventMarkers(selectedTrip?.events || [])} on:load={(e) => addRouteForEvents(homeLongitude, homeLatitude, selectedTrip?.events || [], e.detail.target)} />
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th>Event type</th>
+                        <th>Created</th>
+                        <th>Coordinates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each selectedTrip.events as event}
+                    <tr>
+                        <td>{event.animal_name}</td>
+                        <td>{event.event_type}</td>
+                        <td>{event.created}</td>
+                        <td>{event.longitude}, {event.latitude}</td>
+                    </tr>
+                    {/each}
+                </tbody>
+            </table>
         {/if}
     </span>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={() => isVisible = false}>Cancel</button>
+        <button type="button" class="btn btn-success" on:click={async () => {
+            if(!selectedTrip) return;
+            await TripsService.createTripsPost({
+                event_ids: selectedTrip.events.map(e => e.id)
+            });
+            trips = await getAllUnconfirmedTrips();
+            selectedTrip = undefined;
+        }}>Confirm</button>
+        <button type="button" class="btn btn-danger" on:click={() => selectedTrip = undefined}>Cancel</button>
     </span>
 </Modal>
 
-<Tabs tabButtons={[{
-    id: 'new-trips',
-    title: 'New trips'
-}, {
-    id: 'existing-trips',
-    title: 'Existing trips'
-}]} bind:activeTabId>
-    <Tab id="new-trips" show={activeTabId == 'new-trips'}>
-        {#await EventsService.getCountEventsCountGet(undefined, undefined, undefined, false) then count}
-            <div class="container-fluid">
-                {#await EventsService.getAllEventsGet(undefined, undefined, undefined, false, 0, count) then events}
-                    <div class="align-items-center bg-dark mt-2 py-2 row text-light">
-                        <div class="col">Start time</div>
-                        <div class="col">Stop time</div>
-                        <div class="col">Duration</div>
-                        <div class="col">Events</div>
-                    </div>
-                    {@const trips = getTripsFromEvents(events, 1000 * 60 * 5, 1000 * 60 * 10)}
-                    {#each trips as trip}
-                        <div class="align-items-center bg-odd-colored pt-2 pb-2 row" on:click={() => reviewTrip(trip)} role="button">
-                            <div class="col">{trip.startTime.toLocaleString()}</div>
-                            <div class="col">{trip.stopTime.toLocaleString()}</div>
-                            <div class="col">{getTimeSpanString(getTimeSpanFromDateOrNumber(trip.durationInMs))}</div>
-                            <div class="col">{trip.events.length}</div>
-                        </div>
-                    {/each}
-                {/await}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" id="new-trips-tab" on:click={() => activeTabId = "new-trips"}>
+                    <button type="button" class="nav-link {activeTabId == "new-trips" ? "active" : ""}">New trips</button>
+                </li>
+            </ul>
+            <div class="tab-pane fade {activeTabId == "new-trips" ? "d-block show" : "d-none"}" id="new-trips" role="tabpanel" aria-labelledby="#new-trips-tab">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Start time</th>
+                                <th>Stop time</th>
+                                <th>Duration</th>
+                                <th>Events</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each trips as trip}
+                                <tr on:click={() => selectedTrip = trip} role="button">
+                                    <td>{trip.startTime.toLocaleString()}</td>
+                                    <td>{trip.stopTime.toLocaleString()}</td>
+                                    <td>{getTimeSpanString(getTimeSpanFromDateOrNumber(trip.durationInMs))}</td>
+                                    <td>{trip.events.length}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        {/await}
-    </Tab>
-    <Tab id="existing-trips" show={activeTabId == 'existing-trips'}>
-        Hello World!
-    </Tab>
-</Tabs>
-
-<style lang="scss">
-    .row.bg-odd-colored {
-        &:nth-child(odd) {
-            background: rgba(0, 0, 0, 0.05);
-        }
-    }
-</style>
+        </div>
+    </div>
+</div>

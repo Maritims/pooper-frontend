@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { EnrichedEventType } from "../models/EnrichedEventType";
-    import { getCssPostfix, getText, getTimeSpanForNextEvent } from "./EventButton";
-    import { createEventDispatcher, afterUpdate } from "svelte";
+    import { getCssPostfix, getText, getTimeSpanForNextEvent } from "./loaders/EventButton";
+    import { afterUpdate, createEventDispatcher } from "svelte";
     import { EventsService, type AnimalRead } from "../api";
     import { addToast } from "../services/toasts";
     import Modal from "./Modal.svelte";
@@ -15,7 +15,6 @@
     let cssClass = 'btn-danger';
     let isModalVisible = false;
     let rating = 0;
-
     const dispatch = createEventDispatcher();
 
     async function createEvent(): Promise<void> {
@@ -56,11 +55,6 @@
         );
     }
 
-    async function handleOnClick(): Promise<void> {
-        if(eventType.isRatingRequired) isModalVisible = true;
-        else await createEvent();
-    }
-
     afterUpdate(() => {
         const timeSpanForNextEvent = getTimeSpanForNextEvent(animal, eventType);
         if(!timeSpanForNextEvent) return;
@@ -71,7 +65,7 @@
 </script>
 
 {#if eventType.isRatingRequired}
-    <Modal isVisible={isModalVisible}>
+    <Modal bind:isVisible={isModalVisible}>
         <span slot="title">Rate the event: {eventType.eventType}</span>
         <div class="row mb-2" slot="body">
             <div class="col">
@@ -85,7 +79,10 @@
     </Modal>
 {/if}
 
-<button type="button" class="btn btn-lg btn-event {cssClass} {compact ? '' : 'w-100'}" on:click={handleOnClick}>
+    <button type="button" class="btn btn-lg btn-event {cssClass} {compact ? '' : 'w-100'}" on:click={async () => {
+        if(eventType.isRatingRequired) isModalVisible = true;
+        else await createEvent();
+    }}>
     <i class="fas {eventType.iconClass} {compact ? '' : 'fa-2x'}"></i>
     <div class="d-none {compact ? 'd-sm-inline-block' : 'd-sm-block fs-3'}">{eventType.eventType}</div>
     <div class="d-none {compact ? '' : 'd-sm-block fs-6'}">{nextEventDueInHoursText}</div>

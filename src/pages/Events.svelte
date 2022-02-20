@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { type AnimalRead, type EventRead, AnimalsService, EventsService, EventType } from "../api";
-    import { getAllEventTypes, getEventMarkers } from "../services/events";
+    import { getAllEventTypes } from "./loaders/Events";
     import { getCurrentPosition, type Position } from "../models/Position";
-    import type { MapMouseEvent } from "mapbox-gl";
     import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";
     import Map from "../components/Map.svelte";
+    import { getEventMarkers } from '../components/loaders/Map';
     import Modal from "../components/Modal.svelte";
     import { getEnrichedEventType } from "../models/EnrichedEventType";
     import { getEventCreate } from "../factories/EventCreateFactory";
@@ -14,9 +14,10 @@
     import DropdownFilter from "../components/table/DropdownFilter.svelte";
     import Rating from "../components/Rating.svelte";
     import { firstColumnClass, secondColumnClass, thirdColumnClass, fourthColumnClass } from "./loaders/Events";
+    import RemoveButton from "../components/RemoveButton.svelte";
 
     let animals: Array<AnimalRead> = [];
-    let confirmation: Confirmation;
+    let idToRemove: number | undefined;
     let days = [1, 7, 14, 30];
     let eventCreate = getEventCreate();
     let events: Array<EventRead> = [];
@@ -39,19 +40,6 @@
     onMount(async () => {
         animals = await AnimalsService.getAllAnimalsGet();
     });
-
-    function handleOnClick(id: number): void {
-        confirmation.confirm(async () => {
-            await EventsService.deleteEventsIdDelete(id);
-            events = await EventsService.getAllEventsGet();
-        });
-    };
-
-    function handleOnMapClick(e: CustomEvent<MapMouseEvent>): void {
-        map.setCenter(e.detail.lngLat);
-        eventCreate.longitude = e.detail.lngLat.lng;
-        eventCreate.latitude = e.detail.lngLat.lat;
-    }
 
     async function createEvent(): Promise<void> {
         const event = await EventsService.createEventsPost(eventCreate);
@@ -86,9 +74,14 @@
         ).then((count) => totalEventCount = count);
     $: isRatingRequired = enrichedEventTypes.find(enrichedEventType => enrichedEventType.eventType === eventCreate.event_type)?.isRatingRequired;
     $: eventCreate.rating = enrichedEventTypes.find(enrichedEventType => enrichedEventType.eventType === eventCreate.event_type)?.isRatingRequired ? eventCreate.rating : 0;
+    $: isConfirmationVisible = !!idToRemove;
 </script>
 
-<Confirmation bind:this={confirmation} />
+<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
+    await EventsService.deleteEventsIdDelete(idToRemove);
+    events = await EventsService.getAllEventsGet();
+    idToRemove = undefined;
+}} on:cancel={() => idToRemove = undefined}/>
 
 <Modal isVisible={isModalVisible}>
     <span slot="title">Create new event</span>
@@ -152,7 +145,11 @@
         {/if}
         <div class="row mb-2">
             {#if position}
-				<Map bind:this={map} on:click={handleOnMapClick} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
+				<Map bind:this={map} on:click={(e) => {
+                    map.setCenter(e.detail.lngLat);
+                    eventCreate.longitude = e.detail.lngLat.lng;
+                    eventCreate.latitude = e.detail.lngLat.lat;
+                }} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
 				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
 			{/if}
@@ -215,9 +212,7 @@
             </div>
             <div class={thirdColumnClass}>{new Date(Date.parse(event.created)).toLocaleString()}</div>
             <div class={fourthColumnClass}>
-                <button class="btn btn-lg btn-danger" on:click={() => handleOnClick(event.id)}>
-                    <i class="fas fa-trash"></i><span class="d-none d-md-inline">&nbsp;Remove</span>
-                </button>
+                <RemoveButton id={event.id} on:click={() => idToRemove = event.id} />
             </div>
         </div>
     {/each}

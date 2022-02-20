@@ -4,13 +4,14 @@
 
 	import { onMount } from "svelte";
 	import { AnimalsService } from "../api";
-	import { getAllEventTypes, getEventMarkers } from "../services/events";
+	import { getAllEventTypes } from "./loaders/Events";
 	import { getCurrentPosition } from "../models/Position";
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
 	import Modal from '../components/Modal.svelte';
-	import { getTimeSpanForNextEvent } from '../components/EventButton';
+	import { getTimeSpanForNextEvent } from '../components/loaders/EventButton';
 	import TripAlert from '../components/TripAlert.svelte';
+	import { getEventMarkers } from '../components/loaders/Map';
 
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;

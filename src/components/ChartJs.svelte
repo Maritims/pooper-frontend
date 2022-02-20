@@ -1,7 +1,10 @@
 <script lang="ts">
     import { Chart, registerables, type ChartDataset, type ChartTypeRegistry } from 'chart.js';
     import annotationPlugin, { type AnnotationOptions } from 'chartjs-plugin-annotation';
-    import { onMount } from 'svelte';
+    import { getChart } from './loaders/ChartJs';
+
+    Chart.register(...registerables);
+    Chart.register(annotationPlugin);
 
     export let annotations: Array<AnnotationOptions> = [];
     export let datasets: Array<ChartDataset>;
@@ -16,63 +19,13 @@
     export let yMax: number | undefined = undefined;
     export let yStep: number | undefined = undefined;
 
-    Chart.register(...registerables);
-    Chart.register(annotationPlugin);
-
     let canvas: HTMLCanvasElement;
-    let chart: Chart;
+    let chart: Chart | undefined;
 
-    onMount(() => configureChart());
-
-    function configureChart() {
-        if(chart) chart.destroy();
-        
-        const context = canvas.getContext('2d');
-        if(!context) return;
-
-        chart = new Chart(context, {
-            type: type,
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: type === 'line' ? {
-                responsive: true,
-                plugins: {
-                    annotation: {
-                        annotations: annotations
-                    },
-                    title: {
-                        display: true,
-                        text: title
-                    }
-                },
-                scales: {
-                    xAxis: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: x
-                        }
-                    },
-                    y: {
-                        display: true,
-                        min: yMin,
-                        max: yMax,
-                        ticks: {
-                            stepSize: yStep
-                        },
-                        title: {
-                            display: true,
-                            text: y
-                        }
-                    }
-                }
-            } : {}
-        });
-    };
-
-    $: if(canvas && datasets && labels) configureChart();
+    $: if(canvas && datasets && labels) {
+        chart?.destroy();
+        chart = getChart(canvas, annotations, datasets, labels, title, type, x, y, yMin, yMax, yStep);
+    }
 </script>
 
 <div class="container-fluid">

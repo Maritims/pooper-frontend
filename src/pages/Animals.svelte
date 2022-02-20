@@ -3,11 +3,12 @@
     import { AnimalsService, type AnimalRead } from '../api';
     import Modal from '../components/Modal.svelte';
     import Confirmation from '../components/Confirmation.svelte';
+import RemoveButton from '../components/RemoveButton.svelte';
 
     let animals: Array<AnimalRead> = [];
+    let isModalVisible = false;
+    let idToRemove: number | undefined;
     let newAnimalName: string;
-    let modal: Modal;
-    let confirmation: Confirmation;
 
     onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
 
@@ -17,20 +18,19 @@
         });
         newAnimalName = '';
         animals = await AnimalsService.getAllAnimalsGet();
-        modal.hide();
+        isModalVisible = false;
     }
 
-    function handleOnClick(id: number): void {
-        confirmation.confirm(async () => {
-            await AnimalsService.deleteAnimalsIdDelete(id);
-            animals = await AnimalsService.getAllAnimalsGet();
-        });
-    };
+    $: isConfirmationVisible = !!idToRemove;
 </script>
 
-<Confirmation bind:this={confirmation} />
+<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
+    await AnimalsService.deleteAnimalsIdDelete(idToRemove);
+    animals = await AnimalsService.getAllAnimalsGet();
+    idToRemove = undefined;
+}} on:cancel={() => idToRemove = undefined}/>
 
-<Modal bind:this={modal}>
+<Modal bind:isVisible={isModalVisible}>
     <span slot="title">Create new animal</span>
     <form slot="body" on:submit|preventDefault={handleOnSubmit}>
         <div class="row mb-2">
@@ -43,7 +43,7 @@
         </div>
     </form>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={modal.hide}>Cancel</button>
+        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
         <button type="submit" class="btn btn-success" on:click={handleOnSubmit}>Submit</button>
     </span>
 </Modal>
@@ -51,7 +51,7 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={modal.show}>Create animal</button>
+            <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>Create animal</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -68,9 +68,7 @@
                         <tr>
                             <td class="align-middle">{animal.name}</td>
                             <td class="align-middle text-end">
-                                <button type="button" class="btn btn-lg btn-danger" on:click={() => handleOnClick(animal.id)}>
-                                    <i class="fas fa-trash"></i> <span class="d-none d-md-inline-block">Remove</span>
-                                </button>
+                                <RemoveButton id={animal.id} on:click={() => idToRemove = animal.id} />
                             </td>
                         </tr>
                     {/each}

@@ -1,33 +1,7 @@
 import type { ChartDataset } from "chart.js";
-import { Marker, Popup } from "mapbox-gl";
-import type { EventRead } from '../api';
-import { EventType } from "../api";
-import type { EnrichedEventType } from "../models/EnrichedEventType";
-import { getEnrichedEventType } from "../models/EnrichedEventType";
-import { getAverage } from "../utils/NumberUtils";
-
-export const getAllEventTypes = (): Array<EnrichedEventType> => Object.values(EventType).map(eventType => getEnrichedEventType(eventType));
-
-export function getEventMarkers(events: Array<EventRead>): Array<Marker> {
-    const groupedEventsMap = events.reduce<Map<string, number>>((acc, event) => {
-        const key = `${event.longitude},${event.latitude},${event.event_type}`;
-        acc.set(key, (acc.get(key) || 0) + 1);
-        return acc;
-    }, new Map<string, number>());
-
-    const eventMarkers = [...groupedEventsMap.keys()].map(key => {
-        const keyParts = key.split(',');
-        const lng = parseFloat(keyParts[0]);
-        const lat = parseFloat(keyParts[1]);
-        const eventType = keyParts[2];
-        const marker = new Marker()
-        .setLngLat([lng, lat])
-        .setPopup(new Popup().setHTML(`Count: ${groupedEventsMap.get(key)} - Type: ${eventType}`));
-        return marker;
-    });
-
-    return eventMarkers;
-};
+import { EventType, type EventRead } from "../../api";
+import { getAllEventTypes } from "./Events";
+import { getAverage } from "../../utils/NumberUtils";
 
 function getDates(days: number): Array<Date> {
     return [...Array(days).keys()].map(day => {

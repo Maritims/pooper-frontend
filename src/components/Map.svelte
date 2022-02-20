@@ -17,35 +17,7 @@
         personalMarker.setLngLat([position.lng, position.lat]).addTo(map);
     };
 
-    export function addRoute(positions: Array<Position>): void {
-        const sourceId = new Date().getTime().toString();
-        map.addSource(sourceId, {
-            type: 'geojson',
-            data: {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: positions.map(pos => [pos.lng, pos.lat])
-                }
-            }
-        });
-        map.addLayer({
-            id: sourceId,
-            type: 'line',
-            source: sourceId,
-            layout: {
-                'line-join': 'round',
-                'line-cap': 'round'
-            },
-            paint: {
-                'line-color': '#888',
-                'line-width': 4
-            }
-        });
-    }
-
-    const dispatchOnLoadEvent = createEventDispatcher();
+    const dispatchOnLoadEvent = createEventDispatcher<{load: MapboxEvent}>();
     const dispatchMapMouseEvent = createEventDispatcher<{click: MapMouseEvent}>();
     const personalMarker = new Marker({ color: '#FF0000' });
 
@@ -68,10 +40,4 @@
     });
 </script>
 
-<div class="container-fluid">
-    <div class="row mt-2">
-        <div class="col">
-            <div bind:this={mapContainer} class="mapbox-container w-100" style="min-height:{minHeightPx}px"></div>
-        </div>
-    </div>
-</div>
+<div bind:this={mapContainer} class="mapbox-container w-100" style="min-height:{minHeightPx}px"></div>

@@ -1,6 +1,6 @@
-import type { AnimalRead } from '../api';
-import type { EnrichedEventType } from '../models/EnrichedEventType';
-import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString, type TimeSpan } from '../utils/TimeUtils';
+import type { AnimalRead } from '../../api';
+import type { EnrichedEventType } from '../../models/EnrichedEventType';
+import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString, type TimeSpan } from '../../utils/TimeUtils';
 
 export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
     if(millisecondsSincePreviousEvent > intervalInMilliseconds) return 'danger';

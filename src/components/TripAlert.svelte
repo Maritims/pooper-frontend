@@ -1,17 +1,10 @@
 <script lang="ts">
-    import type { EventRead } from "../api";
-    import { getTripsFromEvents } from "../utils/TripUtils";
-    
-    export let events: Array<EventRead>;
-    export let estimatedMsBeforeFirstEvent: number;
-    export let estimatedMsAfterLastEvent: number;
-
-    $: trips = getTripsFromEvents(events, estimatedMsBeforeFirstEvent, estimatedMsAfterLastEvent);
+    import { getAllUnconfirmedTrips } from "../pages/loaders/Trips";
 </script>
 
-{#if trips?.length}
+{#await getAllUnconfirmedTrips() then trips}
     <div class="col-12">
-        <div class="alert alert-primary">There are <a href="#" class="alert-link">{trips.length} new trips</a> to confirm.</div>
+        <div class="alert alert-primary">There are <a href="/trips" class="alert-link">{trips.length} new trips</a> to confirm.</div>
     </div>
     <!--{trips.map(trip => `${trip.date}: ${trip.events.length}, ${getTimeSpanString(getTimeSpanFromDateOrNumber(trip.durationInMs))}`)}-->
-{/if}
+{/await}

@@ -1,31 +1,17 @@
 <script lang="ts">
+    import { onSubmitHandler } from './loaders/Login';
     import { useFocus } from 'svelte-navigator';
-    import { login } from '../services/auth';
-    import { addToast } from '../services/toasts';
 
-    const registerFocus = useFocus();
+    export const registerFocus = useFocus();
 
     let username: string;
     let password: string;
-
-    const onSubmitHandler = async () => {
-        try {
-            await login(username, password);
-        } catch(e) {
-            addToast({
-                id: new Date().getTime(),
-                type: 'danger',
-                body: 'Unable to login. Invalid credentials.',
-                durationInMs: 3000
-            });
-        }
-    }
 </script>
 
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col-xs-12 offset-md-4 col-md-4 offset-xl-5 col-xl-2">
-            <form on:submit|preventDefault={onSubmitHandler}>
+            <form on:submit|preventDefault={() => onSubmitHandler(username, password)}>
                 <div class="text-center">
                     <img src="gfx/pooper.png" alt="Pooper" class="img-fluid" style="height:150px"/>
                 </div>

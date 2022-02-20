@@ -1,23 +1,15 @@
 <script lang="ts">
     import type { AnimalRead } from '../api';
     import { AnimalsService } from "../api";
-    import { getAllEventTypes, getAllEventTypesDataSets, getLabels, getPoopRatingDataSets } from "../services/events";
+    import { getAllEventTypes } from "./loaders/Events";
     import ChartJs from "../components/ChartJs.svelte";
     import { getMostFrequentHourFromDates, getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds, isToday } from "../utils/TimeUtils";
     import { getAverage, getMeanOfDifferences } from '../utils/NumberUtils';
-    import Tabs from '../components/tabs/Tabs.svelte';
-    import Tab from '../components/tabs/Tab.svelte';
+    import { getAllEventTypesDataSets, getLabels, getPoopRatingDataSets } from './loaders/Statistics';
 
     let currentAnimal: AnimalRead;
     let days = 7;
-    let tabButtons = [{
-        id: 'allEventTypes',
-        title: 'All event types'
-    }, {
-        id: 'poopRating',
-        title: 'Poop rating'
-    }];
-    let activeTabId: string = 'allEventTypes';
+    let activeTabId: string = 'all-event-types';
 </script>
 
 <div class="container-fluid">
@@ -85,17 +77,24 @@
                 </table>
             </div>
             <div class="col-12 col-md-6">
-                <Tabs {tabButtons} bind:activeTabId={activeTabId}>
-                    <Tab id="allEventTypes" show={activeTabId == 'allEventTypes'}>
-                        <ChartJs title="Events"
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" id="all-event-types-tab" on:click={() => activeTabId = "all-event-types"}>
+                        <button type="button" class="nav-link {activeTabId == "all-event-types" ? "active" : ""}">All event types</button>
+                    </li>
+                    <li class="nav-item" id="poop-rating-tab" on:click={() => activeTabId = "poop-rating"}>
+                        <button type="button" class="nav-link {activeTabId == "poop-rating" ? "active" : ""}">Poop rating</button>
+                    </li>
+                </ul>
+                <div class="tab-pane fade {activeTabId == "all-event-types" ? "d-block show" : "d-none"}" id="all-event-types" role="tabpanel" aria-labelledby="#all-event-types-tab">
+                    <ChartJs title="Events"
                             type="line"
                             x="Date"
                             y="Amount"
                             datasets={getAllEventTypesDataSets(days, currentAnimal?.events || animals.flatMap(foo => foo.events))}
                             labels={getLabels(days)} />
-                    </Tab>
-                    <Tab id="poopRating" show={activeTabId == 'poopRating'}>
-                        <ChartJs title="Poop rating"
+                </div>
+                <div class="tab-pane fade {activeTabId == "poop-rating" ? "d-block show" : "d-none"}" id="poop-rating" role="tabpanel" aria-labelledby="#poop-rating-tab">
+                    <ChartJs title="Poop rating"
                             type="line"
                             x="Date"
                             y="Rating"
@@ -105,8 +104,7 @@
                             datasets={getPoopRatingDataSets(days, currentAnimal?.events || animals.flatMap(foo => foo.events), currentAnimal?.events ? 1 : animals.length)}
                             labels={getLabels(days)}
                         />
-                    </Tab>
-                </Tabs>
+                </div>
             </div>
         </div>
     {/await}
