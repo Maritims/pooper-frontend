@@ -54,8 +54,8 @@
 				<Users />
 			</Route>			
 		{:else}
-			<Route path="/confirm-password-reset/:token" let:params>
-				<PasswordResetConfirmation token={params.token} />
+			<Route path="/confirm-password-reset">
+				<PasswordResetConfirmation token={new URLSearchParams(window.location.search).get('token') || ''} />
 			</Route>
 			<Route path="/reset-password">
 				<PasswordResetRequest />

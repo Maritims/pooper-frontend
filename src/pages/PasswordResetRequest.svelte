@@ -1,21 +1,31 @@
 <script lang="ts">
     import { AuthService } from '../api';
     import Confirmation from '../components/Confirmation.svelte';
+import { addToast } from '../services/toasts';
 
-    let confirmation: Confirmation;
+    let isConfirmationVisible = false;
     let emailAddress: string;
     let success: boolean;
 
     async function handleOnSubmit(): Promise<void> {
-        confirmation.confirm(async () => {
-            success = (await AuthService.resetPasswordAuthResetPasswordPost({
-                email_address: emailAddress
-            })).success;
-        });
+        isConfirmationVisible = true;
     }
 </script>
 
-<Confirmation bind:this={confirmation} />
+<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
+    success = (await AuthService.resetPasswordAuthResetPasswordPost({
+        email_address: emailAddress
+    })).success;
+
+    if(!success) {
+        addToast({
+            id: new Date().getTime(),
+            type: 'danger',
+            body: 'Unable to request password reset',
+            durationInMs: 3000
+        });
+    }
+}} on:cancel={() => isConfirmationVisible = false} />
 
 <div class="container-fluid">
     <div class="row mt-2">
