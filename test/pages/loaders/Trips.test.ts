@@ -6,7 +6,7 @@ describe('getEventsInTrip', () => {
   it('should get trip events', () => {
     const events = [...mockEvents];
     const eventsInTrip = getEventsInTrip(events, 1000 * 60 * 60);
-    expect(eventsInTrip.length).toBe(5);
+    expect(eventsInTrip.length).toBe(6);
   });
 });
 
@@ -17,7 +17,6 @@ describe('getTripsFromEvents', () => {
       events[i].trip_id = 1;
     }
     const trips = getTripsFromEvents(events, 1000 * 60 * 5, 1000 * 60 * 10);
-    expect(trips.length).toBe(32);
-    console.log(trips.map(trip => `${trip.startTime.toISOString()}: ${trip.events.length} events, ${trip.durationInMs} ms`).join('\n'));
+    expect(trips.length).toBe(63);
   });
 });
