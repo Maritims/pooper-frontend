@@ -13,7 +13,7 @@
     {/each}
 </div>
 
-<style>
+<style lang="scss">
     .toast-container {
         position: absolute;
         top:1rem;
