@@ -5,7 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
-import css from 'rollup-plugin-css-only';
+import scss from 'rollup-plugin-scss';
 import replace from '@rollup/plugin-replace';
 import preprocess from 'svelte-preprocess';
 import dotenv from 'dotenv';
@@ -92,7 +92,10 @@ export default [{
 		}),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
-		css({ output: 'bundle.css' }),
+		scss({
+			output: 'public/build/bundle.css',
+			watch: 'src'
+		}),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In

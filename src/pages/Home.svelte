@@ -112,10 +112,6 @@
 </div>
 
 <style lang="scss">
-	:global(body) {
-		background-color:black !important;
-	}
-
 	.card-body {
 		.col:nth-child(2) {
 			padding-right:0;

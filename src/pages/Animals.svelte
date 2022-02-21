@@ -3,7 +3,7 @@
     import { AnimalsService, type AnimalRead } from '../api';
     import Modal from '../components/Modal.svelte';
     import Confirmation from '../components/Confirmation.svelte';
-import RemoveButton from '../components/RemoveButton.svelte';
+    import RemoveButton from '../components/RemoveButton.svelte';
 
     let animals: Array<AnimalRead> = [];
     let isModalVisible = false;
