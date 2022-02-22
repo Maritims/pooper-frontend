@@ -76,7 +76,7 @@
 		{#each animals as animal}
 			{@const division = animals.length > 1 ? 6 : 12}
 			<div class="col-12 col-sm-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-2">
-				<div class="card bg-dark text-light">
+				<div class="card">
 					<div class="card-body">
 						<h5 class="align-middle align-items-center card-title d-flex justify-content-between">
 							{animal.name}

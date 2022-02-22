@@ -1,0 +1,42 @@
+@import './bootstrap-requirements.scss';
+
+$primary: $gray-300;
+
+$body-bg: $black;
+$body-color: $primary;
+
+$border-color: $gray-800;
+
+$card-bg: $gray-900;
+$card-border-color: $border-color;
+
+$input-bg: $gray-900;
+$input-color: $primary;
+$input-focus-color: $input-color;
+$input-focus-bg: $input-bg;
+$input-border-color: $border-color;
+$input-disabled-bg: $gray-800;
+
+$form-select-bg: $input-bg;
+$form-select-color: $input-color;
+$form-select-border-color: $border-color;
+
+$modal-content-bg: $gray-900;
+$modal-content-border-color: $border-color;
+$modal-content-color: $body-color;
+$modal-header-border-color: $border-color;
+$modal-footer-border-color: $modal-header-border-color;
+
+$nav-tabs-link-active-color: $primary;
+$nav-tabs-link-active-bg: $gray-900;
+$nav-tabs-link-active-border-color: $gray-900 $gray-900 $nav-tabs-link-active-bg;
+$nav-tabs-border-color: $border-color;
+
+$table-color: $body-color;
+$table-border-color: $border-color;
+$table-group-separator-color: $gray-700;
+$table-striped-bg-factor: 0.075;
+$table-striped-bg: rgba($white, $table-striped-bg-factor);
+$table-striped-color: $table-color;
+
+@import './bootstrap-components.scss';

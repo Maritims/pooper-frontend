@@ -9,6 +9,7 @@ import scss from 'rollup-plugin-scss';
 import replace from '@rollup/plugin-replace';
 import preprocess from 'svelte-preprocess';
 import dotenv from 'dotenv';
+import del from 'rollup-plugin-delete';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const envVars = {
 	MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
 	VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY
 };
-console.log(envVars);
+
 Object.entries(envVars).forEach(entry => {
 	const [key, val] = entry;
 	if(!val) throw new Error(`Environment variable ${key} is not set. Unable to continue bundling process.`);
@@ -46,7 +47,26 @@ function serve() {
 	};
 }
 
-export default [{
+export default [
+	...['dark', 'light'].map(style => {
+		return {
+			input: `src/styles/${style}.ts`,
+			output: {
+				sourcemap: true,
+				format: 'iife',
+				name: style,
+				file: `public/build/${style}.js`
+			},
+			plugins: [
+				scss({
+					output: `public/build/${style}.css`,
+					watch: `src/styles/${style}.scss`
+				}),
+				,
+				del({ targets: `public/build/${style}.js*` })
+			]
+		}
+	}), {
 	input: 'src/serviceWorker.ts',
 	output: {
 		sourcemap: true,

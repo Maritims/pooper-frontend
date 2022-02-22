@@ -16,9 +16,14 @@
 	import Users from './pages/Users.svelte';
 	import registerServiceWorker from './utils/ServiceWorkerUtil';
 	import Trips from './pages/Trips.svelte';
+	import { themeStore } from './services/themes';
 
 	registerServiceWorker();
 </script>
+
+<svelte:head>
+	<link rel="stylesheet" type="text/css" href="build/{$themeStore.mode}.css" />
+</svelte:head>
 
 <Toasts />
 

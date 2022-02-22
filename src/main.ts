@@ -1,4 +1,3 @@
-import './main.scss';
 import App from './App.svelte';
 import { OpenAPI } from './api';
 
