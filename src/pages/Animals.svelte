@@ -56,24 +56,26 @@
     </div>
     <div class="row mt-2">
         <div class="col">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each animals as animal}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td class="align-middle">{animal.name}</td>
-                            <td class="align-middle text-end">
-                                <RemoveButton id={animal.id} on:click={() => idToRemove = animal.id} />
-                            </td>
+                            <th>Name</th>
+                            <th></th>
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {#each animals as animal}
+                            <tr>
+                                <td class="align-middle">{animal.name}</td>
+                                <td class="align-middle text-end">
+                                    <RemoveButton id={animal.id} on:click={() => idToRemove = animal.id} />
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

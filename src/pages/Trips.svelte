@@ -99,10 +99,10 @@
                         <tbody>
                             {#each trips as trip}
                                 <tr on:click={() => selectedTrip = trip} role="button">
-                                    <td>{trip.startTime.toLocaleString()}</td>
-                                    <td>{trip.stopTime.toLocaleString()}</td>
-                                    <td>{getTimeSpanString(getTimeSpanFromDateOrNumber(trip.durationInMs))}</td>
-                                    <td>{trip.events.length}</td>
+                                    <td class="align-middle">{trip.startTime.toLocaleString()}</td>
+                                    <td class="align-middle">{trip.stopTime.toLocaleString()}</td>
+                                    <td class="align-middle">{getTimeSpanString(getTimeSpanFromDateOrNumber(trip.durationInMs))}</td>
+                                    <td class="align-middle">{trip.events.length}</td>
                                 </tr>
                             {/each}
                         </tbody>
