@@ -8,7 +8,7 @@
 </script>
 
 <nav aria-label="Pagination">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center d-flex flex-wrap">
         <li class="page-item" on:click={() => currentPageNumber -= currentPageNumber > 0 ? 1 : 0}>
             <button class="page-link" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>

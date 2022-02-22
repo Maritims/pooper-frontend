@@ -167,66 +167,67 @@
             <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>Create event</button>
         </div>
     </div>
-    <div class="align-items-center bg-dark mt-2 pt-2 row text-light">
-        <div class={firstColumnClass}>Animal</div>
-        <div class={secondColumnClass}>Event type</div>
-        <div class={thirdColumnClass}>Created</div>
-        <div class={fourthColumnClass}></div>
-    </div>
-    <div class="align-items-center row bg-dark py-2">
-        <div class={firstColumnClass}>
-            <DropdownFilter bind:this={animalFilter} bind:selectedOption={filterByAnimal} options={animals.map(animal => {
-                return {
-                    description: animal.name,
-                    value: animal
-                }
-            })} />
-        </div>
-        <div class={secondColumnClass}>
-            <DropdownFilter bind:this={eventTypeFilter} bind:selectedOption={filterByEventType} options={enrichedEventTypes.map(enrichedEventType => {
-                return {
-                    description: enrichedEventType.eventType,
-                    value: enrichedEventType.eventType
-                }
-            })} />
-        </div>
-        <div class={thirdColumnClass}>
-            <DropdownFilter bind:this={daysFilter} bind:selectedOption={filterByDays} options={days.map(day => {
-                return {
-                    description: day == 1 ? 'Today' : `Last ${day.toString()} days`,
-                    value: day
-                }
-            })} />
-        </div>
-        <div class={fourthColumnClass}>
-            <button class="btn btn-lg btn-danger" on:click={() => resetFilters()}>
-                <i class="fas fa-undo"></i><span class="d-none d-md-inline">&nbsp;Reset</span>
-            </button>
-        </div>
-    </div>
-    {#each events as event}
-        <div class="align-items-center bg-odd-colored pt-2 pb-2 row">
-            <div class={firstColumnClass}>{event.animal_name}</div>
-            <div class={secondColumnClass}>
-                <i class="fas {getEnrichedEventType(event.event_type).iconClass} fa-2x"></i>
-            </div>
-            <div class={thirdColumnClass}>{new Date(Date.parse(event.created)).toLocaleString()}</div>
-            <div class={fourthColumnClass}>
-                <RemoveButton id={event.id} on:click={() => idToRemove = event.id} />
-            </div>
-        </div>
-    {/each}
     <div class="row mt-2">
-        <div class="col">
-            <Pagination bind:currentPageNumber pageSize={10} bind:totalCount={totalEventCount} />
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Animal
+                            <DropdownFilter bind:this={animalFilter} bind:selectedOption={filterByAnimal} options={animals.map(animal => {
+                                return {
+                                    description: animal.name,
+                                    value: animal
+                                }
+                            })} />
+                        </th>
+                        <th>
+                            Event type
+                            <DropdownFilter bind:this={eventTypeFilter} bind:selectedOption={filterByEventType} options={enrichedEventTypes.map(enrichedEventType => {
+                                return {
+                                    description: enrichedEventType.eventType,
+                                    value: enrichedEventType.eventType
+                                }
+                            })} />
+                        </th>
+                        <th>
+                            Created
+                            <DropdownFilter bind:this={daysFilter} bind:selectedOption={filterByDays} options={days.map(day => {
+                                return {
+                                    description: day == 1 ? 'Today' : `Last ${day.toString()} days`,
+                                    value: day
+                                }
+                            })} />
+                        </th>
+                        <th class="text-end">
+                            <button class="btn btn-lg btn-danger" on:click={() => resetFilters()}>
+                                <i class="fas fa-undo"></i><span class="d-none d-md-inline">&nbsp;Reset</span>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each events as event}
+                        <tr>
+                            <td>{event.animal_name}</td>
+                            <td>
+                                <i class="fas {getEnrichedEventType(event.event_type).iconClass} fa-2x"></i>
+                            </td>
+                            <td>{new Date(Date.parse(event.created)).toLocaleString()}</td>
+                            <td class="text-end">
+                                <RemoveButton id={event.id} on:click={() => idToRemove = event.id} />
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <Pagination bind:currentPageNumber pageSize={10} bind:totalCount={totalEventCount} />
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 </div>
-
-<style lang="scss">
-    .row.bg-odd-colored {
-        &:nth-child(odd) {
-            background: rgba(0, 0, 0, 0.05);
-        }
-    }
-</style>
