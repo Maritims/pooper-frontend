@@ -1,6 +1,6 @@
 <script lang="ts">
     import { authStore, logout } from '../../services/auth';
-    import { setMode, themeStore } from '../../services/themes';
+    import ColorThemeButton from '../ColorThemeButton.svelte';
     import NavLink from './NavLink.svelte';
 
     export let bottom = false;
@@ -80,25 +80,14 @@
                     {/if}
                 </ul>
             {/if}
-            {#if $themeStore.mode == "dark"}
-                <i class="fas fa-moon text-light" on:click={() => setMode('light')}></i>
-            {/if}
-            {#if $themeStore.mode == "light"}
-                <i class="fas fa-sun text-light" on:click={() => setMode('dark')}></i>
-            {/if}
+            <ColorThemeButton />
         </div>
 
         {#if bottom}
             <button class="navbar-toggler" type="button" on:click={toggleNavbar}>
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            {#if $themeStore.mode == "dark"}
-                <i class="fas fa-moon text-light" on:click={() => setMode('light')}></i>
-            {/if}
-            {#if $themeStore.mode == "light"}
-                <i class="fas fa-sun text-light" on:click={() => setMode('dark')}></i>
-            {/if}
+            <ColorThemeButton />
         {/if}
     </div>
 </nav>

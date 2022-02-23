@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authStore } from './services/auth';
+	import { authStore, getDecodedToken } from './services/auth';
 	import { modalStore } from './services/modals';
 	import { Router, Route } from 'svelte-navigator';
 	import Animals from './pages/Animals.svelte';
@@ -16,13 +16,17 @@
 	import Users from './pages/Users.svelte';
 	import registerServiceWorker from './utils/ServiceWorkerUtil';
 	import Trips from './pages/Trips.svelte';
-	import { themeStore } from './services/themes';
+	import { colorThemeStore } from './components/loaders/ColorThemeButton';
+import { ColorTheme } from './api';
 
 	registerServiceWorker();
+
+	let colorTheme = ColorTheme.LIGHT;
+	colorThemeStore.subscribe(value => colorTheme = value);
 </script>
 
 <svelte:head>
-	<link rel="stylesheet" type="text/css" href="build/{$themeStore.mode}.css" />
+	<link rel="stylesheet" type="text/css" href="build/{colorTheme?.toLowerCase()}.css" />
 </svelte:head>
 
 <Toasts />

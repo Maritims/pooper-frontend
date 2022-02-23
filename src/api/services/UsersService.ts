@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ColorTheme } from '../models/ColorTheme';
 import type { UserCreate } from '../models/UserCreate';
 import type { UserRead } from '../models/UserRead';
 
@@ -100,6 +101,27 @@ export class UsersService {
             url: '/users/{_id}',
             path: {
                 '_id': id,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Set Theme
+     * @param theme
+     * @returns ColorTheme Successful Response
+     * @throws ApiError
+     */
+    public static setThemeUsersThemeThemePatch(
+        theme: ColorTheme,
+    ): CancelablePromise<ColorTheme> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/users/theme/{theme}',
+            path: {
+                'theme': theme,
             },
             errors: {
                 422: `Validation Error`,

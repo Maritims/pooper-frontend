@@ -27,7 +27,7 @@ export function getDecodedToken(): {
     return {
         user: JSON.parse(payload.user)
     };
-}
+};
 
 authStore.subscribe((value) => {
     if(value) {

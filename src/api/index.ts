@@ -11,6 +11,7 @@ export type { AnimalRead } from './models/AnimalRead';
 export type { Body_confirm_password_reset_auth_confirm_password_reset_post } from './models/Body_confirm_password_reset_auth_confirm_password_reset_post';
 export type { Body_login_auth_token_post } from './models/Body_login_auth_token_post';
 export type { Body_reset_password_auth_reset_password_post } from './models/Body_reset_password_auth_reset_password_post';
+export { ColorTheme } from './models/ColorTheme';
 export type { EventCreate } from './models/EventCreate';
 export type { EventRead } from './models/EventRead';
 export { EventType } from './models/EventType';
