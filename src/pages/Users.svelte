@@ -4,8 +4,8 @@
     import { UsersService } from "../api";
     import Confirmation from "../components/Confirmation.svelte";
     import Modal from "../components/Modal.svelte";
-import RemoveButton from "../components/RemoveButton.svelte";
-    import { getUserCreate } from "../factories/UserCreateFactory";
+    import RemoveButton from "../components/RemoveButton.svelte";
+    import { getUserCreate } from "../factories/UserFactory";
 
     let idToRemove: number | undefined;
     let users: Array<UserRead> = [];

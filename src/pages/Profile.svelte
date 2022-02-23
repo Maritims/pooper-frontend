@@ -3,7 +3,6 @@
     import { useFocus } from "svelte-navigator";
     import type { UserCreate, UserRead } from "../api";
     import { UsersService } from "../api";
-    import { getUserCreate } from "../factories/UserCreateFactory";
     import { addToast } from "../services/toasts";
     import Map from '../components/Map.svelte';
     import { getCurrentPosition, type Position } from "../models/Position";

@@ -1,4 +1,13 @@
-import { EventType, type EventRead } from "../api";
+import { EventType, type EventCreate, type EventRead } from "../api";
+
+export function getEventCreate(): EventCreate {
+    return {
+        animal_id: 0,
+        longitude: 0,
+        latitude: 0,
+        event_type: EventType.EAT
+    }
+};
 
 export function getEventRead(): EventRead {
     return {
@@ -12,4 +21,4 @@ export function getEventRead(): EventRead {
         created_by_user_name: '',
         animal_name: ''
     }
-}
+};

@@ -24,12 +24,14 @@ export class AnimalsService {
 
     /**
      * Get All
+     * @param includeDeactivated
      * @param page
      * @param pageSize
      * @returns AnimalRead Successful Response
      * @throws ApiError
      */
     public static getAllAnimalsGet(
+        includeDeactivated: boolean = false,
         page?: number,
         pageSize: number = 100,
     ): CancelablePromise<Array<AnimalRead>> {
@@ -37,6 +39,7 @@ export class AnimalsService {
             method: 'GET',
             url: '/animals/',
             query: {
+                'include_deactivated': includeDeactivated,
                 'page': page,
                 'page_size': pageSize,
             },

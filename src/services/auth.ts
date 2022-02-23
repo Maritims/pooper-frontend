@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { AuthService, OpenAPI, type UserRead } from "../api";
-import { getUserRead } from "../factories/UserReadFactory";
+import { getUserRead } from "../factories/UserFactory";
 
 let accessToken = localStorage.getItem('accessToken');
 

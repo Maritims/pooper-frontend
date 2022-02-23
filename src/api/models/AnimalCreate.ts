@@ -4,4 +4,5 @@
 
 export type AnimalCreate = {
     name: string;
+    is_deactivated?: boolean;
 };

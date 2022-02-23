@@ -17,7 +17,7 @@
 	import registerServiceWorker from './utils/ServiceWorkerUtil';
 	import Trips from './pages/Trips.svelte';
 	import { colorThemeStore } from './components/loaders/ColorThemeButton';
-import { ColorTheme } from './api';
+	import { ColorTheme } from './api';
 
 	registerServiceWorker();
 

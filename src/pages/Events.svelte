@@ -9,11 +9,10 @@
     import { getEventMarkers } from '../components/loaders/Map';
     import Modal from "../components/Modal.svelte";
     import { getEnrichedEventType } from "../models/EnrichedEventType";
-    import { getEventCreate } from "../factories/EventCreateFactory";
+    import { getEventCreate } from "../factories/EventFactory";
     import Pagination from "../components/table/Pagination.svelte";
     import DropdownFilter from "../components/table/DropdownFilter.svelte";
     import Rating from "../components/Rating.svelte";
-    import { firstColumnClass, secondColumnClass, thirdColumnClass, fourthColumnClass } from "./loaders/Events";
     import RemoveButton from "../components/RemoveButton.svelte";
 
     let animals: Array<AnimalRead> = [];

@@ -6,6 +6,7 @@ import type { EventRead } from './EventRead';
 
 export type AnimalRead = {
     name: string;
+    is_deactivated?: boolean;
     id: number;
     created: string;
     updated: string;
