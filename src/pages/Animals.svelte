@@ -23,7 +23,7 @@
         } else {
             await AnimalsService.createAnimalsPost(animalCreate);
         }
-        animals = await AnimalsService.getAllAnimalsGet();
+        animals = await AnimalsService.getAllAnimalsGet(includeDeactivated);
         animalCreate = getAnimalCreate();
         idToEdit = undefined;
         isModalVisible = false;
