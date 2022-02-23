@@ -34,7 +34,7 @@
 
 <Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
     await AnimalsService.deleteAnimalsIdDelete(idToRemove);
-    animals = await AnimalsService.getAllAnimalsGet();
+    animals = await AnimalsService.getAllAnimalsGet(includeDeactivated);
     idToRemove = undefined;
 }} on:cancel={() => idToRemove = undefined}/>
 
