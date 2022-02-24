@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { authStore, getDecodedToken } from './services/auth';
-	import { modalStore } from './services/modals';
+	import { authStore } from './services/auth';
+	import { modalStore } from './components/loaders/Modal';
 	import { Router, Route } from 'svelte-navigator';
 	import Animals from './pages/Animals.svelte';
 	import Events from './pages/Events.svelte';
@@ -18,6 +18,7 @@
 	import Trips from './pages/Trips.svelte';
 	import { colorThemeStore } from './components/loaders/ColorThemeButton';
 	import { ColorTheme } from './api';
+	import About from './pages/About.svelte';
 
 	registerServiceWorker();
 
@@ -73,9 +74,12 @@
 				<Login />
 			</Route>
 		{/if}
+		<Route path="/about">
+			<About />
+		</Route>
 	</main>
 
-	<footer class="footer mt-auto bg-light d-sm-none fixed-bottom" style="z-index:1002">
+	<footer class="footer mt-auto d-lg-none fixed-bottom" style="z-index:1002">
 		<NavigationBar bottom={true} />
 	</footer>
 </Router>

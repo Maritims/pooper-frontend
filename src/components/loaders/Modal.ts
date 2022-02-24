@@ -5,6 +5,12 @@ export type ModalContext = {
     isBackdropVisible: boolean
 };
 
+export enum ModalSize {
+    Large = 'modal-lg',
+    ExtraLarge = 'modal-xl',
+    FullScreen = 'modal-fullscreen'
+};
+
 export const modalStore: Writable<ModalContext> = writable({
     isBackdropVisible: false
 });

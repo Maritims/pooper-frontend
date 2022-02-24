@@ -2,24 +2,20 @@
     import { authStore, logout } from '../../services/auth';
     import ColorThemeButton from '../ColorThemeButton.svelte';
     import NavLink from './NavLink.svelte';
+    import { navigationBarStore } from './loaders/NavigationBar';
 
     export let bottom = false;
-    let show = false;
-
-    function toggleNavbar(): void {
-		show = !show;
-	}
 </script>
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         {#if !bottom}
             <a class="navbar-brand" href="/">Pooper</a>
         {/if}
 
-        <div class="collapse navbar-collapse {show ? "show" : ""}">
-            {#if $authStore}
-                <ul class="navbar-nav me-auto">
+        <div class="collapse navbar-collapse {$navigationBarStore.show ? "show" : ""}">
+            <ul class="navbar-nav me-auto">
+                {#if $authStore}
                     {#if bottom}
                         <li class="nav-item">
                             <NavLink to="profile" class="nav-link">
@@ -51,7 +47,7 @@
                     </li>
                     <li class="nav-item">
                         <NavLink to="/trips" class="nav-link">
-                            <div class="icon"><i class="fas fa-hiking"></i> Trips</div>
+                            <div class="icon"><i class="fas fa-hiking"></i></div> Trips
                         </NavLink>
                     </li>
                     <li class="nav-item">
@@ -78,13 +74,21 @@
                             </a>
                         </li>
                     {/if}
-                </ul>
-            {/if}
-            <ColorThemeButton />
+                {/if}
+                <li class="nav-item">
+                    <NavLink to="about" class="nav-link">
+                        <div class="icon"><i class="fas fa-info"></i></div> About
+                    </NavLink>
+                </li>
+            </ul>
+            <ColorThemeButton class="d-none d-lg-block" />
         </div>
 
         {#if bottom}
-            <button class="navbar-toggler" type="button" on:click={toggleNavbar}>
+            <button class="navbar-toggler" type="button" on:click={() => navigationBarStore.update(context => {
+                context.show = !context.show;
+                return context;
+            })}>
                 <span class="navbar-toggler-icon"></span>
             </button>
             <ColorThemeButton />
@@ -96,7 +100,7 @@
     .icon {
         display:inline-block;
 
-        @media(max-width:576px) {
+        @media(max-width:768px) {
             text-align:center;
             width:30px;
         }

@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { showBackdrop, hideBackdrop } from '../services/modals';
+    import { showBackdrop, hideBackdrop, ModalSize } from './loaders/Modal';
 
     export let isVisible: boolean;
-    export let isLarge = false;
+    export let size: ModalSize = ModalSize.Large;
 
     $: isVisible ? showBackdrop() : hideBackdrop();
 </script>
 
 <div class="modal" tabindex="-1" style="{ isVisible ? "display:block" : "" }">
-    <div class="modal-dialog {isLarge ? 'modal-lg' : ''}">
+    <div class="modal-dialog {size}">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">

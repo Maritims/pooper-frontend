@@ -14,7 +14,7 @@
         <div class="col-xs-12 offset-md-4 col-md-4 offset-xl-5 col-xl-2">
             <form on:submit|preventDefault={() => onSubmitHandler(username, password)}>
                 <div class="text-center">
-                    <img src="gfx/pooper_{$colorThemeStore}_mode.png" alt="Pooper" class="img-fluid" style="height:150px"/>
+                    <img src="/gfx/pooper_{$colorThemeStore}_mode.png" alt="Pooper" class="img-fluid" style="height:150px"/>
                 </div>
 
                 <div class="mb-3 form-floating">

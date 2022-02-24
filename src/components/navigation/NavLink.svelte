@@ -1,5 +1,7 @@
 <script>
+    import { getContext } from "svelte";
     import { Link } from "svelte-navigator";
+    import { navigationBarStore } from './loaders/NavigationBar';
   
     let clazz = "";
     export { clazz as class };
@@ -15,6 +17,9 @@
     }
 </script>
 
-<Link to="{to}" getProps="{getProps}" class={$$props.class}>
+<Link to="{to}" getProps="{getProps}" class={$$props.class} on:click={() => navigationBarStore.update(context => {
+    context.show = false;
+    return context;
+})}>
     <slot />
 </Link>

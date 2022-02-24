@@ -37,7 +37,7 @@
     $: isModalVisible = !!selectedTrip;
 </script>
 
-<Modal bind:isVisible={isModalVisible} isLarge={true}>
+<Modal bind:isVisible={isModalVisible}>
     <span slot="title">Review trip: {selectedTrip?.startTime.toLocaleString()}, {getTimeSpanString(getTimeSpanFromDateOrNumber(selectedTrip?.durationInMs || 0))}, {selectedTrip?.events?.length} events</span>
     <span slot="body">
         {#if isModalVisible && selectedTrip}
