@@ -9,14 +9,15 @@
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
 	import Modal from '../components/Modal.svelte';
-	import { getTimeSpanForNextEvent } from '../components/loaders/EventButton';
 	import TripAlert from '../components/TripAlert.svelte';
 	import { getEventMarkers } from '../components/loaders/Map';
+	import { getAdditionalEventTypesCssClass } from './loaders/Home';
+	import Accordion from '../components/Accordion.svelte';
+	import { getEventsInChosenPeriod } from './loaders/Statistics';
 
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let eventTypes = getAllEventTypes();
-	let isModalVisible = false;
 	let position: Position | undefined = undefined;
 	
 	onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
@@ -24,30 +25,9 @@
 	async function handleOnDone(e: CustomEvent): Promise<void> {
 		animals = e.detail.success ? (await AnimalsService.getAllAnimalsGet()) : [];
 		currentAnimal = undefined;
-		isModalVisible = false;
-	}
-	async function loadMap(): Promise<void> {
-		position = await getCurrentPosition();
-	}
-	
-	function showModal(animal: AnimalRead): void {
-		currentAnimal = animal;
-		isModalVisible = true;
 	}
 
-	function getAdditionalEventTypesCssClass(animal: AnimalRead): string {
-		if(!animal.events?.length) return 'danger';
-
-		for(let i = 0; i < eventTypes.length; i++) {
-			if(eventTypes[i].showOnHomeScreen) continue;
-			
-			const timeSpanForNextEvent = getTimeSpanForNextEvent(animal, eventTypes[i]);
-			if(!timeSpanForNextEvent || timeSpanForNextEvent.totalMilliseconds > eventTypes[i].intervalInMilliseconds) return 'danger';
-			if((timeSpanForNextEvent.totalMilliseconds / eventTypes[i].intervalInMilliseconds) >= 0.75) return 'warning';
-		}
-
-		return 'success';
-	}
+	$: isModalVisible = !!currentAnimal;
 </script>
 
 
@@ -80,7 +60,7 @@
 					<div class="card-body">
 						<h5 class="align-middle align-items-center card-title d-flex justify-content-between">
 							{animal.name}
-							<button class="btn btn-{getAdditionalEventTypesCssClass(animal)}" on:click={() => showModal(animal)}>
+							<button class="btn btn-{getAdditionalEventTypesCssClass(animal, eventTypes)}" on:click={() => currentAnimal = animal}>
 								<i class="fas fa-plus"></i>
 							</button>
 						</h5>
@@ -94,6 +74,32 @@
 									{/if}
 								{/each}
 							</div>
+							<div class="row mt-2">
+								<div class="col">
+									<Accordion header="Summary - Today">
+										<table class="table table-striped" slot="accordion-body">
+											<thead>
+												<tr>
+													<th>Event type</th>
+													<th>Registered</th>
+													<th>Expected</th>
+												</tr>
+											</thead>
+											<tbody>
+												{#each eventTypes as eventType}
+													{@const todaysEvents = getEventsInChosenPeriod(animal.events, eventType, 1)}
+													{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.events, eventType, 7)}
+													<tr>
+														<td>{eventType.eventType}</td>
+														<td>{todaysEvents.length}</td>
+														<td>{(lastSevenDaysEvents.length / 7).toFixed(2)}</td>
+													</tr>
+												{/each}
+											</tbody>
+										</table>
+									</Accordion>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -105,7 +111,7 @@
 			{#if position}
 				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
-				<button class="btn btn-lg btn-primary" on:click={loadMap}>Load map</button>
+				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
 			{/if}
 		</div>
 	</div>

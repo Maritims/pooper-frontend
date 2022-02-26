@@ -4,19 +4,22 @@
     import NavLink from './NavLink.svelte';
     import { navigationBarStore } from './loaders/NavigationBar';
 
-    export let bottom = false;
+    export let showBrand = true;
+    export let showToggleButton = false;
+    let clazz: string = '';
+    export { clazz as class };
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        {#if !bottom}
+        {#if showBrand}
             <a class="navbar-brand" href="/">Pooper</a>
         {/if}
 
-        <div class="collapse navbar-collapse {$navigationBarStore.show ? "show" : ""}">
+        <div class="collapse navbar-collapse mt-1 {$navigationBarStore.show ? "show" : ""} {clazz}">
             <ul class="navbar-nav me-auto">
                 {#if $authStore}
-                    {#if bottom}
+                    {#if showToggleButton}
                         <li class="nav-item">
                             <NavLink to="profile" class="nav-link">
                                 <div class="icon"><i class="fas fa-user-cog"></i></div> My profile
@@ -55,7 +58,7 @@
                             <div class="icon"><i class="fas fa-users"></i></div> Users
                         </NavLink>
                     </li>
-                    {#if bottom}
+                    {#if showToggleButton}
                         <li class="nav-item">
                             <NavLink to="/" class="nav-link">
                                 <div class="icon"><i class="fas fa-home"></i></div> Home
@@ -84,7 +87,7 @@
             <ColorThemeButton class="d-none d-lg-block" />
         </div>
 
-        {#if bottom}
+        {#if showToggleButton}
             <button class="navbar-toggler" type="button" on:click={() => navigationBarStore.update(context => {
                 context.show = !context.show;
                 return context;

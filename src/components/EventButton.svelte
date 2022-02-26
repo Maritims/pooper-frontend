@@ -79,9 +79,9 @@
     </Modal>
 {/if}
 
-    <button type="button" class="btn btn-lg btn-event {cssClass} {compact ? '' : 'w-100'}" on:click={async () => {
-        if(eventType.isRatingRequired) isModalVisible = true;
-        else await createEvent();
+<button type="button" class="btn btn-lg btn-event {cssClass} {compact ? '' : 'w-100'}" on:click={async () => {
+    if(eventType.isRatingRequired) isModalVisible = true;
+    else await createEvent();
     }}>
     <i class="fas {eventType.iconClass} {compact ? '' : 'fa-2x'}"></i>
     <div class="d-none {compact ? 'd-sm-inline-block' : 'd-sm-block fs-3'}">{eventType.eventType}</div>

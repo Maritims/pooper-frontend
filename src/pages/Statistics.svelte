@@ -3,9 +3,9 @@
     import { AnimalsService } from "../api";
     import { getAllEventTypes } from "./loaders/Events";
     import ChartJs from "../components/ChartJs.svelte";
-    import { getMostFrequentHourFromDates, getTimeSpanFromDatePair, getTimeSpanStringFromMilliseconds, isToday } from "../utils/TimeUtils";
+    import { getMostFrequentHourFromDates, getTimeSpanStringFromMilliseconds } from "../utils/TimeUtils";
     import { getAverage, getMeanOfDifferences } from '../utils/NumberUtils';
-    import { getAllEventTypesDataSets, getLabels, getPoopRatingDataSets } from './loaders/Statistics';
+    import { getAllEventTypesDataSets, getEventsInChosenPeriod, getLabels, getPoopRatingDataSets } from './loaders/Statistics';
 
     let currentAnimal: AnimalRead;
     let days = 7;
@@ -53,14 +53,7 @@
                     <tbody>
                         <!-- svelte-ignore missing-declaration -->
                         {#each eventTypes as et}
-                            {@const eventsInChosenPeriod = allEvents.filter(e => {
-                                if(e.event_type != et.eventType) return false;
-                                if(days == 1) return isToday(Date.parse(e.created));
-                                return getTimeSpanFromDatePair({
-                                    latest: new Date(),
-                                    earliest: new Date(Date.parse(e.created))
-                                }).totalDays <= days;
-                            })}
+                            {@const eventsInChosenPeriod = getEventsInChosenPeriod(allEvents, et, days)}
                             {@const averageRating = getAverage(eventsInChosenPeriod.map(e => e.rating))}
                             {@const averageEvents = eventsInChosenPeriod.length / days}
                             {@const meanTimeBetweenEvents = getMeanOfDifferences(eventsInChosenPeriod.sort((a, b) => Date.parse(b.created) - Date.parse(a.created)).map(e => Date.parse(e.created)))}

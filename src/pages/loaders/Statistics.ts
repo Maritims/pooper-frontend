@@ -2,6 +2,8 @@ import type { ChartDataset } from "chart.js";
 import { EventType, type EventRead } from "../../api";
 import { getAllEventTypes } from "./Events";
 import { getAverage } from "../../utils/NumberUtils";
+import type { EnrichedEventType } from "../../models/EnrichedEventType";
+import { getTimeSpanFromDatePair, isToday } from "../../utils/TimeUtils";
 
 function getDates(days: number): Array<Date> {
     return [...Array(days).keys()].map(day => {
@@ -56,4 +58,15 @@ export function getPoopRatingDataSets(days: number, events: Array<EventRead>, di
         backgroundColor: '#000',
         borderColor: '#000'
     }];
+}
+
+export function getEventsInChosenPeriod(events: Array<EventRead>, eventType: EnrichedEventType, days: number): Array<EventRead> {
+    return events.filter(e => {
+        if(e.event_type != eventType.eventType) return false;
+        if(days == 1) return isToday(Date.parse(e.created));
+        return getTimeSpanFromDatePair({
+            latest: new Date(),
+            earliest: new Date(Date.parse(e.created))
+        }).totalDays <= days;
+    })
 }

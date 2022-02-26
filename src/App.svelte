@@ -34,7 +34,7 @@
 
 <Router>
 	<header>
-		<NavigationBar />
+		<NavigationBar showBrand={true} showToggleButton={false} class="d-none d-lg-block" />
 	</header>
 
 	<main class="flex-shrink-0 pt-2">
@@ -80,7 +80,7 @@
 	</main>
 
 	<footer class="footer mt-auto d-lg-none fixed-bottom" style="z-index:1002">
-		<NavigationBar bottom={true} />
+		<NavigationBar showBrand={false} showToggleButton={true} />
 	</footer>
 </Router>
 
