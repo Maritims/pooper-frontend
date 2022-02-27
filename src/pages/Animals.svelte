@@ -8,7 +8,7 @@
     import EditButton from '../components/EditButton.svelte';
     import { t } from '../translations';
     import { getNoteCreate } from '../factories/NoteFactory';
-    import NoteModals from '../components/NoteModals.svelte';
+    import NoteModal from '../components/NoteModal.svelte';
 
     let animals: Array<AnimalRead> = [];
     let isCreateModalVisible = false;
@@ -73,7 +73,7 @@
     </span>
 </Modal>
 
-<NoteModals bind:animal={animalToInspect}
+<NoteModal bind:animal={animalToInspect}
     on:done={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
     on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
     on:cancel={() => idToInspect = undefined}
