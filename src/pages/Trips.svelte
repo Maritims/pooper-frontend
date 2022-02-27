@@ -7,6 +7,7 @@
     import { onMount } from "svelte";
     import { EventsService, TripsService } from '../api';
     import { getDecodedToken } from '../services/auth';
+import { t } from '../translations';
 
     let activeTabId = 'new-trips';
     let selectedTrip: Trip | undefined;
@@ -38,24 +39,29 @@
 </script>
 
 <Modal bind:isVisible={isModalVisible}>
-    <span slot="title">Review trip: {selectedTrip?.startTime.toLocaleString()}, {getTimeSpanString(getTimeSpanFromDateOrNumber(selectedTrip?.durationInMs || 0))}, {selectedTrip?.events?.length} events</span>
+    <span slot="title">{$t({ key: 'trips.review.trip', substitutions: [
+        selectedTrip?.startTime.toLocaleString() || '',
+        getTimeSpanString(getTimeSpanFromDateOrNumber(selectedTrip?.durationInMs || 0)),
+        selectedTrip?.events?.length || 0
+        ]})}
+    </span>
     <span slot="body">
         {#if isModalVisible && selectedTrip}
             <Map {center} markers={getEventMarkers(selectedTrip?.events || [])} on:load={(e) => addRouteForEvents(homeLongitude, homeLatitude, selectedTrip?.events || [], e.detail.target)} />
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Animal</th>
-                        <th>Event type</th>
-                        <th>Created</th>
-                        <th>Coordinates</th>
+                        <th>{$t({ key: 'animal' })}</th>
+                        <th>{$t({ key: 'event.type' })}</th>
+                        <th>{$t({ key: 'created' })}</th>
+                        <th>{$t({ key: 'coordinates' })}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {#each selectedTrip.events as event}
                     <tr>
                         <td>{event.animal_name}</td>
-                        <td>{event.event_type}</td>
+                        <td>{$t({ key: `event.type.${event.event_type.replace(' ', '.').toLowerCase()}` })}</td>
                         <td>{event.created}</td>
                         <td>{event.longitude}, {event.latitude}</td>
                     </tr>
@@ -72,8 +78,8 @@
             });
             trips = await getAllUnconfirmedTrips();
             selectedTrip = undefined;
-        }}>Confirm</button>
-        <button type="button" class="btn btn-danger" on:click={() => selectedTrip = undefined}>Cancel</button>
+        }}>{$t({ key: 'confirm' })}</button>
+        <button type="button" class="btn btn-danger" on:click={() => selectedTrip = undefined}>{$t({ key: 'cancel' })}</button>
     </span>
 </Modal>
 
@@ -82,7 +88,7 @@
         <div class="col">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item" id="new-trips-tab" on:click={() => activeTabId = "new-trips"}>
-                    <button type="button" class="nav-link {activeTabId == "new-trips" ? "active" : ""}">New trips</button>
+                    <button type="button" class="nav-link {activeTabId == "new-trips" ? "active" : ""}">{$t({ key: 'trips.new.trips' })}</button>
                 </li>
             </ul>
             <div class="tab-pane fade {activeTabId == "new-trips" ? "d-block show" : "d-none"}" id="new-trips" role="tabpanel" aria-labelledby="#new-trips-tab">
@@ -90,10 +96,10 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Start time</th>
-                                <th>Stop time</th>
-                                <th>Duration</th>
-                                <th>Events</th>
+                                <th>{$t({ key: 'trips.table.header.start.time' })}</th>
+                                <th>{$t({ key: 'trips.table.header.stop.time' })}</th>
+                                <th>{$t({ key: 'trips.table.header.duration' })}</th>
+                                <th>{$t({ key: 'events' })}</th>
                             </tr>
                         </thead>
                         <tbody>

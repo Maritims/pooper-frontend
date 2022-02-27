@@ -116,7 +116,7 @@ import { t } from '../translations';
 			{#if position}
 				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
-				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'home.load.map' })}</button>
+				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
 			{/if}
 		</div>
 	</div>

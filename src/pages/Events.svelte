@@ -95,7 +95,7 @@
                             <option value={animal.id}>{animal.name}</option>
                         {/each}
                     </select>
-                    <label for="animal">{$t({ key: 'events.animal' })}</label>
+                    <label for="animal">{$t({ key: 'animal' })}</label>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@
                             <option value={eventType.eventType}>{$t({ key: `event.type.${eventType.eventType.replace(' ', '.').toLowerCase()}` })}</option>
                         {/each}
                     </select>
-                    <label for="eventType">{$t({ key: 'events.event.type' })}</label>
+                    <label for="eventType">{$t({ key: 'event.type' })}</label>
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="longitude" bind:value={eventCreate.longitude} readonly />
-                    <label for="longitude">{$t({ key: 'events.longitude' })}</label>
+                    <label for="longitude">{$t({ key: 'longitude' })}</label>
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="text" class="form-control" bind:value={eventCreate.latitude} readonly />
-                    <label for="latitude">{$t({ key: 'events.latitude' })}</label>
+                    <label for="latitude">{$t({ key: 'latitude' })}</label>
                 </div>
             </div>
         </div>
@@ -151,7 +151,7 @@
                     eventCreate.latitude = e.detail.lngLat.lat;
                 }} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
-				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'events.load.map' })}</button>
+				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
 			{/if}
         </div>
     </form>
@@ -173,7 +173,7 @@
                 <thead>
                     <tr>
                         <th>
-                            {$t({ key: 'events.animal' })}
+                            {$t({ key: 'animal' })}
                             <DropdownFilter bind:this={animalFilter} bind:selectedOption={filterByAnimal} options={animals.map(animal => {
                                 return {
                                     description: animal.name,
@@ -182,7 +182,7 @@
                             })} />
                         </th>
                         <th>
-                            {$t({ key: 'events.event.type' })}
+                            {$t({ key: 'event.type' })}
                             <DropdownFilter bind:this={eventTypeFilter} bind:selectedOption={filterByEventType} options={enrichedEventTypes.map(enrichedEventType => {
                                 return {
                                     description: enrichedEventType.eventType,

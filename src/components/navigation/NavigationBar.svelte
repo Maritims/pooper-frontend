@@ -37,7 +37,7 @@
                     {/if}
                     <li class="nav-item">
                         <NavLink to="animals" class="nav-link">
-                            <div class="icon"><i class="fas fa-paw"></i></div> {$t({ key: 'navigation.bar.animals' })}
+                            <div class="icon"><i class="fas fa-paw"></i></div> {$t({ key: 'animal' })}
                         </NavLink>
                     </li>
                     <li class="nav-item">
@@ -69,7 +69,7 @@
                     {:else}
                         <li class="nav-item">
                             <NavLink to="profile" class="nav-link">
-                                <div class="icon"><i class="fas fa-user-cog"></i></div> {$t({ key: 'navigation.bar.users' })}
+                                <div class="icon"><i class="fas fa-user-cog"></i></div> {$t({ key: 'navigation.bar.my.profile' })}
                             </NavLink>
                         </li>
                         <!-- svelte-ignore a11y-invalid-attribute -->

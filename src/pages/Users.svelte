@@ -6,6 +6,7 @@
     import Modal from "../components/Modal.svelte";
     import RemoveButton from "../components/RemoveButton.svelte";
     import { getUserCreate } from "../factories/UserFactory";
+    import { t } from "../translations";
 
     let idToRemove: number | undefined;
     let users: Array<UserRead> = [];
@@ -37,7 +38,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="firstName" bind:value={userCreate.first_name} autocomplete="given-name" />
-                    <label for="firstName">First name</label>
+                    <label for="firstName">{$t({ key: 'first.name' })}</label>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="text" class="form-control" bind:value={userCreate.last_name} autocomplete="family-name" />
-                    <label for="lastName">Last name</label>
+                    <label for="lastName">{$t({ key: 'last.name' })}</label>
                 </div>
             </div>
         </div>
@@ -53,7 +54,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="email" class="form-control" id="emailAddress" autocomplete="email" bind:value={userCreate.email_address} />
-                    <label for="emailAddress">E-mail address</label>
+                    <label for="emailAddress">{$t({ key: 'email.address' })}</label>
                 </div>
             </div>
         </div>
@@ -61,7 +62,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="password" class="form-control" id="password" autocomplete="new-password" bind:value={userCreate.password} />
-                    <label for="password">Password</label>
+                    <label for="password">{$t({ key: 'password' })}</label>
                 </div>
             </div>
         </div>
@@ -69,21 +70,21 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="password" class="form-control" id="passwordRepeated" autocomplete="new-password" bind:value={userCreate.password_repeated} />
-                    <label for="passwordRepeated">Repeat password</label>
+                    <label for="passwordRepeated">{$t({key: 'users.create.user.repeat.password' })}</label>
                 </div>
             </div>
         </div>
     </form>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
-        <button type="submit" class="btn btn-success" on:click={handleOnSubmit}>Submit</button>
+        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>{$t({ key: 'cancel' })}</button>
+        <button type="submit" class="btn btn-success" on:click={handleOnSubmit}>{$t({ key: 'submit' })}</button>
     </span>
 </Modal>
 
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>Create user</button>
+            <button class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>{$t({ key: 'users.create.user' })}</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -91,11 +92,11 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>E-mail address</th>
-                        <th>Created</th>
-                        <th>Updated</th>
+                        <th>{$t({ key: 'first.name' })}</th>
+                        <th>{$t({ key: 'last.name' })}</th>
+                        <th>{$t({ key: 'email.address' })}</th>
+                        <th>{$t({ key: 'created' })}</th>
+                        <th>{$t({ key: 'updated' })}</th>
                         <th></th>
                     </tr>
                 </thead>

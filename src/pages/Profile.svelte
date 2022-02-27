@@ -7,6 +7,7 @@
     import Map from '../components/Map.svelte';
     import { getCurrentPosition, type Position } from "../models/Position";
     import type { MapMouseEvent } from "mapbox-gl";
+import { t } from "../translations";
 
     let map: Map;
     let position: Position;
@@ -36,7 +37,7 @@
             addToast({
                 id: new Date().getTime(),
                 type: 'danger',
-                body: 'Unable to update profile',
+                body: $t({ key: 'my.profile.unable.to.update' }),
                 durationInMs: 3000
             });
             return;
@@ -45,7 +46,7 @@
         addToast({
             id: new Date().getTime(),
             type: 'success',
-            body: 'Succesfully updated profile',
+            body: $t({ key: 'my.profile.successfully.updated' }),
             durationInMs: 3000
         });
     }
@@ -64,7 +65,7 @@
                 <div class="col">
                     <div class="form-floating">
                         <input type="text" readonly class="form-control" id="firstName" bind:value={userUpdate.first_name} autocomplete="given-name" />
-                        <label for="firstName">First name</label>
+                        <label for="firstName">{$t({ key: 'first.name' })}</label>
                     </div>
                 </div>
             </div>
@@ -72,7 +73,7 @@
                 <div class="col">
                     <div class="form-floating">
                         <input type="text" readonly class="form-control" id="lastName" bind:value={userUpdate.last_name} autocomplete="family-name" />
-                        <label for="lastName">Last name</label>
+                        <label for="lastName">{$t({ key: 'last.name' })}</label>
                     </div>
                 </div>
             </div>
@@ -80,7 +81,7 @@
                 <div class="col">
                     <div class="form-floating">
                         <input type="email" readonly class="form-control" id="emailAddress" bind:value={userUpdate.email_address} autocomplete="email" />
-                        <label for="emailAddress">E-mail address</label>
+                        <label for="emailAddress">{$t({ key: 'email.address' })}</label>
                     </div>
                 </div>
             </div>
@@ -88,7 +89,7 @@
                 <div class="col">
                     <div class="form-floating">
                         <input type="password" class="form-control" id="password" bind:value={userUpdate.password} autocomplete="new-password" use:focus />
-                        <label for="password">Password</label>
+                        <label for="password">{$t({ key: 'password' })}</label>
                     </div>
                 </div>
             </div>
@@ -96,7 +97,7 @@
                 <div class="col">
                     <div class="form-floating">
                         <input type="password" class="form-control" id="passwordRepeated" bind:value={userUpdate.password_repeated} autocomplete="new-password" />
-                        <label for="passwordRepeated">Repeat password</label>
+                        <label for="passwordRepeated">{$t({ key: 'my.profile.repeat.password' })}</label>
                     </div>
                 </div>
             </div>
@@ -104,13 +105,13 @@
                 <div class="col">
                     <div class="form-floating">
                         <input type="text" class="form-control" id="longitude" bind:value={userUpdate.home_longitude} readonly />
-                        <label for="longitude">Longitude</label>
+                        <label for="longitude">{$t({ key: 'longitude' })}</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating">
                         <input type="text" class="form-control" bind:value={userUpdate.home_latitude} readonly />
-                        <label for="latitude">Latitude</label>
+                        <label for="latitude">{$t({ key: 'latitude' })}</label>
                     </div>
                 </div>
             </div>
@@ -119,13 +120,13 @@
                     {#if position}
                         <Map bind:this={map} center={position} on:click={handleMapMouseEvent} />
                     {:else}
-                        <button type="button" class="btn btn-lg btn-primary w-100" on:click={async () => position = await getCurrentPosition()}>Load map</button>
+                        <button type="button" class="btn btn-lg btn-primary w-100" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
                     {/if}
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col">
-                    <button type="submit" class="btn btn-lg btn-success">Save changes</button>
+                    <button type="submit" class="btn btn-lg btn-success">{$t({ key: 'submit' })}</button>
                 </div>
             </div>
         </form>
