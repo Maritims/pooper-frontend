@@ -31,6 +31,8 @@ export default {
     'animals.deactivate.animal': 'Deaktiver',
     'animals.table.header.name': 'Navn',
     'animals.table.header.deactivated': 'Deaktivert',
+    'color.theme.button.dark.mode': 'Mørkt tema',
+    'color.theme.button.light.mode': 'Lyst tema',
     'confirmation.title': 'Er du sikker?',
     'confirmation.body': 'Vennligst bekreft handlingen. Vil du fortsette?',
     'dropdown.filter.default.option': 'Filter',

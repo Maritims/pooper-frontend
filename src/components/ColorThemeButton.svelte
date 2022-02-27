@@ -1,13 +1,19 @@
 <script lang="ts">
     import { ColorTheme } from '../api';
-    import { colorThemeStore } from './loaders/ColorThemeButton';
+    import { t } from '../translations';
+    import { colorThemeStore, getEnumFromString, getIconFromEnum } from './loaders/ColorThemeButton';
 
     let clazz: string = '';
     export { clazz as class };
+
+    $: changeToTheme = $colorThemeStore == ColorTheme.DARK ? ColorTheme.LIGHT : ColorTheme.DARK;
 </script>
 
-{#if $colorThemeStore == ColorTheme.DARK}
-    <i class="{clazz} fas fa-moon text-light" on:click={() => colorThemeStore.update(colorTheme => colorTheme = ColorTheme.LIGHT)}></i>
-{:else}
-    <i class="{clazz} fas fa-sun text-light" on:click={() => colorThemeStore.update(colorTheme => colorTheme = ColorTheme.DARK)}></i>
-{/if}
+{#each Object.keys(ColorTheme) as key}
+    {#if $colorThemeStore === getEnumFromString(key)}
+        <span class="d-inline {clazz}" role="button" on:click={() => colorThemeStore.update(colorTheme => colorTheme = changeToTheme)}>
+            <i class="fas {getIconFromEnum(key)} text-light"></i>
+            <span class="d-none d-lg-inline text-light">&nbsp;{$t({ key: `color.theme.button.${getEnumFromString(key).toLowerCase()}.mode` })}</span>
+        </span>
+    {/if}
+{/each}

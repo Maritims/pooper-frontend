@@ -25,6 +25,8 @@ export default {
     'animals.deactivate.animal': 'Deactivate',
     'animals.table.header.name': 'Name',
     'animals.table.header.deactivated': 'Deactivated',
+    'color.theme.button.dark.mode': 'Mørkt tema',
+    'color.theme.button.light.mode': 'Lyst tema',
     'confirmation.title': 'Are you sure?',
     'confirmation.body': 'Please confirm the action. Do you want to proceed?',
     'dropdown.filter.default.option': 'Filter',

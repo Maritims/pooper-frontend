@@ -10,3 +10,15 @@ colorThemeStore.subscribe(async (value: ColorTheme) => {
         localStorage.setItem('colorThemeKey', value.toUpperCase());
     }
 });
+
+export function getEnumFromString(key: string): ColorTheme {
+    return ColorTheme[key as keyof typeof ColorTheme];
+}
+
+export function getIconFromEnum(key: string): string {
+    const enumValue = getEnumFromString(key);
+    switch(enumValue) {
+        case ColorTheme.DARK: return 'fa-moon';
+        case ColorTheme.LIGHT: return 'fa-sun';
+    }
+}
