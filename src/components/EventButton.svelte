@@ -6,12 +6,15 @@
     import { addToast } from "../services/toasts";
     import Modal from "./Modal.svelte";
     import Rating from './Rating.svelte';
+    import { t, type TranslationRequest } from "../translations";
 
     export let animal: AnimalRead;
     export let compact = false;
     export let eventType: EnrichedEventType;
 
-    let nextEventDueInHoursText = 'Due now';
+    let nextEventDueInHoursText: TranslationRequest = {
+        key: 'event.button.due.now'
+    };
     let cssClass = 'btn-danger';
     let isModalVisible = false;
     let rating = 0;
@@ -30,7 +33,7 @@
                 addToast({
                     id: new Date().getTime(),
                     type: 'success',
-                    body: `Successfully registered event '${eventType.eventType}' for ${animal.name}`,
+                    body: $t({ key: 'event.button.success', substitutions: [eventType.eventType, animal.name] }),
                     durationInMs: 3000
                 });
                 dispatch('done', {
@@ -43,7 +46,7 @@
                 addToast({
                     id: new Date().getTime(),
                     type: 'danger',
-                    body: `Failed to register event '${eventType.eventType} for ${animal.name}: ${error}`,
+                    body: $t({ key: 'event.button.failure', substitutions: [eventType.eventType, animal.name, error.message] }),
                     durationInMs: 3000
                 });
                 dispatch('done', {
@@ -73,8 +76,8 @@
             </div>
         </div>
         <span slot="footer">
-            <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
-            <button type="submit" class="btn btn-success" on:click={() => createEvent()}>Submit</button>
+            <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>{$t({ key: 'cancel' })}</button>
+            <button type="submit" class="btn btn-success" on:click={() => createEvent()}>{$t({ key: 'submit' })}</button>
         </span>
     </Modal>
 {/if}
@@ -84,6 +87,6 @@
     else await createEvent();
     }}>
     <i class="fas {eventType.iconClass} {compact ? '' : 'fa-2x'}"></i>
-    <div class="d-none {compact ? 'd-sm-inline-block' : 'd-sm-block fs-3'}">{eventType.eventType}</div>
-    <div class="d-none {compact ? '' : 'd-sm-block fs-6'}">{nextEventDueInHoursText}</div>
+    <div class="d-none {compact ? 'd-sm-inline-block' : 'd-sm-block fs-3'}">{$t({ key: `event.type.${eventType.eventType.replace(' ', '.').toLowerCase()}`})}</div>
+    <div class="d-none {compact ? '' : 'd-sm-block fs-6'}">{$t(nextEventDueInHoursText)}</div>
 </button>

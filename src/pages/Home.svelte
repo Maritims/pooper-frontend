@@ -14,6 +14,7 @@
 	import { getAdditionalEventTypesCssClass } from './loaders/Home';
 	import Accordion from '../components/Accordion.svelte';
 	import { getEventsInChosenPeriod } from './loaders/Statistics';
+import { t } from '../translations';
 
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;
@@ -32,7 +33,7 @@
 
 
 <Modal isVisible={isModalVisible}>
-	<span slot="title">Additional event types</span>
+	<span slot="title">{$t({ key: 'home.additional.event.types' })}</span>
 	<div slot="body" class="container-fluid p-0">
 		{#each eventTypes as eventType}
 			{#if !eventType.showOnHomeScreen && currentAnimal}
@@ -45,7 +46,7 @@
 		{/each}
 	</div>
 	<span slot="footer">
-		<button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
+		<button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>{$t({ key: 'cancel' })}</button>
 	</span>
 </Modal>
 
@@ -55,7 +56,7 @@
 
 		{#each animals as animal}
 			{@const division = animals.length > 1 ? 6 : 12}
-			<div class="col-12 col-sm-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-2">
+			<div class="col-12 col-md-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-2">
 				<div class="card">
 					<div class="card-body">
 						<h5 class="align-middle align-items-center card-title d-flex justify-content-between">
@@ -76,23 +77,27 @@
 							</div>
 							<div class="row mt-2">
 								<div class="col">
-									<Accordion header="Summary - Today">
+									<Accordion header={$t({ key: 'home.daily.summary.title' })}>
 										<table class="table table-striped" slot="accordion-body">
 											<thead>
 												<tr>
-													<th>Event type</th>
-													<th>Registered</th>
-													<th>Expected</th>
+													<th></th>
+													<th class="text-center">{$t({ key: 'home.daily.summary.table.header.registered' })}</th>
+													<th class="text-center">{$t({ key: 'home.daily.summary.table.header.expected' })}</th>
+													<th class="text-center">{$t({ key: 'home.daily.summary.table.header.difference' })}</th>
 												</tr>
 											</thead>
 											<tbody>
 												{#each eventTypes as eventType}
-													{@const todaysEvents = getEventsInChosenPeriod(animal.events, eventType, 1)}
-													{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.events, eventType, 7)}
+													{@const todaysEvents = getEventsInChosenPeriod(animal.events, eventType, 1).length}
+													{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.events, eventType, 7).length / 7}
 													<tr>
-														<td>{eventType.eventType}</td>
-														<td>{todaysEvents.length}</td>
-														<td>{(lastSevenDaysEvents.length / 7).toFixed(2)}</td>
+														<td>
+															<i class="fas {eventType.iconClass}"></i>
+														</td>
+														<td class="text-center">{todaysEvents}</td>
+														<td class="text-center">{lastSevenDaysEvents.toFixed(0)}</td>
+														<td class="text-center">{(todaysEvents - lastSevenDaysEvents).toFixed(0)}</td>
 													</tr>
 												{/each}
 											</tbody>
@@ -111,7 +116,7 @@
 			{#if position}
 				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
-				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
+				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'home.load.map' })}</button>
 			{/if}
 		</div>
 	</div>

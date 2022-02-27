@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import { t } from "../translations";
     import Modal from "./Modal.svelte";
 
     export let isVisible = false;
@@ -8,16 +9,16 @@
 </script>
 
 <Modal bind:isVisible>
-    <span slot="title">Are you sure?</span>
-    <span slot="body">Please confirm the action. Do you want to proceed?</span>
+    <span slot="title">{$t({ key: 'confirmation.title' })}</span>
+    <span slot="body">{$t({ key: 'confirmation.body' })}</span>
     <span slot="footer">
         <button type="button" class="btn btn-danger" on:click={() => {
             isVisible = false;
             dispatch('cancel');
-        }}>No</button>
+        }}>{$t({ key: 'no' })}</button>
         <button type="button" class="btn btn-success" on:click={() => {
             isVisible = false;
             dispatch('confirm');
-        }}>Yes</button>
+        }}>{$t({ key: 'yes' })}</button>
     </span>
 </Modal>

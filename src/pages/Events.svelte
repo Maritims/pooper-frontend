@@ -14,6 +14,7 @@
     import DropdownFilter from "../components/table/DropdownFilter.svelte";
     import Rating from "../components/Rating.svelte";
     import RemoveButton from "../components/RemoveButton.svelte";
+    import { t } from '../translations';
 
     let animals: Array<AnimalRead> = [];
     let idToRemove: number | undefined;
@@ -48,7 +49,7 @@
         addToast({
             id: new Date().getTime(),
             type: 'success',
-            body: `Successfully registered event '${event.event_type}' for ${event.animal_name}`,
+            body: $t({ key: 'event.button.success', substitutions: [event.event_type, event.animal_name] }),
             durationInMs: 3000
         });
     }
@@ -83,7 +84,7 @@
 }} on:cancel={() => idToRemove = undefined}/>
 
 <Modal isVisible={isModalVisible}>
-    <span slot="title">Create new event</span>
+    <span slot="title">{$t({ key: 'events.create.event' })}</span>
     <form slot="body" on:submit|preventDefault={createEvent}>
         <div class="row mb-2">
             <div class="col">
@@ -94,7 +95,7 @@
                             <option value={animal.id}>{animal.name}</option>
                         {/each}
                     </select>
-                    <label for="animal">Animal</label>
+                    <label for="animal">{$t({ key: 'events.animal' })}</label>
                 </div>
             </div>
         </div>
@@ -104,10 +105,10 @@
                     <select class="form-select" id="eventType" bind:value={eventCreate.event_type}>
                         <option>Choose event type</option>
                         {#each enrichedEventTypes as eventType}
-                            <option value={eventType.eventType}>{eventType.eventType}</option>
+                            <option value={eventType.eventType}>{$t({ key: `event.type.${eventType.eventType.replace(' ', '.').toLowerCase()}` })}</option>
                         {/each}
                     </select>
-                    <label for="eventType">Event type</label>
+                    <label for="eventType">{$t({ key: 'events.event.type' })}</label>
                 </div>
             </div>
         </div>
@@ -115,7 +116,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="longitude" bind:value={eventCreate.longitude} readonly />
-                    <label for="longitude">Longitude</label>
+                    <label for="longitude">{$t({ key: 'events.longitude' })}</label>
                 </div>
             </div>
         </div>
@@ -123,7 +124,7 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="text" class="form-control" bind:value={eventCreate.latitude} readonly />
-                    <label for="latitude">Latitude</label>
+                    <label for="latitude">{$t({ key: 'events.latitude' })}</label>
                 </div>
             </div>
         </div>
@@ -131,14 +132,14 @@
             <div class="col">
                 <div class="form-floating">
                     <input type="datetime-local" class="form-control" bind:value={eventCreate.created} />
-                    <label for="created">Created</label>
+                    <label for="created">{$t({ key: 'created' })}</label>
                 </div>
             </div>
         </div>
         {#if isRatingRequired}
             <div class="row mb-2">
                 <div class="col">
-                    <Rating bind:rating={eventCreate.rating} label="Rating" />
+                    <Rating bind:rating={eventCreate.rating} label={$t({ key: 'rating.title' })} />
                 </div>
             </div>
         {/if}
@@ -150,20 +151,20 @@
                     eventCreate.latitude = e.detail.lngLat.lat;
                 }} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
 			{:else}
-				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>Load map</button>
+				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'events.load.map' })}</button>
 			{/if}
         </div>
     </form>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>Cancel</button>
-        <button type="submit" class="btn btn-success" on:click={createEvent}>Submit</button>
+        <button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>{$t({ key: 'cancel' })}</button>
+        <button type="submit" class="btn btn-success" on:click={createEvent}>{$t({ key: 'submit' })}</button>
     </span>
 </Modal>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>Create event</button>
+            <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>{$t({ key: 'events.create.event' })}</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -172,7 +173,7 @@
                 <thead>
                     <tr>
                         <th>
-                            Animal
+                            {$t({ key: 'events.animal' })}
                             <DropdownFilter bind:this={animalFilter} bind:selectedOption={filterByAnimal} options={animals.map(animal => {
                                 return {
                                     description: animal.name,
@@ -181,7 +182,7 @@
                             })} />
                         </th>
                         <th>
-                            Event type
+                            {$t({ key: 'events.event.type' })}
                             <DropdownFilter bind:this={eventTypeFilter} bind:selectedOption={filterByEventType} options={enrichedEventTypes.map(enrichedEventType => {
                                 return {
                                     description: enrichedEventType.eventType,
@@ -190,7 +191,7 @@
                             })} />
                         </th>
                         <th>
-                            Created
+                            {$t({ key: 'created' })}
                             <DropdownFilter bind:this={daysFilter} bind:selectedOption={filterByDays} options={days.map(day => {
                                 return {
                                     description: day == 1 ? 'Today' : `Last ${day.toString()} days`,
@@ -200,7 +201,7 @@
                         </th>
                         <th class="text-end">
                             <button class="btn btn-lg btn-danger" on:click={() => resetFilters()}>
-                                <i class="fas fa-undo"></i><span class="d-none d-md-inline">&nbsp;Reset</span>
+                                <i class="fas fa-undo"></i><span class="d-none d-md-inline">&nbsp;{$t({ key: 'reset' })}</span>
                             </button>
                         </th>
                     </tr>

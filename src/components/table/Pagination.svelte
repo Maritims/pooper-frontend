@@ -1,4 +1,7 @@
 <script lang="ts">
+import { t } from "../../translations";
+
+
     export let currentPageNumber: number;
     export let pageSize: number;
     export let totalCount: number;
@@ -10,9 +13,9 @@
 <nav aria-label="Pagination">
     <ul class="pagination justify-content-center d-flex flex-wrap">
         <li class="page-item" on:click={() => currentPageNumber -= currentPageNumber > 0 ? 1 : 0}>
-            <button class="page-link" aria-label="Previous">
+            <button class="page-link" aria-label={$t({ key: 'pagination.previous' })}>
                 <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
+                <span class="sr-only">{$t({ key: 'pagination.previous' })}</span>
             </button>
         </li>
         <li class="active d-sm-none page-item">
@@ -24,9 +27,9 @@
             </li>
         {/each}
         <li class="page-item" on:click={() => currentPageNumber += currentPageNumber < (pageNumbers.length - 1) ? 1 : 0}>
-            <button class="page-link" href="#" aria-label="Next">
+            <button class="page-link" href="#" aria-label={$t({ key: 'pagination.next' })}>
                 <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
+                <span class="sr-only">{$t({ key: 'pagination.next' })}</span>
             </button>
         </li>
     </ul>

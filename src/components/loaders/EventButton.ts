@@ -1,5 +1,6 @@
 import type { AnimalRead } from '../../api';
 import type { EnrichedEventType } from '../../models/EnrichedEventType';
+import type { TranslationRequest } from '../../translations';
 import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString, type TimeSpan } from '../../utils/TimeUtils';
 
 export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
@@ -8,15 +9,20 @@ export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalIn
     return 'success';
 };
 
-export function getText(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
+export function getText(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): TranslationRequest {
     const timeSpan          = getTimeSpanFromDateOrNumber(intervalInMilliseconds - millisecondsSincePreviousEvent);
     const includeDays       = !!timeSpan.days;
     const includeHours      = !includeDays && !!timeSpan.hours;
     const includeMinutes    = !includeHours && !!timeSpan.minutes;
     const includeSeconds    = false;
     const timeSpanString    = getTimeSpanString(timeSpan, includeDays, includeHours, includeMinutes, includeSeconds);
-    const text = 'Due ' + (timeSpanString ? `in ${timeSpanString}` : 'now');
-    return text;
+
+    return timeSpanString ? {
+        key: 'event.button.due.in',
+        substitutions: [timeSpanString]
+    } : {
+        key: 'event.button.due.now'
+    }
 };
 
 export function getTimeSpanForNextEvent(animal: AnimalRead, eventType: EnrichedEventType): TimeSpan | undefined {

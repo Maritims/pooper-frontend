@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "../translations";
     import type { GalleryImage } from "./loaders/Gallery";
     import { ModalSize } from "./loaders/Modal";
     import Modal from "./Modal.svelte";
@@ -20,7 +21,7 @@
         </div>
     </div>
     <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={() => imageInFocus = undefined}>Close</button>
+        <button type="button" class="btn btn-danger" on:click={() => imageInFocus = undefined}>{$t({ key: 'close' })}</button>
     </span>
 </Modal>
 

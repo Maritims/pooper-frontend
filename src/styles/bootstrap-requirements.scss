@@ -2,3 +2,18 @@
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "width": map-merge(
+            map-get($utilities, "width"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "width"), "values"), (5: 5%),
+                    map-get(map-get($utilities, "width"), "values"), (10: 10%),
+                ),
+            ),
+        ),
+    )
+);

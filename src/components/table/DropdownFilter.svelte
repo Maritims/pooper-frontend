@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { t } from "../../translations";
+
     export let selectedOption: {} = '';
     export let options: Array<{description: string, value: {}}>;
     export function reset() {
@@ -7,7 +9,7 @@
 </script>
 
 <select class="form-select" bind:value={selectedOption}>
-    <option value="" selected>Filter</option>
+    <option value="" selected>{$t({ key: 'dropdown.filter.default.option' })}</option>
     {#each options as option}
         <option value={option.value}>{option.description}</option>
     {/each}
