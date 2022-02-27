@@ -17,14 +17,22 @@ describe('getCssPostfix', () => {
 
 describe('getText', () => {
     it("shold return 'Due now' when time since previous event is greater than interval'", () => {
-        expect(getText(9 * 60 * 60 * 1000, 8 * 60 * 60 * 1000)).toBe('Due now');
+        expect(getText(9 * 60 * 60 * 1000, 8 * 60 * 60 * 1000)).toStrictEqual({
+            key: 'event.button.due.now'
+        });
     });
 
     it("should return 'Due in 8 hours' when it's 1 hour since the previous event and the interval is 9 hours", () => {
-        expect(getText(1 * 60 * 60 * 1000, 9 * 60 * 60 * 1000)).toBe('Due in 8 hrs');
+        expect(getText(1 * 60 * 60 * 1000, 9 * 60 * 60 * 1000)).toStrictEqual({
+            key: 'event.button.due.in',
+            substitutions: ['8 hrs']
+        });
     });
 
     it("should return 'Due in 59 minutes' when minutes until next event is greater than 0, but less than 60", () => {
-        expect(getText(1 * 60 * 1000, 1 * 60 * 60 * 1000)).toBe('Due in 59 mins');
+        expect(getText(1 * 60 * 1000, 1 * 60 * 60 * 1000)).toStrictEqual({
+            key: 'event.button.due.in',
+            substitutions: ['59 mins']
+        });
     });
 });
