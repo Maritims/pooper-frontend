@@ -17,6 +17,8 @@ export type { EventRead } from './models/EventRead';
 export { EventType } from './models/EventType';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { LoginResponse } from './models/LoginResponse';
+export type { NoteCreate } from './models/NoteCreate';
+export type { NoteRead } from './models/NoteRead';
 export type { NotificationSubscriptionCreate } from './models/NotificationSubscriptionCreate';
 export type { NotificationSubscriptionRead } from './models/NotificationSubscriptionRead';
 export type { PasswordResetResponse } from './models/PasswordResetResponse';

@@ -69,3 +69,11 @@ export const t = derived(locale, ($iso639_1) => (translationRequest: Translation
 
     return translation;
 });
+
+export const d = (date: Date | string | Number): string | undefined => {
+    console.log(date);
+    if(date instanceof Date) return date.toLocaleString();
+    if(typeof date === 'string') return new Date(Date.parse(date as string)).toLocaleString();
+    if(date instanceof Number) return new Date(date as number).toLocaleString();
+    return
+};

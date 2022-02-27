@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import type { EventRead } from './EventRead';
+import type { NoteRead } from './NoteRead';
 
 export type AnimalRead = {
     name: string;
@@ -11,4 +12,5 @@ export type AnimalRead = {
     created: string;
     updated: string;
     events: Array<EventRead>;
+    notes: Array<NoteRead>;
 };

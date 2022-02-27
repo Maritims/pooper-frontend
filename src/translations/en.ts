@@ -30,6 +30,7 @@ export default {
     'animals.deactivate.animal': 'Deactivate',
     'animals.table.header.name': 'Name',
     'animals.table.header.deactivated': 'Deactivated',
+    'animals.view.notes': 'View notes',
     'color.theme.button.dark.mode': 'Dark mode',
     'color.theme.button.light.mode': 'Light mode',
     'confirmation.title': 'Are you sure?',

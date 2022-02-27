@@ -6,13 +6,17 @@
     import RemoveButton from '../components/RemoveButton.svelte';
     import { getAnimalCreate } from '../factories/AnimalFactory';
     import EditButton from '../components/EditButton.svelte';
-import { t } from '../translations';
+    import { t } from '../translations';
+    import { getNoteCreate } from '../factories/NoteFactory';
+    import NoteModals from '../components/NoteModals.svelte';
 
     let animals: Array<AnimalRead> = [];
-    let isModalVisible = false;
+    let isCreateModalVisible = false;
     let idToEdit: number | undefined;
+    let idToInspect: number | undefined;
     let idToRemove: number | undefined;
     let animalCreate: AnimalCreate = getAnimalCreate();
+    let noteCreate = getNoteCreate();
 
     const includeDeactivated = true;
 
@@ -27,10 +31,11 @@ import { t } from '../translations';
         animals = await AnimalsService.getAllAnimalsGet(includeDeactivated);
         animalCreate = getAnimalCreate();
         idToEdit = undefined;
-        isModalVisible = false;
+        isCreateModalVisible = false;
     }
 
     $: isConfirmationVisible = !!idToRemove;
+    $: animalToInspect = animals.find(animal => animal.id == idToInspect);
 </script>
 
 <Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
@@ -39,7 +44,7 @@ import { t } from '../translations';
     idToRemove = undefined;
 }} on:cancel={() => idToRemove = undefined}/>
 
-<Modal bind:isVisible={isModalVisible}>
+<Modal bind:isVisible={isCreateModalVisible}>
     <span slot="title">Create new animal</span>
     <form slot="body" on:submit|preventDefault={handleOnSubmit}>
         <div class="row mb-2">
@@ -62,16 +67,22 @@ import { t } from '../translations';
     <span slot="footer">
         <button type="button" class="btn btn-danger" on:click={() => {
             animalCreate = getAnimalCreate();
-            isModalVisible = false;
+            isCreateModalVisible = false;
         }}>{$t({ key: 'cancel' })}</button>
         <button type="submit" class="btn btn-success" on:click={handleOnSubmit}>{$t({ key: 'submit' })}</button>
     </span>
 </Modal>
 
+<NoteModals bind:animal={animalToInspect}
+    on:done={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
+    on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
+    on:cancel={() => idToInspect = undefined}
+/>
+
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>{$t({ key: 'animals.create.animal' })}</button>
+            <button type="button" class="btn btn-lg btn-success" on:click={() => isCreateModalVisible = true}>{$t({ key: 'animals.create.animal' })}</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -91,10 +102,17 @@ import { t } from '../translations';
                                 <td class="align-middle">{animal.name}</td>
                                 <td class="align-middle">{$t({ key: animal.is_deactivated?.toYesNo()?.toLowerCase() || 'no' })}</td>
                                 <td class="align-middle text-end">
+                                    <button class="btn btn-lg btn-info" on:click={() => {
+                                        idToInspect = animal.id;
+                                        noteCreate.animal_id = idToInspect;
+                                    }}>
+                                        <i class="fas fa-book"></i>
+                                        <span class="d-none d-md-inline">&nbsp;{$t({ key: 'animals.view.notes' })}</span>
+                                    </button>
                                     <EditButton id={animal.id} on:click={() => {
                                         animalCreate = animal;
                                         idToEdit = animal.id;
-                                        isModalVisible = true;
+                                        isCreateModalVisible = true;
                                     }} />
                                     <RemoveButton id={animal.id} on:click={() => idToRemove = animal.id} />
                                 </td>

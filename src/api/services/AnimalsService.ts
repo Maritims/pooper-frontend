@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type { AnimalCreate } from '../models/AnimalCreate';
 import type { AnimalRead } from '../models/AnimalRead';
+import type { NoteCreate } from '../models/NoteCreate';
+import type { NoteRead } from '../models/NoteRead';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -127,6 +129,84 @@ export class AnimalsService {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/animals/{_id}',
+            path: {
+                '_id': id,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Get All Notes
+     * @returns NoteRead Successful Response
+     * @throws ApiError
+     */
+    public static getAllNotesAnimalsNoteGet(): CancelablePromise<Array<NoteRead>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/animals/note',
+        });
+    }
+
+    /**
+     * Create
+     * @param requestBody
+     * @returns NoteRead Successful Response
+     * @throws ApiError
+     */
+    public static createAnimalsNotePost(
+        requestBody: NoteCreate,
+    ): CancelablePromise<NoteRead> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/animals/note',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Update
+     * @param id
+     * @param requestBody
+     * @returns NoteRead Successful Response
+     * @throws ApiError
+     */
+    public static updateAnimalsNoteIdPut(
+        id: number,
+        requestBody: NoteCreate,
+    ): CancelablePromise<NoteRead> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/animals/note/{_id}',
+            path: {
+                '_id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Delete
+     * @param id
+     * @returns void
+     * @throws ApiError
+     */
+    public static deleteAnimalsNoteIdDelete(
+        id: any,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/animals/note/{_id}',
             path: {
                 '_id': id,
             },

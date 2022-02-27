@@ -3,11 +3,13 @@
 
     export let isVisible: boolean;
     export let size: ModalSize = ModalSize.Large;
+    let clazz = '';
+    export { clazz as class }
 
     $: isVisible ? showBackdrop() : hideBackdrop();
 </script>
 
-<div class="modal" tabindex="-1" style="{ isVisible ? "display:block" : "" }">
+<div class="modal {clazz} {isVisible ? 'd-block' : ''}" tabindex="-1">
     <div class="modal-dialog {size}">
         <div class="modal-content">
             <div class="modal-header">

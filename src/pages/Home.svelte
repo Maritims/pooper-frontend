@@ -13,6 +13,7 @@
 	import { getEventMarkers } from '../components/loaders/Map';
 	import { getAdditionalEventTypesCssClass } from './loaders/Home';
 	import Accordion from '../components/Accordion.svelte';
+	import AccordionItem from '../components/AccordionItem.svelte';
 	import { getEventsInChosenPeriod } from './loaders/Statistics';
 import { t } from '../translations';
 
@@ -77,32 +78,34 @@ import { t } from '../translations';
 							</div>
 							<div class="row mt-2">
 								<div class="col">
-									<Accordion header={$t({ key: 'home.daily.summary.title' })}>
-										<table class="table table-striped" slot="accordion-body">
-											<thead>
-												<tr>
-													<th></th>
-													<th class="text-center">{$t({ key: 'home.daily.summary.table.header.registered' })}</th>
-													<th class="text-center">{$t({ key: 'home.daily.summary.table.header.expected' })}</th>
-													<th class="text-center">{$t({ key: 'home.daily.summary.table.header.difference' })}</th>
-												</tr>
-											</thead>
-											<tbody>
-												{#each eventTypes as eventType}
-													{@const todaysEvents = getEventsInChosenPeriod(animal.events, eventType, 1).length}
-													{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.events, eventType, 7).length / 7}
+									<Accordion>
+										<AccordionItem header={$t({ key: 'home.daily.summary.title' })}>
+											<table class="table table-striped" slot="accordion-body">
+												<thead>
 													<tr>
-														<td>
-															<i class="fas {eventType.iconClass}"></i>
-														</td>
-														<td class="text-center">{todaysEvents}</td>
-														<td class="text-center">{lastSevenDaysEvents.toFixed(0)}</td>
-														<td class="text-center">{(todaysEvents - lastSevenDaysEvents).toFixed(0)}</td>
+														<th></th>
+														<th class="text-center">{$t({ key: 'home.daily.summary.table.header.registered' })}</th>
+														<th class="text-center">{$t({ key: 'home.daily.summary.table.header.expected' })}</th>
+														<th class="text-center">{$t({ key: 'home.daily.summary.table.header.difference' })}</th>
 													</tr>
-												{/each}
-											</tbody>
-										</table>
-									</Accordion>
+												</thead>
+												<tbody>
+													{#each eventTypes as eventType}
+														{@const todaysEvents = getEventsInChosenPeriod(animal.events, eventType, 1).length}
+														{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.events, eventType, 7).length / 7}
+														<tr>
+															<td>
+																<i class="fas {eventType.iconClass}"></i>
+															</td>
+															<td class="text-center">{todaysEvents}</td>
+															<td class="text-center">{lastSevenDaysEvents.toFixed(0)}</td>
+															<td class="text-center">{(todaysEvents - lastSevenDaysEvents).toFixed(0)}</td>
+														</tr>
+													{/each}
+												</tbody>
+											</table>
+										</AccordionItem>
+									</Accordion> 
 								</div>
 							</div>
 						</div>
