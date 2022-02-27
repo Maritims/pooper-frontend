@@ -15,11 +15,13 @@
 	import Accordion from '../components/Accordion.svelte';
 	import AccordionItem from '../components/AccordionItem.svelte';
 	import { getEventsInChosenPeriod } from './loaders/Statistics';
-import { t } from '../translations';
+	import { t } from '../translations';
+	import NoteModal from '../components/NoteModal.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let eventTypes = getAllEventTypes();
+	let idToInspect = 0;
 	let position: Position | undefined = undefined;
 	
 	onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
@@ -30,6 +32,7 @@ import { t } from '../translations';
 	}
 
 	$: isModalVisible = !!currentAnimal;
+	$: animalToInspect = animals.find(animal => animal.id === idToInspect);
 </script>
 
 
@@ -51,6 +54,12 @@ import { t } from '../translations';
 	</span>
 </Modal>
 
+<NoteModal bind:animal={animalToInspect}
+    on:done={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
+    on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
+    on:cancel={() => idToInspect = 0}
+/>
+
 <div class="container-fluid">
 	<div class="row mt-2">
 		<TripAlert />
@@ -62,9 +71,14 @@ import { t } from '../translations';
 					<div class="card-body">
 						<h5 class="align-middle align-items-center card-title d-flex justify-content-between">
 							{animal.name}
-							<button class="btn btn-{getAdditionalEventTypesCssClass(animal, eventTypes)}" on:click={() => currentAnimal = animal}>
-								<i class="fas fa-plus"></i>
-							</button>
+							<div class="d-inline-block">
+								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
+									<i class="fas fa-book"></i>
+								</button>
+								<button class="btn btn-{getAdditionalEventTypesCssClass(animal, eventTypes)}" on:click={() => currentAnimal = animal}>
+									<i class="fas fa-plus"></i>
+								</button>
+							</div>
 						</h5>
 						<div class="container-fluid p-0">
 							<div class="row">

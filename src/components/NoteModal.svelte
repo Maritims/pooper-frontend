@@ -8,7 +8,6 @@
     import AccordionItem from "./AccordionItem.svelte";
     import Accordion from "./Accordion.svelte";
     import RemoveButton from "./RemoveButton.svelte";
-    import Confirmation from "./Confirmation.svelte";
     import EditButton from "./EditButton.svelte";
 
     export let animal: AnimalRead | undefined;
@@ -51,27 +50,12 @@
     async function cancel() {
         idToEdit = 0;
         noteText = '';
+        showNotes = false;
         dispatch('cancel');
     }
     
     $: isVisible = !!animal;
-    $: isConfirmationVisible = idToRemove > 0;
 </script>
-
-<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
-    try {
-        await AnimalsService.deleteAnimalsIdDelete(idToRemove);
-    } catch(e) {
-        addToast({
-            id: new Date().getTime(),
-            body: $t({ key: 'note.delete.error', }),
-            type: 'danger',
-            durationInMs: 3000
-        });
-    }
-    idToRemove = 0;
-    dispatch('remove');
-}} on:cancel={() => idToRemove = 0}/>
 
 <Modal {isVisible}>
     <span slot="title">{animal?.name}</span>
@@ -160,7 +144,7 @@
             }}>{$t({ key: 'back' })}</button>
             <button type="submit" class="btn btn-success" disabled={!noteText} on:click={handleOnSubmit}>{$t({ key: 'submit' })}</button>
         {:else}
-            <button type="button" class="btn btn-danger" on:click={cancel}>{$t({ key: 'cancel' })}</button>
+            <button type="button" class="btn btn-danger" on:click={cancel}>{$t({ key: 'close' })}</button>
             <button type="submit" class="btn btn-success" disabled={!noteText} on:click={handleOnSubmit}>{$t({ key: 'submit' })}</button>
         {/if}
     </span>
