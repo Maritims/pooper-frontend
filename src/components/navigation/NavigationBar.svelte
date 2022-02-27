@@ -63,7 +63,7 @@
                     {#if showToggleButton}
                         <li class="nav-item">
                             <NavLink to="/" class="nav-link">
-                                <div class="icon"><i class="fas fa-home"></i></div> {$t({ key: 'navigation.bar.home' })}}
+                                <div class="icon"><i class="fas fa-home"></i></div> {$t({ key: 'navigation.bar.home' })}
                             </NavLink>
                         </li>
                     {:else}
@@ -87,7 +87,7 @@
                 </li>
             </ul>
 
-            <LanguageSelector />
+            <LanguageSelector class="d-none d-lg-block w-10 mx-2" />
             <ColorThemeButton class="d-none d-lg-block" />
         </div>
 
@@ -98,7 +98,10 @@
             })}>
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <ColorThemeButton />
+            <div class="d-flex align-items-center">
+                <LanguageSelector class="d-lg-none mx-2" />
+                <ColorThemeButton />
+            </div>
         {/if}
     </div>
 </nav>

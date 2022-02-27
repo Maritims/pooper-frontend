@@ -55,6 +55,7 @@ export default {
     'navigation.bar.my.profile': 'My profile',
     'navigation.bar.log.out': 'Log out',
     'navigation.bar.about': 'About',
+    'navigation.bar.home': 'Home',
     'pagination.next': 'Next',
     'pagination.previous': 'Previous',
     'statistics.choose.an.animal': 'Choose an animal',

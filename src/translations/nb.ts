@@ -62,6 +62,7 @@ export default {
     'navigation.bar.my.profile': 'Min profil',
     'navigation.bar.log.out': 'Logg ut',
     'navigation.bar.about': 'Om',
+    'navigation.bar.home': 'Hjem',
     'pagination.next': 'Neste',
     'pagination.previous': 'Forrige',
     'statistics.choose.an.animal': 'Velg kjæledyr',

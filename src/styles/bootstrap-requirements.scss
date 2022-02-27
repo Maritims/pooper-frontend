@@ -10,7 +10,6 @@ $utilities: map-merge(
             map-get($utilities, "width"),
             (
                 values: map-merge(
-                    map-get(map-get($utilities, "width"), "values"), (5: 5%),
                     map-get(map-get($utilities, "width"), "values"), (10: 10%),
                 ),
             ),
