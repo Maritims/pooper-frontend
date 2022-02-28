@@ -21,7 +21,7 @@
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let eventTypes = getAllEventTypes();
-	let idToInspect = 0;
+	let idToInspect: number | undefined;
 	let position: Position | undefined = undefined;
 	
 	onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
@@ -32,7 +32,7 @@
 	}
 
 	$: isModalVisible = !!currentAnimal;
-	$: animalToInspect = animals.find(animal => animal.id === idToInspect);
+	$: animalToInspect = idToInspect ? animals.find(animal => animal.id === idToInspect) : undefined;
 </script>
 
 
@@ -54,10 +54,10 @@
 	</span>
 </Modal>
 
-<NoteModal bind:animal={animalToInspect}
-    on:done={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
-    on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
-    on:cancel={() => idToInspect = 0}
+<NoteModal animal={animalToInspect}
+	on:done={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
+	on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
+	on:cancel={() => idToInspect = 0}
 />
 
 <div class="container-fluid">
@@ -94,7 +94,7 @@
 								<div class="col">
 									<Accordion>
 										<AccordionItem header={$t({ key: 'home.daily.summary.title' })}>
-											<table class="table table-striped" slot="accordion-body">
+											<table class="table table-striped">
 												<thead>
 													<tr>
 														<th></th>

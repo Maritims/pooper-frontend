@@ -9,6 +9,7 @@
     import Accordion from "./Accordion.svelte";
     import RemoveButton from "./RemoveButton.svelte";
     import EditButton from "./EditButton.svelte";
+    import { ModalSize } from "./loaders/Modal";
 
     export let animal: AnimalRead | undefined;
 
@@ -53,81 +54,76 @@
         showNotes = false;
         dispatch('cancel');
     }
-    
-    $: isVisible = !!animal;
 </script>
 
-<Modal {isVisible}>
+<Modal isVisible={!!animal} size={ModalSize.ExtraLarge}>
     <span slot="title">{animal?.name}</span>
     <div class="container-fluid" slot="body">
-        {#if idToEdit > 0}
-            <div class="row">
-                <div class="col">
-                    <form on:submit|preventDefault={handleOnSubmit}>
+        <form on:submit|preventDefault={handleOnSubmit}>
+            {#if idToEdit > 0}
+                <div class="row">
+                    <div class="col">
                         <div class="form-floating">
                             <textarea class="form-control" id="createNote" placeholder={$t({ key: 'animals.create.note'} )} style="height:100px" bind:value={noteText} maxlength="256" />
                             <label for="createNote">{$t({ key: 'animals.create.note' })}</label>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        {:else}
-            <div class="row">
-                <div class="col">
-                    <form on:submit|preventDefault={handleOnSubmit}>
+            {:else}
+                <div class="row">
+                    <div class="col">
                         <div class="form-floating">
                             <textarea class="form-control" id="createNote" placeholder={$t({ key: 'animals.create.note'} )} style="height:100px" bind:value={noteText} maxlength="256"></textarea>
                             <label for="createNote">{$t({ key: 'animals.create.note' })}</label>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col">
-                    {#if animal}
-                        <Accordion>
-                            <AccordionItem header={$t({ key: 'note.modal.accordion.title' })} bind:show={showNotes}>
-                                {#if idToRemove > 0}
-                                    <div class="text-center">
-                                        <h2>{$t({ key: 'confirmation.title' })}</h2>
-                                        <p>{$t({ key: 'confirmation.body' })}</p>
-                                    </div>
-                                {:else}
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>{$t({ key: 'note.modal.table.header.note.title' })}</th>
-                                                <th>{$t({ key: 'created' })}</th>
-                                                <th>{$t({ key: 'updated' })}</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {#each animal.notes as note}
-                                                {@const noteHeader = note.text.substring(0, note.text.length > 25 ? 25 : note.text.length)}
-                                                <tr class="align-middle">
-                                                    <td>{noteHeader.padEnd(noteHeader.length == 25 ? noteHeader.length + 3 : 0, '.')}</td>
-                                                    <td>{d(note.created)}</td>
-                                                    <td>{d(note.updated)}</td>
-                                                    <td class="text-end">
-                                                        <EditButton id={note.id} on:click={() => {
-                                                            idToEdit = note.id;
-                                                            noteText = note.text;
-                                                        }} compact={true} />
-                                                        <RemoveButton id={note.id} on:click={() => idToRemove = note.id} compact={true} />
-                                                    </td>
+                <div class="row mt-2">
+                    <div class="col">
+                        {#if animal}
+                            <Accordion>
+                                <AccordionItem header={$t({ key: 'note.modal.accordion.title' })} bind:show={showNotes}>
+                                    {#if idToRemove > 0}
+                                        <div class="text-center">
+                                            <h2>{$t({ key: 'confirmation.title' })}</h2>
+                                            <p>{$t({ key: 'confirmation.body' })}</p>
+                                        </div>
+                                    {:else}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>{$t({ key: 'note.modal.table.header.note.title' })}</th>
+                                                    <th class="d-none d-lg-table-cell">{$t({ key: 'last.updated' })}</th>
+                                                    <th class="d-none d-lg-table-cell">{$t({ key: 'created' })}</th>
+                                                    <th></th>
                                                 </tr>
-                                            {/each}
-                                        </tbody>
-                                    </table>
-                                {/if}
-                            </AccordionItem>
-                        </Accordion>
-                    {/if}
+                                            </thead>
+                                            <tbody>
+                                                {#each animal.notes as note}
+                                                    {@const noteHeader = note.text.substring(0, note.text.length > 25 ? 25 : note.text.length)}
+                                                    <tr class="align-middle">
+                                                        <td>{noteHeader.padEnd(noteHeader.length == 25 ? noteHeader.length + 3 : 0, '.')}</td>
+                                                        <td class="d-none d-lg-table-cell">{note.updated_by_user_name}, {d(note.updated)}</td>
+                                                        <td class="d-none d-lg-table-cell">{note.created_by_user_name}, {d(note.created)}</td>
+                                                        <td class="text-end">
+                                                            <EditButton id={note.id} on:click={() => {
+                                                                idToEdit = note.id;
+                                                                noteText = note.text;
+                                                            }} compact={true} />
+                                                            <RemoveButton id={note.id} on:click={() => idToRemove = note.id} compact={true} />
+                                                        </td>
+                                                    </tr>
+                                                {/each}
+                                            </tbody>
+                                        </table>
+                                    {/if}
+                                </AccordionItem>
+                            </Accordion>
+                        {/if}
+                    </div>
                 </div>
-            </div>
-        {/if}
-        
+            {/if}
+        </form>
     </div>
     <span slot="footer">
         {#if idToRemove > 0}
