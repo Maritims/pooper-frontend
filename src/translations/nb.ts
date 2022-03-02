@@ -59,6 +59,7 @@ export default {
     'home.daily.summary.table.header.registered': 'Registrert',
     'home.daily.summary.table.header.expected': 'Forventet',
     'home.daily.summary.table.header.difference': 'Avvik',
+    'language.selector.choose.language': 'Velg språk',
     'login.action': 'Logg inn',
     'login.forgotten.password': 'Trykk <a href="reset-password/">her</a> hvis du har glemt passordet ditt',
     'login.username': 'Brukernavn',

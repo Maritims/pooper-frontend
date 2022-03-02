@@ -59,6 +59,7 @@ export default {
     'home.daily.summary.table.header.registered': 'Registered',
     'home.daily.summary.table.header.expected': 'Expected',
     'home.daily.summary.table.header.difference': 'Difference',
+    'language.selector.choose.language': 'Choose language',
     'login.action': 'Log in',
     'login.forgotten.password': 'Click <a href="reset-password/">here</a> if you\'ve forgotten your password',
     'login.username': 'Username',

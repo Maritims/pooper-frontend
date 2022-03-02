@@ -72,5 +72,5 @@ $table-striped-bg-factor: 0.075;
 $table-striped-bg: rgba($white, $table-striped-bg-factor);
 $table-striped-color: $table-color;
 
-@import './bootstrap-components.scss';
 @import './extra.scss';
+@import './bootstrap-components.scss';

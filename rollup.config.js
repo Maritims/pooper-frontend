@@ -10,6 +10,7 @@ import replace from '@rollup/plugin-replace';
 import preprocess from 'svelte-preprocess';
 import dotenv from 'dotenv';
 import del from 'rollup-plugin-delete';
+import copy from 'rollup-plugin-copy';
 
 dotenv.config();
 
@@ -96,6 +97,7 @@ export default [
 	plugins: [
 		replace({
 			preventAssignment: true,
+			'process.env.NODE_ENV': process.env.NODE_ENV,
 			globalThis: JSON.stringify({
 				API_BASE_URL: process.env.API_BASE_URL,
 				VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY,
@@ -109,6 +111,11 @@ export default [
 				dev: !production
 			},
 			preprocess: preprocess()
+		}),
+		copy({
+			targets: [{
+				src: 'node_modules/flag-icons/flags', dest: 'public'
+			}]
 		}),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
