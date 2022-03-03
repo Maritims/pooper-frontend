@@ -7,6 +7,7 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AnimalCreate } from './models/AnimalCreate';
+export type { AnimalEventTypeAssociationRead } from './models/AnimalEventTypeAssociationRead';
 export type { AnimalRead } from './models/AnimalRead';
 export type { Body_confirm_password_reset_auth_confirm_password_reset_post } from './models/Body_confirm_password_reset_auth_confirm_password_reset_post';
 export type { Body_login_auth_token_post } from './models/Body_login_auth_token_post';

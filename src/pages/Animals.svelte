@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { AnimalsService, type AnimalCreate, type AnimalRead } from '../api';
+    import { AnimalsService, EventType, type AnimalCreate, type AnimalRead } from '../api';
     import Modal from '../components/Modal.svelte';
     import Confirmation from '../components/Confirmation.svelte';
     import RemoveButton from '../components/RemoveButton.svelte';
@@ -9,6 +9,7 @@
     import { t } from '../translations';
     import { getNoteCreate } from '../factories/NoteFactory';
     import NoteModal from '../components/NoteModal.svelte';
+    import { getEventTypes } from './loaders/Events';
 
     let animals: Array<AnimalRead> = [];
     let isCreateModalVisible = false;
@@ -32,6 +33,17 @@
         animalCreate = getAnimalCreate();
         idToEdit = undefined;
         isCreateModalVisible = false;
+    }
+
+    function trackEventType(e: Event) {
+        const target = e.target as HTMLInputElement;
+        const eventType = target.value as EventType;
+        const i = animalCreate.event_types_to_track.indexOf(eventType);
+        if(i === -1) {
+            animalCreate.event_types_to_track.push(eventType);
+        } else {
+            animalCreate.event_types_to_track.splice(i, 1);
+        }
     }
 
     $: isConfirmationVisible = !!idToRemove;
@@ -63,6 +75,20 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <h5>{$t({ key: 'animals.track.event.types' })}</h5>
+            </div>
+            {#each getEventTypes() as eventType}
+                <div class="col-6">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="trackEventType_{eventType}" value={eventType}
+                            checked={animalCreate.event_types_to_track?.indexOf(eventType) > -1} on:change={trackEventType}>
+                        <label class="form-check-label" for="trackEventType_{eventType}">{eventType}</label>
+                    </div>
+                </div>
+            {/each}
+        </div>        
     </form>
     <span slot="footer">
         <button type="button" class="btn btn-danger" on:click={() => {
@@ -110,7 +136,10 @@
                                         <span class="d-none d-md-inline">&nbsp;{$t({ key: 'animals.view.notes' })}</span>
                                     </button>
                                     <EditButton id={animal.id} on:click={() => {
-                                        animalCreate = animal;
+                                        animalCreate = {
+                                            name: animal.name,
+                                            event_types_to_track: animal.tracked_event_types.map(trackedEventType => trackedEventType.event_type)
+                                        };
                                         idToEdit = animal.id;
                                         isCreateModalVisible = true;
                                     }} />

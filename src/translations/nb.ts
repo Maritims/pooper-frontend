@@ -32,6 +32,7 @@ export default {
     'password': 'Passord',
     'animals.create.animal': 'Opprett kjæledyr',
     'animals.new.animal.name': 'Navn',
+    'animals.track.event.types': 'Spor aktivitetstyper',
     'animals.deactivate.animal': 'Deaktiver',
     'animals.table.header.name': 'Navn',
     'animals.table.header.deactivated': 'Deaktivert',

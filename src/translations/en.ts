@@ -31,6 +31,7 @@ export default {
     'yes': 'Yes',    
     'animals.create.animal': 'Create animal',
     'animals.new.animal.name': 'Name',
+    'animals.track.event.types': 'Track event types',
     'animals.deactivate.animal': 'Deactivate',
     'animals.table.header.name': 'Name',
     'animals.table.header.deactivated': 'Deactivated',
