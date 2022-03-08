@@ -19,6 +19,7 @@ export function getEventRead(): EventRead {
         id: 0,
         created_by_user_id: 0,
         created_by_user_name: '',
-        animal_name: ''
+        animal_name: '',
+        is_tracked: false
     }
 };

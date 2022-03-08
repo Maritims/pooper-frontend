@@ -26,10 +26,10 @@ export function getText(millisecondsSincePreviousEvent: number, intervalInMillis
 };
 
 export function getTimeSpanForNextEvent(animal: AnimalRead, eventType: EnrichedEventType): TimeSpan | undefined {
-    if(!animal.events.length) return;
+    if(!animal.tracked_events.length) return;
 
     const previousEventTimestamp: Date = (
-        animal.events
+        animal.tracked_events
         .filter(event => event.event_type == eventType.eventType)
         .sort((olderEvent, newerEvent) => Date.parse(newerEvent.created) - Date.parse(olderEvent.created))
         .map(event => new Date(event.created)) || [undefined]

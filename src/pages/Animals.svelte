@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { AnimalsService, EventType, type AnimalCreate, type AnimalRead } from '../api';
-    import Modal from '../components/Modal.svelte';
+    import { AnimalsService, type AnimalCreate, type AnimalRead } from '../api';
     import Confirmation from '../components/Confirmation.svelte';
     import RemoveButton from '../components/RemoveButton.svelte';
     import { getAnimalCreate } from '../factories/AnimalFactory';
@@ -9,41 +8,38 @@
     import { t } from '../translations';
     import { getNoteCreate } from '../factories/NoteFactory';
     import NoteModal from '../components/NoteModal.svelte';
-    import { getEventTypes } from './loaders/Events';
+    import EditAnimalModal from '../components/EditAnimalModal.svelte';
+    import { getLogger, LogLevel } from '../services/logger';
 
     let animals: Array<AnimalRead> = [];
-    let isCreateModalVisible = false;
     let idToEdit: number | undefined;
     let idToInspect: number | undefined;
     let idToRemove: number | undefined;
-    let animalCreate: AnimalCreate = getAnimalCreate();
+    let animalCreate: AnimalCreate | undefined;
     let noteCreate = getNoteCreate();
 
     const includeDeactivated = true;
+    const log = getLogger({
+        context: 'Animals',
+        level: LogLevel.ERROR
+    });
 
     onMount(async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated));
 
     async function handleOnSubmit(): Promise<void> {
+        if(!animalCreate) {
+            log.error('Encountered form submission without data');
+            return;
+        }
+
         if(idToEdit) {
             await AnimalsService.updateAnimalsIdPut(idToEdit, animalCreate);
         } else {
             await AnimalsService.createAnimalsPost(animalCreate);
         }
         animals = await AnimalsService.getAllAnimalsGet(includeDeactivated);
-        animalCreate = getAnimalCreate();
+        animalCreate = undefined;
         idToEdit = undefined;
-        isCreateModalVisible = false;
-    }
-
-    function trackEventType(e: Event) {
-        const target = e.target as HTMLInputElement;
-        const eventType = target.value as EventType;
-        const i = animalCreate.event_types_to_track.indexOf(eventType);
-        if(i === -1) {
-            animalCreate.event_types_to_track.push(eventType);
-        } else {
-            animalCreate.event_types_to_track.splice(i, 1);
-        }
     }
 
     $: isConfirmationVisible = !!idToRemove;
@@ -56,48 +52,7 @@
     idToRemove = undefined;
 }} on:cancel={() => idToRemove = undefined}/>
 
-<Modal bind:isVisible={isCreateModalVisible}>
-    <span slot="title">Create new animal</span>
-    <form slot="body" on:submit|preventDefault={handleOnSubmit}>
-        <div class="row mb-2">
-            <div class="col">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="newAnimalName" bind:value={animalCreate.name} />
-                    <label for="newAnimalName">{$t({ key: 'animals.new.animal.name' })}</label>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="isDeactivated" bind:checked={animalCreate.is_deactivated}>
-                    <label class="form-check-label" for="isDeactivated">{$t({ key: 'animals.deactivate.animal'})}</label>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-12">
-                <h5>{$t({ key: 'animals.track.event.types' })}</h5>
-            </div>
-            {#each getEventTypes() as eventType}
-                <div class="col-6">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="trackEventType_{eventType}" value={eventType}
-                            checked={animalCreate.event_types_to_track?.indexOf(eventType) > -1} on:change={trackEventType}>
-                        <label class="form-check-label" for="trackEventType_{eventType}">{eventType}</label>
-                    </div>
-                </div>
-            {/each}
-        </div>        
-    </form>
-    <span slot="footer">
-        <button type="button" class="btn btn-danger" on:click={() => {
-            animalCreate = getAnimalCreate();
-            isCreateModalVisible = false;
-        }}>{$t({ key: 'cancel' })}</button>
-        <button type="submit" class="btn btn-success" on:click={handleOnSubmit}>{$t({ key: 'submit' })}</button>
-    </span>
-</Modal>
+<EditAnimalModal bind:animal={animalCreate} on:submit={handleOnSubmit} />
 
 <NoteModal bind:animal={animalToInspect}
     on:done={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
@@ -108,7 +63,7 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={() => isCreateModalVisible = true}>{$t({ key: 'animals.create.animal' })}</button>
+            <button type="button" class="btn btn-lg btn-success" on:click={() => animalCreate = getAnimalCreate()}>{$t({ key: 'animals.create.animal' })}</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -138,10 +93,11 @@
                                     <EditButton id={animal.id} on:click={() => {
                                         animalCreate = {
                                             name: animal.name,
+                                            is_deactivated: animal.is_deactivated,
+                                            condition_types_to_track: animal.tracked_condition_types.map(trackedConditionType => trackedConditionType.condition_type),
                                             event_types_to_track: animal.tracked_event_types.map(trackedEventType => trackedEventType.event_type)
                                         };
                                         idToEdit = animal.id;
-                                        isCreateModalVisible = true;
                                     }} />
                                     <RemoveButton id={animal.id} on:click={() => idToRemove = animal.id} />
                                 </td>

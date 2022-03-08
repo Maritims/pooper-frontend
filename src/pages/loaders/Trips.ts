@@ -34,7 +34,7 @@ export function getEventsInTrip(events: Array<EventRead>, maxMsBetweenEvents: nu
         const differenceInMs = currentTimeInMs - previousTimeInMs;
         if(i > 0 && (differenceInMs > maxMsBetweenEvents)) break;
 
-        if(!events[i].trip_id || maxMsBetweenEvents > differenceInMs) eventsInTrip.push(events[i]);
+        if((!events[i].trip_id || maxMsBetweenEvents > differenceInMs) && events[i].is_tracked) eventsInTrip.push(events[i]);
         indexesToRemove.push(i);
         previousTimeInMs = Date.parse(events[i].created);
     }

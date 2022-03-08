@@ -149,7 +149,7 @@
                     map.setCenter(e.detail.lngLat);
                     eventCreate.longitude = e.detail.lngLat.lng;
                     eventCreate.latitude = e.detail.lngLat.lat;
-                }} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
+                }} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.tracked_events))} />
 			{:else}
 				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
 			{/if}

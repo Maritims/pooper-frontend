@@ -7,7 +7,7 @@
     import { onMount } from "svelte";
     import { EventsService, TripsService } from '../api';
     import { getDecodedToken } from '../services/auth';
-import { t } from '../translations';
+    import { t } from '../translations';
 
     let activeTabId = 'new-trips';
     let selectedTrip: Trip | undefined;
@@ -22,12 +22,12 @@ import { t } from '../translations';
         const totalEventCount = await EventsService.getCountEventsCountGet(undefined, undefined, undefined, false);
         const events = await EventsService.getAllEventsGet(undefined, undefined, undefined, false, 0, totalEventCount);
         let eventsInTrips = getEventsInTrip(events,1000*60*60);
-        trips = [{
+        trips = eventsInTrips.length > 0 ? [{
             startTime: new Date(Date.parse(eventsInTrips[0].created)),
             stopTime: new Date(Date.parse(eventsInTrips[eventsInTrips.length - 1].created)),
             durationInMs: Date.parse(eventsInTrips[eventsInTrips.length - 1].created) - Date.parse(eventsInTrips[0].created),
             events: eventsInTrips
-        }];
+        }] : [];
         trips = await getAllUnconfirmedTrips();
     });
 

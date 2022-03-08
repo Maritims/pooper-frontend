@@ -3,6 +3,7 @@
 /* eslint-disable */
 import type { AnimalCreate } from '../models/AnimalCreate';
 import type { AnimalRead } from '../models/AnimalRead';
+import type { ConditionType } from '../models/ConditionType';
 import type { NoteCreate } from '../models/NoteCreate';
 import type { NoteRead } from '../models/NoteRead';
 
@@ -209,6 +210,30 @@ export class AnimalsService {
             url: '/animals/note/{_id}',
             path: {
                 '_id': id,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Toggle Condition
+     * @param id
+     * @param conditionType
+     * @returns AnimalRead Successful Response
+     * @throws ApiError
+     */
+    public static toggleConditionAnimalsIdConditionTypePut(
+        id: number,
+        conditionType: ConditionType,
+    ): CancelablePromise<AnimalRead> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/animals/{_id}/{condition_type}',
+            path: {
+                '_id': id,
+                'condition_type': conditionType,
             },
             errors: {
                 422: `Validation Error`,

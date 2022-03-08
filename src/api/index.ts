@@ -6,6 +6,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { AnimalConditionTypeAssociationRead } from './models/AnimalConditionTypeAssociationRead';
 export type { AnimalCreate } from './models/AnimalCreate';
 export type { AnimalEventTypeAssociationRead } from './models/AnimalEventTypeAssociationRead';
 export type { AnimalRead } from './models/AnimalRead';
@@ -13,6 +14,8 @@ export type { Body_confirm_password_reset_auth_confirm_password_reset_post } fro
 export type { Body_login_auth_token_post } from './models/Body_login_auth_token_post';
 export type { Body_reset_password_auth_reset_password_post } from './models/Body_reset_password_auth_reset_password_post';
 export { ColorTheme } from './models/ColorTheme';
+export type { ConditionRead } from './models/ConditionRead';
+export { ConditionType } from './models/ConditionType';
 export type { EventCreate } from './models/EventCreate';
 export type { EventRead } from './models/EventRead';
 export { EventType } from './models/EventType';

@@ -4,7 +4,7 @@
 
 	import { onMount } from "svelte";
 	import { AnimalsService } from "../api";
-	import { getAllEventTypes } from "./loaders/Events";
+	import { getAllEventTypes, getEventTypes } from "./loaders/Events";
 	import { getCurrentPosition } from "../models/Position";
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
@@ -17,10 +17,11 @@
 	import { getEventsInChosenPeriod } from './loaders/Statistics';
 	import { t } from '../translations';
 	import NoteModal from '../components/NoteModal.svelte';
+import { getEnrichedEventType } from '../models/EnrichedEventType';
+import ConditionSwitch from '../components/ConditionSwitch.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let currentAnimal: AnimalRead | undefined;
-	let eventTypes = getAllEventTypes();
 	let idToInspect: number | undefined;
 	let position: Position | undefined = undefined;
 	
@@ -39,15 +40,24 @@
 <Modal isVisible={isModalVisible}>
 	<span slot="title">{$t({ key: 'home.additional.event.types' })}</span>
 	<div slot="body" class="container-fluid p-0">
-		{#each eventTypes as eventType}
-			{#if !eventType.showOnHomeScreen && currentAnimal}
+		{#if currentAnimal}
+			{#if currentAnimal.tracked_event_types.length > 0}
+				{#each currentAnimal.tracked_event_types as animalEventTypeAssociation}
+					{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
+					{#if !eventType.showOnHomeScreen && currentAnimal}
+						<div class="row mb-2">
+							<div class="col">
+								<EventButton animal={currentAnimal} {eventType} on:done={handleOnDone} />
+							</div>
+						</div>
+					{/if}
+				{/each}
+			{:else}
 				<div class="row mb-2">
-					<div class="col">
-						<EventButton animal={currentAnimal} {eventType} on:done={handleOnDone} />
-					</div>
+					<div class="col">{$t({ key: 'home.no.additional.event.types', substitutions: [currentAnimal.name] })}</div>
 				</div>
 			{/if}
-		{/each}
+		{/if}
 	</div>
 	<span slot="footer">
 		<button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>{$t({ key: 'cancel' })}</button>
@@ -72,56 +82,65 @@
 						<h5 class="align-middle align-items-center card-title d-flex justify-content-between">
 							{animal.name}
 							<div class="d-inline-block">
+								{#if animal.tracked_condition_types.length > 0}
+									{#each animal.tracked_condition_types as animalConditionTypeAssociation}
+										<ConditionSwitch {animal} conditionType={animalConditionTypeAssociation.condition_type} />
+									{/each}
+								{/if}
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
 									<i class="fas fa-book"></i>
 								</button>
-								<button class="btn btn-{getAdditionalEventTypesCssClass(animal, eventTypes)}" on:click={() => currentAnimal = animal}>
+								<button class="btn btn-{getAdditionalEventTypesCssClass(animal)}" on:click={() => currentAnimal = animal}>
 									<i class="fas fa-plus"></i>
 								</button>
 							</div>
 						</h5>
 						<div class="container-fluid p-0">
-							<div class="row">
-								{#each eventTypes as eventType}
-									{#if eventType.showOnHomeScreen}
-										<div class="col">
-											<EventButton {animal} {eventType} on:done={handleOnDone} />
-										</div>
-									{/if}
-								{/each}
-							</div>
-							<div class="row mt-2">
-								<div class="col">
-									<Accordion>
-										<AccordionItem header={$t({ key: 'home.daily.summary.title' })}>
-											<table class="table table-striped">
-												<thead>
-													<tr>
-														<th></th>
-														<th class="text-center">{$t({ key: 'home.daily.summary.table.header.registered' })}</th>
-														<th class="text-center">{$t({ key: 'home.daily.summary.table.header.expected' })}</th>
-														<th class="text-center">{$t({ key: 'home.daily.summary.table.header.difference' })}</th>
-													</tr>
-												</thead>
-												<tbody>
-													{#each eventTypes as eventType}
-														{@const todaysEvents = getEventsInChosenPeriod(animal.events, eventType, 1).length}
-														{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.events, eventType, 7).length / 7}
-														<tr>
-															<td>
-																<i class="fas {eventType.iconClass}"></i>
-															</td>
-															<td class="text-center">{todaysEvents}</td>
-															<td class="text-center">{lastSevenDaysEvents.toFixed(0)}</td>
-															<td class="text-center">{(todaysEvents - lastSevenDaysEvents).toFixed(0)}</td>
-														</tr>
-													{/each}
-												</tbody>
-											</table>
-										</AccordionItem>
-									</Accordion> 
+							{#if animal.tracked_event_types.length > 0}
+								<div class="row">
+									{#each animal.tracked_event_types as animalEventTypeAssociation}
+										{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
+										{#if eventType.showOnHomeScreen}
+											<div class="col">
+												<EventButton {animal} {eventType} on:done={handleOnDone} />
+											</div>
+										{/if}
+									{/each}
 								</div>
-							</div>
+								<div class="row mt-2">
+									<div class="col">
+										<Accordion>
+											<AccordionItem header={$t({ key: 'home.daily.summary.title' })}>
+												<table class="table table-striped">
+													<thead>
+														<tr>
+															<th></th>
+															<th class="text-center">{$t({ key: 'home.daily.summary.table.header.registered' })}</th>
+															<th class="text-center">{$t({ key: 'home.daily.summary.table.header.expected' })}</th>
+															<th class="text-center">{$t({ key: 'home.daily.summary.table.header.difference' })}</th>
+														</tr>
+													</thead>
+													<tbody>
+														{#each animal.tracked_event_types as animalEventTypeAssociation}
+															{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
+															{@const todaysEvents = getEventsInChosenPeriod(animal.tracked_events, eventType, 1).length}
+															{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.tracked_events, eventType, 7).length / 7}
+															<tr>
+																<td>
+																	<i class="fas {eventType.iconClass}"></i>
+																</td>
+																<td class="text-center">{todaysEvents}</td>
+																<td class="text-center">{lastSevenDaysEvents.toFixed(0)}</td>
+																<td class="text-center">{(todaysEvents - lastSevenDaysEvents).toFixed(0)}</td>
+															</tr>
+														{/each}
+													</tbody>
+												</table>
+											</AccordionItem>
+										</Accordion> 
+									</div>
+								</div>
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -131,7 +150,7 @@
 	<div class="row mt-2">
 		<div class="col text-center">
 			{#if position}
-				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.events))} />
+				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.tracked_events))} />
 			{:else}
 				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
 			{/if}

@@ -7,7 +7,6 @@
     import { getAverage, getMeanOfDifferences } from '../utils/NumberUtils';
     import { getAllEventTypesDataSets, getEventsInChosenPeriod, getLabels, getPoopRatingDataSets } from './loaders/Statistics';
     import { t } from '../translations';
-import { time_ranges_to_array } from 'svelte/internal';
 
     let currentAnimal: AnimalRead;
     let days = 7;
@@ -16,7 +15,7 @@ import { time_ranges_to_array } from 'svelte/internal';
 
 <div class="container-fluid">
     {#await AnimalsService.getAllAnimalsGet() then animals}
-        {@const allEvents = currentAnimal?.events || animals.flatMap(a => a.events)}
+        {@const allEvents = currentAnimal?.tracked_events || animals.flatMap(a => a.tracked_events)}
         {@const eventTypes = getAllEventTypes()}
 
         <div class="row mt-2">
@@ -85,7 +84,7 @@ import { time_ranges_to_array } from 'svelte/internal';
                             type="line"
                             x={$t({ key: 'date' })}
                             y={$t({ key: 'amount' })}
-                            datasets={getAllEventTypesDataSets(days, currentAnimal?.events || animals.flatMap(foo => foo.events))}
+                            datasets={getAllEventTypesDataSets(days, currentAnimal?.tracked_events || animals.flatMap(foo => foo.tracked_events))}
                             labels={getLabels(days)} />
                 </div>
                 <div class="tab-pane fade {activeTabId == "poop-rating" ? "d-block show" : "d-none"}" id="poop-rating" role="tabpanel" aria-labelledby="#poop-rating-tab">
@@ -96,7 +95,7 @@ import { time_ranges_to_array } from 'svelte/internal';
                             yMin={0}
                             yMax={5}
                             yStep={1}
-                            datasets={getPoopRatingDataSets(days, currentAnimal?.events || animals.flatMap(foo => foo.events), currentAnimal?.events ? 1 : animals.length)}
+                            datasets={getPoopRatingDataSets(days, currentAnimal?.tracked_events || animals.flatMap(foo => foo.tracked_events), currentAnimal?.tracked_events ? 1 : animals.length)}
                             labels={getLabels(days)}
                         />
                 </div>
