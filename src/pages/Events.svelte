@@ -43,7 +43,7 @@
 
     async function createEvent(): Promise<void> {
         const event = await EventsService.createEventsPost(eventCreate);
-        events = await EventsService.getAllEventsGet();
+        events = await EventsService.getAllEventsGet(animals.map(a => a.id));
         eventCreate = getEventCreate();
         isModalVisible = false;
         addToast({
@@ -61,14 +61,14 @@
     }
 
     $: EventsService.getAllEventsGet(
-        filterByAnimal?.id,
+        filterByAnimal?.id ? [filterByAnimal?.id] : [],
         filterByEventType || undefined,
         filterByDays || undefined,
         undefined,
         currentPageNumber, pageSize
         ).then((newEvents) => events = newEvents);
     $: EventsService.getCountEventsCountGet(
-        filterByAnimal?.id,
+        filterByAnimal?.id ? [filterByAnimal?.id] : [],
         filterByEventType || undefined,
         filterByDays || undefined
         ).then((count) => totalEventCount = count);
@@ -79,7 +79,7 @@
 
 <Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
     await EventsService.deleteEventsIdDelete(idToRemove);
-    events = await EventsService.getAllEventsGet();
+    events = await EventsService.getAllEventsGet(animals.map(a => a.id));
     idToRemove = undefined;
 }} on:cancel={() => idToRemove = undefined}/>
 
