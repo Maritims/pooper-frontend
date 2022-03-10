@@ -28,6 +28,8 @@ export class AnimalsService {
     /**
      * Get All
      * @param includeDeactivated
+     * @param includeEvents
+     * @param includeConditions
      * @param page
      * @param pageSize
      * @returns AnimalRead Successful Response
@@ -35,6 +37,8 @@ export class AnimalsService {
      */
     public static getAllAnimalsGet(
         includeDeactivated: boolean = false,
+        includeEvents: boolean = false,
+        includeConditions: boolean = false,
         page?: number,
         pageSize: number = 100,
     ): CancelablePromise<Array<AnimalRead>> {
@@ -43,6 +47,8 @@ export class AnimalsService {
             url: '/animals/',
             query: {
                 'include_deactivated': includeDeactivated,
+                'include_events': includeEvents,
+                'include_conditions': includeConditions,
                 'page': page,
                 'page_size': pageSize,
             },

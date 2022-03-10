@@ -13,7 +13,7 @@ export class EventsService {
 
     /**
      * Get Count
-     * @param animalId
+     * @param animalIds
      * @param eventType
      * @param days
      * @param hasTrip
@@ -21,7 +21,7 @@ export class EventsService {
      * @throws ApiError
      */
     public static getCountEventsCountGet(
-        animalId?: number,
+        animalIds?: Array<number>,
         eventType?: EventType,
         days?: number,
         hasTrip?: boolean,
@@ -30,7 +30,7 @@ export class EventsService {
             method: 'GET',
             url: '/events/count',
             query: {
-                'animal_id': animalId,
+                'animal_ids': animalIds,
                 'event_type': eventType,
                 'days': days,
                 'has_trip': hasTrip,
@@ -85,7 +85,7 @@ export class EventsService {
 
     /**
      * Get All
-     * @param animalId
+     * @param animalIds
      * @param eventType
      * @param days
      * @param hasTrip
@@ -96,7 +96,7 @@ export class EventsService {
      * @throws ApiError
      */
     public static getAllEventsGet(
-        animalId?: number,
+        animalIds?: Array<number>,
         eventType?: EventType,
         days?: number,
         hasTrip?: boolean,
@@ -108,7 +108,7 @@ export class EventsService {
             method: 'GET',
             url: '/events/',
             query: {
-                'animal_id': animalId,
+                'animal_ids': animalIds,
                 'event_type': eventType,
                 'days': days,
                 'has_trip': hasTrip,

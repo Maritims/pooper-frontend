@@ -1,4 +1,4 @@
-import type { AnimalRead } from '../../api';
+import type { EventRead } from '../../api';
 import type { EnrichedEventType } from '../../models/EnrichedEventType';
 import type { TranslationRequest } from '../../translations';
 import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString, type TimeSpan } from '../../utils/TimeUtils';
@@ -25,11 +25,11 @@ export function getText(millisecondsSincePreviousEvent: number, intervalInMillis
     }
 };
 
-export function getTimeSpanForNextEvent(animal: AnimalRead, eventType: EnrichedEventType): TimeSpan | undefined {
-    if(!animal.tracked_events.length) return;
+export function getTimeSpanForNextEvent(events: Array<EventRead>, eventType: EnrichedEventType): TimeSpan | undefined {
+    if(!events.length) return;
 
     const previousEventTimestamp: Date = (
-        animal.tracked_events
+        events
         .filter(event => event.event_type == eventType.eventType)
         .sort((olderEvent, newerEvent) => Date.parse(newerEvent.created) - Date.parse(olderEvent.created))
         .map(event => new Date(event.created)) || [undefined]
@@ -40,4 +40,12 @@ export function getTimeSpanForNextEvent(animal: AnimalRead, eventType: EnrichedE
         latest: new Date(),
         earliest: previousEventTimestamp
     });
+};
+
+export type EventButtonOptions = {
+    animalId: number
+    animalName: string
+    compact: boolean
+    eventType: EnrichedEventType
+    events: Array<EventRead>
 };

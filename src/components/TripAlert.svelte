@@ -1,9 +1,13 @@
 <script lang="ts">
-    import { getAllUnconfirmedTrips } from "../pages/loaders/Trips";
-import { t } from "../translations";
+    import type { EventRead } from "../api";
+
+    import { getTripsFromEvents } from "../pages/loaders/Trips";
+    import { t } from "../translations";
+
+    export let events: Array<EventRead>;
 </script>
 
-{#await getAllUnconfirmedTrips() then trips}
+{#await getTripsFromEvents(events, 1000 * 60 * 5, 1000 * 60 * 10) then trips}
     <div class="col-12">
         <div class="alert alert-primary">{@html $t({ key: 'trip.alert', substitutions: [trips.length] })}</div>
     </div>

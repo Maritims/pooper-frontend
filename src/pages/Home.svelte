@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { AnimalRead } from '../api';
+	import { EventsService, type AnimalRead, type EventRead } from '../api';
 	import type { Position } from '../models/Position';
 
 	import { onMount } from "svelte";
 	import { AnimalsService } from "../api";
-	import { getAllEventTypes, getEventTypes } from "./loaders/Events";
 	import { getCurrentPosition } from "../models/Position";
 	import EventButton from '../components/EventButton.svelte';
 	import Map from '../components/Map.svelte';
@@ -17,18 +16,24 @@
 	import { getEventsInChosenPeriod } from './loaders/Statistics';
 	import { t } from '../translations';
 	import NoteModal from '../components/NoteModal.svelte';
-import { getEnrichedEventType } from '../models/EnrichedEventType';
-import ConditionSwitch from '../components/ConditionSwitch.svelte';
+	import { getEnrichedEventType } from '../models/EnrichedEventType';
+	import ConditionSwitch from '../components/ConditionSwitch.svelte';
 
 	let animals: Array<AnimalRead> = [];
+	let events: Array<EventRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let idToInspect: number | undefined;
 	let position: Position | undefined = undefined;
+
+	async function loadAnimalsAndEvents() {
+		animals = await AnimalsService.getAllAnimalsGet();
+		events = await EventsService.getAllEventsGet(animals.map(a => a.id));
+	}
 	
-	onMount(async () => animals = await AnimalsService.getAllAnimalsGet());
+	onMount(async () => loadAnimalsAndEvents());
 
 	async function handleOnDone(e: CustomEvent): Promise<void> {
-		animals = e.detail.success ? (await AnimalsService.getAllAnimalsGet()) : [];
+		if(e.detail.success) await loadAnimalsAndEvents();
 		currentAnimal = undefined;
 	}
 
@@ -47,7 +52,13 @@ import ConditionSwitch from '../components/ConditionSwitch.svelte';
 					{#if !eventType.showOnHomeScreen && currentAnimal}
 						<div class="row mb-2">
 							<div class="col">
-								<EventButton animal={currentAnimal} {eventType} on:done={handleOnDone} />
+								<EventButton options={{
+									animalId: currentAnimal.id,
+									animalName: currentAnimal.name,
+									compact: false,
+									eventType: eventType,
+									events: events.filter(e => e.animal_id == currentAnimal?.id)
+								}} on:done={handleOnDone} />
 							</div>
 						</div>
 					{/if}
@@ -65,14 +76,14 @@ import ConditionSwitch from '../components/ConditionSwitch.svelte';
 </Modal>
 
 <NoteModal animal={animalToInspect}
-	on:done={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
-	on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(false)}
+	on:done={async () => await loadAnimalsAndEvents()}
+	on:remove={async () => await loadAnimalsAndEvents()}
 	on:cancel={() => idToInspect = 0}
 />
 
 <div class="container-fluid">
 	<div class="row mt-2">
-		<TripAlert />
+		<TripAlert {events} />
 
 		{#each animals as animal}
 			{@const division = animals.length > 1 ? 6 : 12}
@@ -90,7 +101,7 @@ import ConditionSwitch from '../components/ConditionSwitch.svelte';
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
 									<i class="fas fa-book"></i>
 								</button>
-								<button class="btn btn-{getAdditionalEventTypesCssClass(animal)}" on:click={() => currentAnimal = animal}>
+								<button class="btn btn-{getAdditionalEventTypesCssClass(events.filter(e => e.animal_id == animal.id))}" on:click={() => currentAnimal = animal}>
 									<i class="fas fa-plus"></i>
 								</button>
 							</div>
@@ -102,7 +113,13 @@ import ConditionSwitch from '../components/ConditionSwitch.svelte';
 										{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
 										{#if eventType.showOnHomeScreen}
 											<div class="col">
-												<EventButton {animal} {eventType} on:done={handleOnDone} />
+												<EventButton options={{
+													animalId: animal.id,
+													animalName: animal.name,
+													compact: false,
+													eventType: eventType,
+													events: events.filter(e => e.animal_id == animal.id)
+												}} on:done={handleOnDone} />
 											</div>
 										{/if}
 									{/each}
