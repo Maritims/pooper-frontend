@@ -2,7 +2,7 @@
     import Map from '../components/Map.svelte';
     import Modal from "../components/Modal.svelte";
     import { getTimeSpanFromDateOrNumber, getTimeSpanString } from "../utils/TimeUtils";
-    import { addRouteForEvents, getAllUnconfirmedTrips, getEventsInTrip, type Trip } from './loaders/Trips';
+    import { addRouteForEvents, getAllUnconfirmedTrips, getEventsInTrip, getTripsFromEvents, type Trip } from './loaders/Trips';
     import { getEventMarkers } from '../components/loaders/Map';
     import { onMount } from "svelte";
     import { EventsService, TripsService } from '../api';
@@ -21,14 +21,7 @@
         homeLatitude = user.home_latitude!;
         const totalEventCount = await EventsService.getCountEventsCountGet(undefined, undefined, undefined, false);
         const events = await EventsService.getAllEventsGet(undefined, undefined, undefined, false, 0, totalEventCount);
-        let eventsInTrips = getEventsInTrip(events,1000*60*60);
-        trips = eventsInTrips.length > 0 ? [{
-            startTime: new Date(Date.parse(eventsInTrips[0].created)),
-            stopTime: new Date(Date.parse(eventsInTrips[eventsInTrips.length - 1].created)),
-            durationInMs: Date.parse(eventsInTrips[eventsInTrips.length - 1].created) - Date.parse(eventsInTrips[0].created),
-            events: eventsInTrips
-        }] : [];
-        trips = await getAllUnconfirmedTrips();
+        trips = getTripsFromEvents(events, 1000 * 60 * 5, 1000 * 60 * 10);
     });
 
     $: center = {
