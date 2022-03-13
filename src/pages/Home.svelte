@@ -24,7 +24,7 @@
 	async function loadData() {
 		animals = await AnimalsService.getAllAnimalsGet();
 		conditions = await ConditionsService.getAllConditionsGet(animals.map(a => a.id));
-		events = await EventsService.getAllEventsGet(animals.map(a => a.id));
+		events = await EventsService.getAllEventsGet(animals.map(a => a.id), undefined, undefined, false, undefined, undefined, 'desc');
 	}
 	
 	onMount(async () => loadData());
