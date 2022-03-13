@@ -34,6 +34,7 @@ export type { ValidationError } from './models/ValidationError';
 
 export { AnimalsService } from './services/AnimalsService';
 export { AuthService } from './services/AuthService';
+export { ConditionsService } from './services/ConditionsService';
 export { EventsService } from './services/EventsService';
 export { NotificationsService } from './services/NotificationsService';
 export { TripsService } from './services/TripsService';

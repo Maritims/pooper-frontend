@@ -1,22 +1,22 @@
 <script lang="ts">
-    import { AnimalsService, type AnimalRead, type ConditionType } from "../api";
+    import { AnimalsService } from "../api";
     import { getEnrichedConditionType } from "../models/EnrichedConditionType";
     import { t } from "../translations";
+    import type { ConditionSwitchOptions } from "./loaders/ConditionSwitch";
 
-    export let animal: AnimalRead;
-    export let conditionType: ConditionType;
+    export let options: ConditionSwitchOptions;
     
     let disabled = false;
 
-    $: condition = animal.tracked_conditions.find(condition => condition.condition_type === conditionType);
-    $: title = $t({ key: `condition.type.${conditionType.replace(' ', '.').toLowerCase()}.${condition?.is_enabled ? 'enabled' : 'disabled'}` });
+    $: title = $t({ key: `condition.type.${options.conditionType.replace(' ', '.').toLowerCase()}.${options.animalHasCondition ? 'enabled' : 'disabled'}` });
 </script>
 
-<button type="button" class="btn btn-{condition?.is_enabled ? 'success' : 'primary'}" {disabled} on:click={async () => {
+<button type="button" class="btn btn-{options.animalHasCondition ? 'success' : 'primary'}" {disabled} on:click={async () => {
     disabled = true;
-    animal = await AnimalsService.toggleConditionAnimalsIdConditionTypePut(animal.id, conditionType);
+    await AnimalsService.toggleConditionAnimalsIdConditionTypePut(options.animalId, options.conditionType);
+    options.animalHasCondition = !options.animalHasCondition;
     disabled = false;
 }} {title}>
-    <i class="fas {getEnrichedConditionType(conditionType).iconClass}"></i>
+    <i class="fas {getEnrichedConditionType(options.conditionType).iconClass}"></i>
     <div class="d-none d-xxl-inline-block">{title}</div>
 </button>

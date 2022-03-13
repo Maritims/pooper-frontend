@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EventsService, type AnimalRead, type EventRead } from '../api';
+	import { ConditionsService, EventsService, type AnimalRead, type ConditionRead, type EventRead } from '../api';
 
 	import { onMount } from "svelte";
 	import { AnimalsService } from "../api";
@@ -16,19 +16,21 @@
 	import ConditionSwitch from '../components/ConditionSwitch.svelte';
 
 	let animals: Array<AnimalRead> = [];
+	let conditions: Array<ConditionRead> = [];
 	let events: Array<EventRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let idToInspect: number | undefined;
 
-	async function loadAnimalsAndEvents() {
+	async function loadData() {
 		animals = await AnimalsService.getAllAnimalsGet();
+		conditions = await ConditionsService.getAllConditionsGet(animals.map(a => a.id));
 		events = await EventsService.getAllEventsGet(animals.map(a => a.id));
 	}
 	
-	onMount(async () => loadAnimalsAndEvents());
+	onMount(async () => loadData());
 
 	async function handleOnDone(e: CustomEvent): Promise<void> {
-		if(e.detail.success) await loadAnimalsAndEvents();
+		if(e.detail.success) await loadData();
 		currentAnimal = undefined;
 	}
 
@@ -71,8 +73,8 @@
 </Modal>
 
 <NoteModal animal={animalToInspect}
-	on:done={async () => await loadAnimalsAndEvents()}
-	on:remove={async () => await loadAnimalsAndEvents()}
+	on:done={async () => await loadData()}
+	on:remove={async () => await loadData()}
 	on:cancel={() => idToInspect = 0}
 />
 
@@ -90,7 +92,11 @@
 							<div class="d-inline-block">
 								{#if animal.tracked_condition_types.length > 0}
 									{#each animal.tracked_condition_types as animalConditionTypeAssociation}
-										<ConditionSwitch {animal} conditionType={animalConditionTypeAssociation.condition_type} />
+										<ConditionSwitch options={{
+											animalId: animal.id,
+											animalHasCondition: conditions.find(c => c.animal_id == animal.id && c.condition_type == animalConditionTypeAssociation.condition_type)?.is_enabled || false,
+											conditionType: animalConditionTypeAssociation.condition_type
+										}} />
 									{/each}
 								{/if}
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
