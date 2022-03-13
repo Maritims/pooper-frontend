@@ -63,7 +63,7 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={() => animalCreate = getAnimalCreate()}>{$t({ key: 'animals.create.animal' })}</button>
+            <button type="button" class="btn btn-primary" on:click={() => animalCreate = getAnimalCreate()}>{$t({ key: 'animals.create.animal' })}</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -83,7 +83,7 @@
                                 <td class="align-middle">{animal.name}</td>
                                 <td class="align-middle">{$t({ key: animal.is_deactivated?.toYesNo()?.toLowerCase() || 'no' })}</td>
                                 <td class="align-middle text-end">
-                                    <button class="btn btn-lg btn-info" on:click={() => {
+                                    <button class="btn btn-primary" on:click={() => {
                                         idToInspect = animal.id;
                                         noteCreate.animal_id = idToInspect;
                                     }}>

@@ -120,13 +120,13 @@ import { t } from "../translations";
                     {#if position}
                         <Map bind:this={map} center={position} on:click={handleMapMouseEvent} />
                     {:else}
-                        <button type="button" class="btn btn-lg btn-primary w-100" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
+                        <button type="button" class="btn btn-primary w-100" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
                     {/if}
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col">
-                    <button type="submit" class="btn btn-lg btn-success">{$t({ key: 'submit' })}</button>
+                    <button type="submit" class="btn btn-success">{$t({ key: 'submit' })}</button>
                 </div>
             </div>
         </form>

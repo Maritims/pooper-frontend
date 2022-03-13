@@ -84,7 +84,7 @@
 <div class="container-fluid">
     <div class="row mt-2">
         <div class="col">
-            <button class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>{$t({ key: 'users.create.user' })}</button>
+            <button class="btn btn-primary" on:click={() => isModalVisible = true}>{$t({ key: 'users.create.user' })}</button>
         </div>
     </div>
     <div class="row mt-2">

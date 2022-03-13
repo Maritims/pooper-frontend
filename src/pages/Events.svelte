@@ -151,7 +151,7 @@
                     eventCreate.latitude = e.detail.lngLat.lat;
                 }} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.tracked_events))} />
 			{:else}
-				<button type="button" class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
+				<button type="button" class="btn btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
 			{/if}
         </div>
     </form>
@@ -164,7 +164,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-lg btn-success" on:click={() => isModalVisible = true}>{$t({ key: 'events.create.event' })}</button>
+            <button type="button" class="btn btn-primary" on:click={() => isModalVisible = true}>{$t({ key: 'events.create.event' })}</button>
         </div>
     </div>
     <div class="row mt-2">
@@ -200,7 +200,7 @@
                             })} />
                         </th>
                         <th class="text-end">
-                            <button class="btn btn-lg btn-danger" on:click={() => resetFilters()}>
+                            <button class="btn btn-danger" on:click={() => resetFilters()}>
                                 <i class="fas fa-undo"></i><span class="d-none d-md-inline">&nbsp;{$t({ key: 'reset' })}</span>
                             </button>
                         </th>
