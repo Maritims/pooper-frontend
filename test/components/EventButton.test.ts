@@ -3,15 +3,15 @@ import { getCssPostfix, getText } from '../../src/components/loaders/EventButton
 
 describe('getCssPostfix', () => {
     it('should return danger when time since previous event is greater than interval', () => {
-        expect(getCssPostfix(9, 8)).toBe('danger');
+        expect(getCssPostfix(9, 8)).toBe('event-danger');
     });
 
     it("should return warning when time since previous event is greater than or equal to 75% of interval", () => {
-        expect(getCssPostfix(6, 8)).toBe('warning');
+        expect(getCssPostfix(6, 8)).toBe('event-warning');
     });
 
-    it('should return success when time since previous event is less than 75% of interval', () => {
-        expect(getCssPostfix(5, 8)).toBe('success');
+    it('should return primary when time since previous event is less than 75% of interval', () => {
+        expect(getCssPostfix(5, 8)).toBe('primary');
     });
 });
 
