@@ -11,7 +11,7 @@ describe('getCssPostfix', () => {
     });
 
     it('should return primary when time since previous event is less than 75% of interval', () => {
-        expect(getCssPostfix(5, 8)).toBe('primary');
+        expect(getCssPostfix(5, 8)).toBe('event-success');
     });
 });
 
