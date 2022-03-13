@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { slide } from 'svelte/transition';
     import { authStore, logout } from '../../services/auth';
     import ColorThemeButton from '../ColorThemeButton.svelte';
     import NavLink from './NavLink.svelte';
@@ -10,6 +11,8 @@
     export let showToggleButton = false;
     let clazz: string = '';
     export { clazz as class };
+
+    $: isVisible = showToggleButton ? $navigationBarStore.show : true;
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -18,78 +21,80 @@
             <a class="navbar-brand" href="/">Pooper</a>
         {/if}
 
-        <div class="collapse navbar-collapse mt-1 {$navigationBarStore.show ? "show" : ""} {clazz}">
-            <ul class="navbar-nav me-auto">
-                {#if $authStore}
-                    {#if showToggleButton}
+        {#if isVisible}
+            <div class="collapse navbar-collapse mt-1 {$navigationBarStore.show ? "show" : ""} {clazz}" transition:slide>
+                <ul class="navbar-nav me-auto">
+                    {#if $authStore}
+                        {#if showToggleButton}
+                            <li class="nav-item">
+                                <NavLink to="profile" class="nav-link">
+                                    <div class="icon"><i class="fas fa-user-cog"></i></div> {$t({ key: 'navigation.bar.my.profile' })}
+                                </NavLink>
+                            </li>
+                            <!-- svelte-ignore a11y-invalid-attribute -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" on:click={logout}>
+                                    <div class="icon"><i class="fas fa-sign-out-alt"></i></div> {$t({ key: 'navigation.bar.log.out' })}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider text-white"></li>
+                        {/if}
                         <li class="nav-item">
-                            <NavLink to="profile" class="nav-link">
-                                <div class="icon"><i class="fas fa-user-cog"></i></div> {$t({ key: 'navigation.bar.my.profile' })}
+                            <NavLink to="animals" class="nav-link">
+                                <div class="icon"><i class="fas fa-paw"></i></div> {$t({ key: 'animal' })}
                             </NavLink>
                         </li>
-                        <!-- svelte-ignore a11y-invalid-attribute -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link" on:click={logout}>
-                                <div class="icon"><i class="fas fa-sign-out-alt"></i></div> {$t({ key: 'navigation.bar.log.out' })}
-                            </a>
+                            <NavLink to="/events" class="nav-link">
+                                <div class="icon"><i class="fas fa-calendar-alt"></i></div> {$t({ key: 'navigation.bar.events' })}
+                            </NavLink>
                         </li>
-                        <li><hr class="dropdown-divider text-white"></li>
+                        <li class="nav-item">
+                            <NavLink to="statistics" class="nav-link">
+                                <div class="icon"><i class="fas fa-chart-line"></i></div> {$t({ key: 'navigation.bar.statistics' })}
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink to="/trips" class="nav-link">
+                                <div class="icon"><i class="fas fa-hiking"></i></div> {$t({ key: 'navigation.bar.trips' })}
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink to="users" class="nav-link">
+                                <div class="icon"><i class="fas fa-users"></i></div> {$t({ key: 'navigation.bar.users' })}
+                            </NavLink>
+                        </li>
+                        {#if showToggleButton}
+                            <li class="nav-item">
+                                <NavLink to="/" class="nav-link">
+                                    <div class="icon"><i class="fas fa-home"></i></div> {$t({ key: 'navigation.bar.home' })}
+                                </NavLink>
+                            </li>
+                        {:else}
+                            <li class="nav-item">
+                                <NavLink to="profile" class="nav-link">
+                                    <div class="icon"><i class="fas fa-user-cog"></i></div> {$t({ key: 'navigation.bar.my.profile' })}
+                                </NavLink>
+                            </li>
+                            <!-- svelte-ignore a11y-invalid-attribute -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" on:click={logout}>
+                                    <div class="icon"><i class="fas fa-sign-out-alt"></i></div> {$t({ key: 'navigation.bar.log.out' })}
+                                </a>
+                            </li>
+                        {/if}
                     {/if}
                     <li class="nav-item">
-                        <NavLink to="animals" class="nav-link">
-                            <div class="icon"><i class="fas fa-paw"></i></div> {$t({ key: 'animal' })}
+                        <NavLink to="about" class="nav-link">
+                            <div class="icon"><i class="fas fa-info"></i></div> {$t({ key: 'navigation.bar.about' })}
                         </NavLink>
                     </li>
-                    <li class="nav-item">
-                        <NavLink to="/events" class="nav-link">
-                            <div class="icon"><i class="fas fa-calendar-alt"></i></div> {$t({ key: 'navigation.bar.events' })}
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink to="statistics" class="nav-link">
-                            <div class="icon"><i class="fas fa-chart-line"></i></div> {$t({ key: 'navigation.bar.statistics' })}
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink to="/trips" class="nav-link">
-                            <div class="icon"><i class="fas fa-hiking"></i></div> {$t({ key: 'navigation.bar.trips' })}
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink to="users" class="nav-link">
-                            <div class="icon"><i class="fas fa-users"></i></div> {$t({ key: 'navigation.bar.users' })}
-                        </NavLink>
-                    </li>
-                    {#if showToggleButton}
-                        <li class="nav-item">
-                            <NavLink to="/" class="nav-link">
-                                <div class="icon"><i class="fas fa-home"></i></div> {$t({ key: 'navigation.bar.home' })}
-                            </NavLink>
-                        </li>
-                    {:else}
-                        <li class="nav-item">
-                            <NavLink to="profile" class="nav-link">
-                                <div class="icon"><i class="fas fa-user-cog"></i></div> {$t({ key: 'navigation.bar.my.profile' })}
-                            </NavLink>
-                        </li>
-                        <!-- svelte-ignore a11y-invalid-attribute -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" on:click={logout}>
-                                <div class="icon"><i class="fas fa-sign-out-alt"></i></div> {$t({ key: 'navigation.bar.log.out' })}
-                            </a>
-                        </li>
-                    {/if}
-                {/if}
-                <li class="nav-item">
-                    <NavLink to="about" class="nav-link">
-                        <div class="icon"><i class="fas fa-info"></i></div> {$t({ key: 'navigation.bar.about' })}
-                    </NavLink>
-                </li>
-            </ul>
+                </ul>
 
-            <LanguageSelector class="d-none d-lg-block w-10 mx-2" />
-            <ColorThemeButton class="d-none d-lg-block" />
-        </div>
+                <LanguageSelector class="d-none d-lg-block mx-2" />
+                <ColorThemeButton class="d-none d-lg-block" />
+            </div>
+        {/if}
 
         {#if showToggleButton}
             <button class="navbar-toggler" type="button" on:click={() => navigationBarStore.update(context => {

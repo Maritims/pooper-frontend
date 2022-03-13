@@ -31,7 +31,7 @@
 
 <svelte:body on:click={onClickOutside} />
 
-<div class="mx-2">
+<div class="mx-2 {clazz}">
     {#if isVisible}
         <div bind:this={popover} class="popover bs-popover-bottom">
             <div bind:this={arrowElement} class="popover-arrow"></div>
