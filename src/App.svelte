@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import { authStore } from './services/auth';
 	import { modalStore } from './components/loaders/Modal';
 	import { Router, Route } from 'svelte-navigator';
@@ -85,5 +86,5 @@
 </Router>
 
 {#if $modalStore.isBackdropVisible}
-	<div class="modal-backdrop fade show"></div>>
+	<div class="modal-backdrop fade show" transition:fade></div>
 {/if}
