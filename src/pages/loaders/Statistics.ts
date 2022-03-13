@@ -2,7 +2,7 @@ import type { ChartDataset } from "chart.js";
 import { EventType, type EventRead } from "../../api";
 import { getAllEventTypes } from "./Events";
 import { getAverage } from "../../utils/NumberUtils";
-import type { EnrichedEventType } from "../../models/EnrichedEventType";
+import { getEnrichedEventType, type EnrichedEventType } from "../../models/EnrichedEventType";
 import { getTimeSpanFromDatePair, isToday } from "../../utils/TimeUtils";
 
 function getDates(days: number): Array<Date> {
@@ -55,8 +55,8 @@ export function getPoopRatingDataSets(days: number, events: Array<EventRead>, di
     return [{
         label: 'Rating over time',
         data: counts,
-        backgroundColor: '#000',
-        borderColor: '#000'
+        backgroundColor: getEnrichedEventType(EventType.POO).color,
+        borderColor: getEnrichedEventType(EventType.POO).color
     }];
 }
 

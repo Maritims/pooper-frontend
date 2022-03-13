@@ -15,7 +15,7 @@ export const getEnrichedEventType = (eventType: EventType): EnrichedEventType =>
             eventType: eventType,
             iconClass: 'fa-utensils',
             intervalInMilliseconds: 12 * 60 * 60 * 1000,
-            color: '#000000',
+            color: '#006400',
             showOnHomeScreen: true,
             isRatingRequired: false
         };
