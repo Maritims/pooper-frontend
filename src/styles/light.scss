@@ -1,3 +1,16 @@
 @import './bootstrap-requirements.scss';
+
+$body-bg: #fdfdfd;
+
+$btn-primary-bg: transparent;
+$btn-primary-color: #605151;
+$btn-primary-border-color: rgba(141, 137, 137, 0.3);
+$btn-primary-hover-bg: transparent;
+$btn-primary-hover-border-color: $btn-primary-border-color;
+$btn-primary-hover-color: $btn-primary-color;
+
+$btn-event-shadow-spread-radius: -10px;
+
 @import './extra.scss';
 @import './bootstrap-components.scss';
+@import './buttons.scss';

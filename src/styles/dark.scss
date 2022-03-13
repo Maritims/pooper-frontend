@@ -83,5 +83,15 @@ $table-striped-bg-factor: 0.075;
 $table-striped-bg: rgba($white, $table-striped-bg-factor);
 $table-striped-color: $table-color;
 
+$btn-primary-bg: $gray-800;
+$btn-primary-border-color: $gray-700;
+$btn-primary-color: color-contrast($gray-800);
+$btn-primary-hover-bg: $gray-700;
+$btn-primary-hover-border-color: $gray-600;
+$btn-primary-hover-color: color-contrast($btn-primary-hover-bg);
+
+$btn-event-shadow-spread-radius: -5px;
+
 @import './extra.scss';
 @import './bootstrap-components.scss';
+@import './buttons.scss';

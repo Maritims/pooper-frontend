@@ -1,15 +1,11 @@
 <script lang="ts">
 	import { EventsService, type AnimalRead, type EventRead } from '../api';
-	import type { Position } from '../models/Position';
 
 	import { onMount } from "svelte";
 	import { AnimalsService } from "../api";
-	import { getCurrentPosition } from "../models/Position";
 	import EventButton from '../components/EventButton.svelte';
-	import Map from '../components/Map.svelte';
 	import Modal from '../components/Modal.svelte';
 	import TripAlert from '../components/TripAlert.svelte';
-	import { getEventMarkers } from '../components/loaders/Map';
 	import { getAdditionalEventTypesCssClass } from './loaders/Home';
 	import Accordion from '../components/Accordion.svelte';
 	import AccordionItem from '../components/AccordionItem.svelte';
@@ -23,7 +19,6 @@
 	let events: Array<EventRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let idToInspect: number | undefined;
-	let position: Position | undefined = undefined;
 
 	async function loadAnimalsAndEvents() {
 		animals = await AnimalsService.getAllAnimalsGet();
@@ -81,13 +76,13 @@
 	on:cancel={() => idToInspect = 0}
 />
 
-<div class="container-fluid">
+<div class="container-fluid px-sm-4">
 	<div class="row mt-2">
 		<TripAlert {events} />
 
 		{#each animals as animal}
 			{@const division = animals.length > 1 ? 6 : 12}
-			<div class="col-12 col-md-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-2">
+			<div class="col-12 col-md-{division} {division == 12 ? '' : 'd-grid gap-2'} mb-4">
 				<div class="card">
 					<div class="card-body">
 						<h5 class="align-middle align-items-center card-title d-flex justify-content-between">
@@ -101,7 +96,7 @@
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
 									<i class="fas fa-book"></i>
 								</button>
-								<button class="btn btn-{getAdditionalEventTypesCssClass(events.filter(e => e.animal_id == animal.id))}" on:click={() => currentAnimal = animal}>
+								<button class="btn btn-primary btn-{getAdditionalEventTypesCssClass(events.filter(e => e.animal_id == animal.id))}" on:click={() => currentAnimal = animal}>
 									<i class="fas fa-plus"></i>
 								</button>
 							</div>
@@ -163,15 +158,6 @@
 				</div>
 			</div>
 		{/each}
-	</div>
-	<div class="row mt-2">
-		<div class="col text-center">
-			{#if position}
-				<Map minHeightPx={600} center={position} markers={getEventMarkers(animals.flatMap(animal => animal.tracked_events))} />
-			{:else}
-				<button class="btn btn-lg btn-primary" on:click={async () => position = await getCurrentPosition()}>{$t({ key: 'load.map' })}</button>
-			{/if}
-		</div>
 	</div>
 </div>
 

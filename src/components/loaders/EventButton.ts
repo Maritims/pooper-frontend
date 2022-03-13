@@ -4,9 +4,9 @@ import type { TranslationRequest } from '../../translations';
 import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString, type TimeSpan } from '../../utils/TimeUtils';
 
 export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
-    if(millisecondsSincePreviousEvent > intervalInMilliseconds) return 'danger';
-    if((millisecondsSincePreviousEvent / intervalInMilliseconds) >= 0.75) return 'warning';
-    return 'success';
+    if(millisecondsSincePreviousEvent > intervalInMilliseconds) return 'event-danger';
+    if((millisecondsSincePreviousEvent / intervalInMilliseconds) >= 0.75) return 'event-warning';
+    return 'primary';
 };
 
 export function getText(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): TranslationRequest {

@@ -12,7 +12,7 @@
     let nextEventDueInHoursText: TranslationRequest = {
         key: 'event.button.due.now'
     };
-    let cssClass = 'btn-danger';
+    let cssClass = 'btn-event-danger';
     let isModalVisible = false;
     let rating = 0;
     const dispatch = createEventDispatcher();
@@ -79,7 +79,7 @@
     </Modal>
 {/if}
 
-<button type="button" class="btn btn-lg btn-event {cssClass} {options.compact ? '' : 'w-100'}" on:click={async () => {
+<button type="button" class="btn btn-lg {cssClass} {options.compact ? '' : 'w-100'}" on:click={async () => {
     if(options.eventType.isRatingRequired) isModalVisible = true;
     else await createEvent();
     }}>
