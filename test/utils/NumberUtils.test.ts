@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { getAverage, getMeanOfDifferences } from '../../src/utils/NumberUtils';
+import { getAverage, getMeanOfDifferences, getFloorAndCeil } from '../../src/utils/NumberUtils';
 
 describe('getMeanOfDifferences', () => {
     it('should return the mean of the differences between date pairs', () => {
@@ -28,4 +28,23 @@ describe('getAverage', () => {
         const average = getAverage(numbers);
         expect(average).toBe(4);
     })
+});
+
+describe('getFloorAndCeil', () => {
+    [{
+        min: 0,
+        max: 10
+    }, {
+        min: 10,
+        max: 20
+    }, {
+        min: 20,
+        max: 30
+    }].forEach(range => {
+        for(let i = range.min; i < range.max; i++) {
+            it(`should return ${range.min} and ${range.max} when input is ${i}`, () => {
+                expect(getFloorAndCeil(i, range.max, 10)).toStrictEqual(range);
+            });
+        }
+    });
 });

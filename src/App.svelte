@@ -46,7 +46,7 @@
 			<Route path="/animals">
 				<Animals />
 			</Route>
-			<Route path="/events">
+			<Route path="/events" primary={false}>
 				<Events />
 			</Route>
 			<Route path="/logout">

@@ -6,7 +6,7 @@ import { getTimeSpanFromDateOrNumber, getTimeSpanFromDatePair, getTimeSpanString
 export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): string {
     if(millisecondsSincePreviousEvent > intervalInMilliseconds) return 'event-danger';
     if((millisecondsSincePreviousEvent / intervalInMilliseconds) >= 0.75) return 'event-warning';
-    return 'primary';
+    return 'event-success';
 };
 
 export function getText(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): TranslationRequest {

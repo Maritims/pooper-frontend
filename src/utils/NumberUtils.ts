@@ -21,3 +21,20 @@ export function getAverage(nums: Array<number | undefined>): number | undefined 
     nums = nums.filter(num => !!num);
     return nums.length ? nums.reduce<number>((sum, num) => sum += num as number, 0) / nums.length : undefined;
 };
+
+export type NumberRange = {
+    min: number
+    max: number
+};
+
+export function getFloorAndCeil(i: number, max: number, factor: number): NumberRange {
+    if(i > max) throw new Error(`i ${i} is higher than max ${max}`);
+
+    const range: NumberRange = {
+        min: Math.floor(i / factor) * factor,
+        max: Math.ceil(i / factor) * factor
+    };
+    if(range.max === i) range.max += factor;
+
+    return range;
+};

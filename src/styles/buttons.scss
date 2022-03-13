@@ -11,16 +11,14 @@
 
 .btn {
     &.btn-event-danger {
-        @extend .btn-primary;
-
-        box-shadow: 0px 0px 25px $btn-event-shadow-spread-radius rgba(255,0,0,0.59) inset;
-        border-color:$red-700;
+        @extend .btn-danger;
     }
     
     &.btn-event-warning {
-        @extend .btn-primary;
+        @extend .btn-warning;
+    }
 
-        box-shadow: 0px 0px 25px $btn-event-shadow-spread-radius rgba(255,255,0,0.59) inset;
-        border-color:$yellow-700;
+    &.btn-event-success {
+        @extend .btn-success;
     }
 }
