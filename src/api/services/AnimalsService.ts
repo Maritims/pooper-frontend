@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type { AnimalCreate } from '../models/AnimalCreate';
 import type { AnimalRead } from '../models/AnimalRead';
+import type { AnimalWeightCreate } from '../models/AnimalWeightCreate';
+import type { AnimalWeightRead } from '../models/AnimalWeightRead';
 import type { ConditionType } from '../models/ConditionType';
 import type { NoteCreate } from '../models/NoteCreate';
 import type { NoteRead } from '../models/NoteRead';
@@ -14,11 +16,11 @@ import { request as __request } from '../core/request';
 export class AnimalsService {
 
     /**
-     * Get Count
+     * Get Animal Count
      * @returns number Successful Response
      * @throws ApiError
      */
-    public static getCountAnimalsCountGet(): CancelablePromise<number> {
+    public static getAnimalCountAnimalsCountGet(): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/animals/count',
@@ -26,19 +28,21 @@ export class AnimalsService {
     }
 
     /**
-     * Get All
+     * Get All Animals
      * @param includeDeactivated
      * @param includeEvents
      * @param includeConditions
+     * @param includeWeightHistory
      * @param page
      * @param pageSize
      * @returns AnimalRead Successful Response
      * @throws ApiError
      */
-    public static getAllAnimalsGet(
+    public static getAllAnimalsAnimalsGet(
         includeDeactivated: boolean = false,
         includeEvents: boolean = false,
         includeConditions: boolean = false,
+        includeWeightHistory: boolean = false,
         page?: number,
         pageSize: number = 100,
     ): CancelablePromise<Array<AnimalRead>> {
@@ -49,6 +53,7 @@ export class AnimalsService {
                 'include_deactivated': includeDeactivated,
                 'include_events': includeEvents,
                 'include_conditions': includeConditions,
+                'include_weight_history': includeWeightHistory,
                 'page': page,
                 'page_size': pageSize,
             },
@@ -59,12 +64,12 @@ export class AnimalsService {
     }
 
     /**
-     * Create
+     * Create Animal
      * @param requestBody
      * @returns AnimalRead Successful Response
      * @throws ApiError
      */
-    public static createAnimalsPost(
+    public static createAnimalAnimalsPost(
         requestBody: AnimalCreate,
     ): CancelablePromise<AnimalRead> {
         return __request(OpenAPI, {
@@ -79,12 +84,12 @@ export class AnimalsService {
     }
 
     /**
-     * Get By Id
+     * Get Animal By Id
      * @param id
      * @returns AnimalRead Successful Response
      * @throws ApiError
      */
-    public static getByIdAnimalsIdGet(
+    public static getAnimalByIdAnimalsIdGet(
         id: any,
     ): CancelablePromise<AnimalRead> {
         return __request(OpenAPI, {
@@ -100,13 +105,13 @@ export class AnimalsService {
     }
 
     /**
-     * Update
+     * Update Animal
      * @param id
      * @param requestBody
      * @returns AnimalRead Successful Response
      * @throws ApiError
      */
-    public static updateAnimalsIdPut(
+    public static updateAnimalAnimalsIdPut(
         id: number,
         requestBody: AnimalCreate,
     ): CancelablePromise<AnimalRead> {
@@ -125,13 +130,13 @@ export class AnimalsService {
     }
 
     /**
-     * Delete
+     * Delete Animal
      * @param id
      * @returns void
      * @throws ApiError
      */
-    public static deleteAnimalsIdDelete(
-        id: any,
+    public static deleteAnimalAnimalsIdDelete(
+        id: number,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
@@ -158,12 +163,12 @@ export class AnimalsService {
     }
 
     /**
-     * Create
+     * Create Note
      * @param requestBody
      * @returns NoteRead Successful Response
      * @throws ApiError
      */
-    public static createAnimalsNotePost(
+    public static createNoteAnimalsNotePost(
         requestBody: NoteCreate,
     ): CancelablePromise<NoteRead> {
         return __request(OpenAPI, {
@@ -178,13 +183,13 @@ export class AnimalsService {
     }
 
     /**
-     * Update
+     * Update Note
      * @param id
      * @param requestBody
      * @returns NoteRead Successful Response
      * @throws ApiError
      */
-    public static updateAnimalsNoteIdPut(
+    public static updateNoteAnimalsNoteIdPut(
         id: number,
         requestBody: NoteCreate,
     ): CancelablePromise<NoteRead> {
@@ -203,12 +208,12 @@ export class AnimalsService {
     }
 
     /**
-     * Delete
+     * Delete Note
      * @param id
      * @returns void
      * @throws ApiError
      */
-    public static deleteAnimalsNoteIdDelete(
+    public static deleteNoteAnimalsNoteIdDelete(
         id: any,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
@@ -240,6 +245,97 @@ export class AnimalsService {
             path: {
                 '_id': id,
                 'condition_type': conditionType,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Get Current Animal Weight
+     * @param id
+     * @returns AnimalWeightRead Successful Response
+     * @throws ApiError
+     */
+    public static getCurrentAnimalWeightAnimalsIdWeightGet(
+        id: number,
+    ): CancelablePromise<AnimalWeightRead> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/animals/{_id}/weight',
+            path: {
+                '_id': id,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Get Animal Weight History
+     * @param id
+     * @param page
+     * @param pageSize
+     * @returns AnimalWeightRead Successful Response
+     * @throws ApiError
+     */
+    public static getAnimalWeightHistoryAnimalsWeightIdHistoryGet(
+        id: number,
+        page?: number,
+        pageSize: number = 100,
+    ): CancelablePromise<Array<AnimalWeightRead>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/animals/weight/{_id}/history',
+            path: {
+                '_id': id,
+            },
+            query: {
+                'page': page,
+                'page_size': pageSize,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Create Animal Weight
+     * @param requestBody
+     * @returns AnimalWeightRead Successful Response
+     * @throws ApiError
+     */
+    public static createAnimalWeightAnimalsWeightPost(
+        requestBody: AnimalWeightCreate,
+    ): CancelablePromise<AnimalWeightRead> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/animals/weight',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Delete Animal Weight
+     * @param id
+     * @returns void
+     * @throws ApiError
+     */
+    public static deleteAnimalWeightAnimalsWeightIdDelete(
+        id: number,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/animals/weight/{_id}',
+            path: {
+                '_id': id,
             },
             errors: {
                 422: `Validation Error`,

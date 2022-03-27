@@ -14,15 +14,17 @@
 	import NoteModal from '../components/NoteModal.svelte';
 	import { getEnrichedEventType } from '../models/EnrichedEventType';
 	import ConditionSwitch from '../components/ConditionSwitch.svelte';
+	import WeightModal from '../components/WeightModal.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let conditions: Array<ConditionRead> = [];
 	let events: Array<EventRead> = [];
 	let currentAnimal: AnimalRead | undefined;
 	let idToInspect: number | undefined;
+	let idToAddWeightFor: number | undefined;
 
 	async function loadData() {
-		animals = await AnimalsService.getAllAnimalsGet();
+		animals = await AnimalsService.getAllAnimalsAnimalsGet();
 		conditions = await ConditionsService.getAllConditionsGet(animals.map(a => a.id));
 		events = await EventsService.getAllEventsGet(animals.map(a => a.id), undefined, undefined, false, undefined, undefined, 'desc');
 	}
@@ -36,6 +38,7 @@
 
 	$: isModalVisible = !!currentAnimal;
 	$: animalToInspect = idToInspect ? animals.find(animal => animal.id === idToInspect) : undefined;
+	$: animalToAddWeightFor = idToAddWeightFor ? animals.find(animal => animal.id === idToAddWeightFor) : undefined;
 </script>
 
 
@@ -75,8 +78,10 @@
 <NoteModal animal={animalToInspect}
 	on:done={async () => await loadData()}
 	on:remove={async () => await loadData()}
-	on:cancel={() => idToInspect = 0}
+	on:cancel={() => idToInspect = undefined}
 />
+
+<WeightModal animal={animalToAddWeightFor} on:cancel={() => idToAddWeightFor = undefined} />
 
 <div class="container-fluid px-sm-4">
 	<div class="row mt-2">
@@ -99,6 +104,9 @@
 										}} />
 									{/each}
 								{/if}
+								<button class="btn btn-primary" on:click={() => idToAddWeightFor = animal.id}>
+									<i class="fas fa-weight"></i>
+								</button>
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
 									<i class="fas fa-book"></i>
 								</button>

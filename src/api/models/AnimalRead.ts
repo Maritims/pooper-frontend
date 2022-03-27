@@ -4,6 +4,7 @@
 
 import type { AnimalConditionTypeAssociationRead } from './AnimalConditionTypeAssociationRead';
 import type { AnimalEventTypeAssociationRead } from './AnimalEventTypeAssociationRead';
+import type { AnimalWeightRead } from './AnimalWeightRead';
 import type { ConditionRead } from './ConditionRead';
 import type { EventRead } from './EventRead';
 import type { NoteRead } from './NoteRead';
@@ -19,4 +20,5 @@ export type AnimalRead = {
     notes: Array<NoteRead>;
     tracked_condition_types: Array<AnimalConditionTypeAssociationRead>;
     tracked_event_types: Array<AnimalEventTypeAssociationRead>;
+    weight_history: Array<AnimalWeightRead>;
 };

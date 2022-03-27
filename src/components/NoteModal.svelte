@@ -23,14 +23,14 @@
         let toastBody = '';
         
         if(idToEdit > 0) {
-            await AnimalsService.updateAnimalsNoteIdPut(idToEdit, {
+            await AnimalsService.updateNoteAnimalsNoteIdPut(idToEdit, {
                 animal_id: animal!.id,
                 text: noteText
             });
             toastBody = 'note.update.success';
             idToEdit = 0;
         } else {
-            await AnimalsService.createAnimalsNotePost({
+            await AnimalsService.createNoteAnimalsNotePost({
                 animal_id: animal!.id,
                 text: noteText
             });
@@ -129,7 +129,7 @@
         {#if idToRemove > 0}
             <button type="button" class="btn btn-danger" on:click={() => idToRemove = 0}>{$t({ key: 'no' })}</button>
             <button type="button" class="btn btn-success" on:click={async () => {
-                await AnimalsService.deleteAnimalsNoteIdDelete(idToRemove);
+                await AnimalsService.deleteNoteAnimalsNoteIdDelete(idToRemove);
                 idToRemove = 0;
                 dispatch('remove');
             }}>{$t({ key: 'yes' })}</button>

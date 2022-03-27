@@ -24,7 +24,7 @@
         level: LogLevel.ERROR
     });
 
-    onMount(async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated));
+    onMount(async () => animals = await AnimalsService.getAllAnimalsAnimalsGet(includeDeactivated));
 
     async function handleOnSubmit(): Promise<void> {
         if(!animalCreate) {
@@ -33,30 +33,32 @@
         }
 
         if(idToEdit) {
-            await AnimalsService.updateAnimalsIdPut(idToEdit, animalCreate);
+            await AnimalsService.updateAnimalAnimalsIdPut(idToEdit, animalCreate);
         } else {
-            await AnimalsService.createAnimalsPost(animalCreate);
+            await AnimalsService.createAnimalAnimalsPost(animalCreate);
         }
-        animals = await AnimalsService.getAllAnimalsGet(includeDeactivated);
+        animals = await AnimalsService.getAllAnimalsAnimalsGet(includeDeactivated);
         animalCreate = undefined;
         idToEdit = undefined;
+    }
+
+    async function handleOnConfirm(): Promise<void> {
+        await AnimalsService.deleteAnimalAnimalsIdDelete(idToRemove!);
+        animals = await AnimalsService.getAllAnimalsAnimalsGet(includeDeactivated);
+        idToRemove = undefined;
     }
 
     $: isConfirmationVisible = !!idToRemove;
     $: animalToInspect = animals.find(animal => animal.id == idToInspect);
 </script>
 
-<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={async () => {
-    await AnimalsService.deleteAnimalsIdDelete(idToRemove);
-    animals = await AnimalsService.getAllAnimalsGet(includeDeactivated);
-    idToRemove = undefined;
-}} on:cancel={() => idToRemove = undefined}/>
+<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={handleOnConfirm} on:cancel={() => idToRemove = undefined}/>
 
 <EditAnimalModal bind:animal={animalCreate} on:submit={handleOnSubmit} />
 
 <NoteModal bind:animal={animalToInspect}
-    on:done={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
-    on:remove={async () => animals = await AnimalsService.getAllAnimalsGet(includeDeactivated)}
+    on:done={async () => animals = await AnimalsService.getAllAnimalsAnimalsGet(includeDeactivated)}
+    on:remove={async () => animals = await AnimalsService.getAllAnimalsAnimalsGet(includeDeactivated)}
     on:cancel={() => idToInspect = undefined}
 />
 
