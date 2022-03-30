@@ -12,11 +12,13 @@
     export let animal: AnimalRead | undefined;
     let weightHistory: Array<AnimalWeightRead> = [];
     let weightInGrams: number | undefined;
-    let idToRemove: number | undefined;
+    let idToRemove = 0;
     let showWeight = false;
     const dispatch = createEventDispatcher();
 
     async function handleOnSubmit() {
+        if(!animal) return;
+
         if(!weightInGrams) {
             addToast({
                 id: new Date().getTime(),
@@ -28,28 +30,30 @@
         }
 
         await AnimalsService.createAnimalWeightAnimalsWeightPost({
-            animal_id: animal!.id,
+            animal_id: animal.id,
             weight_in_grams: weightInGrams
         });
         addToast({
             id: new Date().getTime(),
-            body: $t({ key: 'weight.create.success', substitutions: [weightInGrams, animal!.name] }),
+            body: $t({ key: 'weight.create.success', substitutions: [weightInGrams, animal.name] }),
             type: 'success',
             durationInMs: 3000
         });
 
         weightInGrams = undefined;
         dispatch('done');
-        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal!.id);
+        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id);
     }
 
     async function handleOnConfirm() {
-        await AnimalsService.deleteAnimalWeightAnimalsWeightIdDelete(idToRemove!);
-        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal!.id);
-        idToRemove = undefined;
+        if(!animal) return;
+        
+        await AnimalsService.deleteAnimalWeightAnimalsWeightIdDelete(idToRemove);
+        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id);
+        idToRemove = 0;
     }
 
-    $: isConfirmationVisible = !!idToRemove;
+    $: isConfirmationVisible = idToRemove > 0;
     $: idToRemove, console.log(idToRemove), console.log(isConfirmationVisible);
     $: if(animal) AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id).then(animalWeightReads => weightHistory = animalWeightReads);
 </script>
@@ -79,7 +83,7 @@
             <div class="col">
                 <Accordion>
                     <AccordionItem header={$t({ key: 'weight.modal.accordion.title' })} bind:show={showWeight}>
-                        {#if idToRemove}
+                        {#if idToRemove > 0}
                             <div class="text-center">
                                 <h2>{$t({ key: 'confirmation.title' })}</h2>
                                 <p>{$t({ key: 'confirmation.body' })}</p>
@@ -112,7 +116,7 @@
         </div>
     </div>
     <span slot="footer">
-        {#if idToRemove}
+        {#if idToRemove > 0}
             <button type="button" class="btn btn-danger" on:click={() => idToRemove = 0}>{$t({ key: 'no' })}</button>
             <button type="button" class="btn btn-success" on:click={handleOnConfirm}>{$t({ key: 'yes' })}</button>
         {:else}

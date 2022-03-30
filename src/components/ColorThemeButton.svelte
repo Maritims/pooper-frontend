@@ -3,7 +3,7 @@
     import { t } from '../translations';
     import { colorThemeStore, getEnumFromString, getIconFromEnum } from './loaders/ColorThemeButton';
 
-    let clazz: string = '';
+    let clazz = '';
     export { clazz as class };
 
     $: changeToTheme = $colorThemeStore == ColorTheme.DARK ? ColorTheme.LIGHT : ColorTheme.DARK;

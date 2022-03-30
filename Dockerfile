@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json rollup.config.js ./
 COPY . .
 RUN yarn install --pure-lockfile --non-interactive \
+    && yarn lint src/**/*.svelte \
     && yarn test
 
 FROM develop-stage AS build-stage

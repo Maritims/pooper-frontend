@@ -6,7 +6,7 @@
     import { addToast } from "../services/toasts";
     import Confirmation from "../components/Confirmation.svelte";
     import Map from "../components/Map.svelte";
-    import { getEventMarkers } from '../components/loaders/Map';
+    import { getEventMarkers } from '../components/loaders/Map';
     import Modal from "../components/Modal.svelte";
     import { getEnrichedEventType } from "../models/EnrichedEventType";
     import { getEventCreate } from "../factories/EventFactory";
@@ -14,7 +14,7 @@
     import DropdownFilter from "../components/table/DropdownFilter.svelte";
     import Rating from "../components/Rating.svelte";
     import RemoveButton from "../components/RemoveButton.svelte";
-    import { t } from '../translations';
+    import { t } from '../translations';
 
     let animals: Array<AnimalRead> = [];
     let idToRemove: number | undefined;
@@ -38,7 +38,7 @@
     let daysFilter: DropdownFilter;
 
     onMount(async () => {
-        animals = await AnimalsService.getAllAnimalsGet();
+        animals = await AnimalsService.getAllAnimalsAnimalsGet();
     });
 
     async function createEvent(): Promise<void> {

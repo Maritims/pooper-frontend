@@ -20,7 +20,7 @@
         userCreate = getUserCreate();
         users = await UsersService.getAllUsersUsersGet();
         isModalVisible = false;
-    };
+    }
 
     $: isConfirmationVisible = !!idToRemove;
 </script>

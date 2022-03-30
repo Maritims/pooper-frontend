@@ -13,10 +13,10 @@
     let eventTypes = getAllEventTypes();
     let currentAnimal: AnimalRead | undefined;
     let days = 7;
-    let activeTabId: string = 'all-event-types';
+    let activeTabId = 'all-event-types';
 
     onMount(async () => {
-        animals = await AnimalsService.getAllAnimalsGet();
+        animals = await AnimalsService.getAllAnimalsAnimalsGet();
         events = await EventsService.getAllEventsGet(animals.map(a => a.id));
     });
 </script>

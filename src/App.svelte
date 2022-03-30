@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { authStore } from './services/auth';
+	import { authStore } from './services/auth';
 	import { modalStore } from './components/loaders/Modal';
 	import { Router, Route } from 'svelte-navigator';
 	import Animals from './pages/Animals.svelte';

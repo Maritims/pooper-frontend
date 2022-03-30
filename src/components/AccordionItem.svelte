@@ -2,7 +2,7 @@
     import { slide } from 'svelte/transition';
 
     export let header: string;
-    export let show: boolean = false;
+    export let show = false;
 </script>
 
 <div class="accordion-item">

@@ -1,8 +1,6 @@
 <script lang="ts">
-import Gallery from '../components/Gallery.svelte';
-
-    import { colorThemeStore } from '../components/loaders/ColorThemeButton';
-
+    import Gallery from '../components/Gallery.svelte';
+    import { colorThemeStore } from '../components/loaders/ColorThemeButton';
 </script>
 
 <div class="container">

@@ -2,7 +2,7 @@
     import Map from '../components/Map.svelte';
     import Modal from "../components/Modal.svelte";
     import { getTimeSpanFromDateOrNumber, getTimeSpanString } from "../utils/TimeUtils";
-    import { addRouteForEvents, getAllUnconfirmedTrips, getEventsInTrip, getTripsFromEvents, type Trip } from './loaders/Trips';
+    import { addRouteForEvents, getAllUnconfirmedTrips, getTripsFromEvents, type Trip } from './loaders/Trips';
     import { getEventMarkers } from '../components/loaders/Map';
     import { onMount } from "svelte";
     import { EventsService, TripsService } from '../api';
@@ -17,8 +17,8 @@
     const user = getDecodedToken().user;
 
     onMount(async () => {
-        homeLongitude = user.home_longitude!;
-        homeLatitude = user.home_latitude!;
+        if(user.home_longitude) homeLongitude = user.home_longitude;
+        if(user.home_latitude) homeLatitude = user.home_latitude;
         const totalEventCount = await EventsService.getCountEventsCountGet(undefined, undefined, undefined, false);
         const events = await EventsService.getAllEventsGet(undefined, undefined, undefined, false, 0, totalEventCount);
         trips = getTripsFromEvents(events, 1000 * 60 * 5, 1000 * 60 * 10);
@@ -47,7 +47,7 @@
                         <th>{$t({ key: 'animal' })}</th>
                         <th>{$t({ key: 'event.type' })}</th>
                         <th>{$t({ key: 'created' })}</th>
-                        <th>{$t({ key: 'coordinates' })}</th>
+                        <th>{$t({ key: 'coordinates' })}</th>
                     </tr>
                 </thead>
                 <tbody>

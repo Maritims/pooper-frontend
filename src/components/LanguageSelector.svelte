@@ -3,7 +3,7 @@
     import { createPopper } from '@popperjs/core';
     import { onMount } from 'svelte';
 
-    let clazz: string = '';
+    let clazz = '';
     export { clazz as class };
 
     let currentLanguage: Language | undefined;

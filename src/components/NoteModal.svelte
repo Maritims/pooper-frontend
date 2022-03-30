@@ -20,18 +20,20 @@
     let showNotes = false;
 
     async function handleOnSubmit(): Promise<void> {
+        if(!animal) return;
+
         let toastBody = '';
         
         if(idToEdit > 0) {
             await AnimalsService.updateNoteAnimalsNoteIdPut(idToEdit, {
-                animal_id: animal!.id,
+                animal_id: animal.id,
                 text: noteText
             });
             toastBody = 'note.update.success';
             idToEdit = 0;
         } else {
             await AnimalsService.createNoteAnimalsNotePost({
-                animal_id: animal!.id,
+                animal_id: animal.id,
                 text: noteText
             });
             toastBody = 'note.create.success';

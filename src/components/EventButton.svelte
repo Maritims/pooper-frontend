@@ -30,7 +30,7 @@
                 addToast({
                     id: new Date().getTime(),
                     type: 'success',
-                    body: $t({ key: 'event.button.success', substitutions: [options.eventType.eventType, options.animalName] }),
+                    body: $t({ key: 'event.button.success', substitutions: [options.eventType.eventType, options.animalName] }),
                     durationInMs: 3000
                 });
                 dispatch('done', {

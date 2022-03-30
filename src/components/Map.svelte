@@ -6,16 +6,16 @@
 
     export let center: Position | undefined = undefined;
     export let markers: Array<Marker> = [];
-    export let minHeightPx: number = 400;
+    export let minHeightPx = 400;
 
     export function addMarker(marker: Marker): void {
         marker.addTo(map);
-    };
+    }
 
     export function setCenter(position: Position): void {
         map.setCenter([position.lng, position.lat]);
         personalMarker.setLngLat([position.lng, position.lat]).addTo(map);
-    };
+    }
 
     const dispatchOnLoadEvent = createEventDispatcher<{load: MapboxEvent}>();
     const dispatchMapMouseEvent = createEventDispatcher<{click: MapMouseEvent}>();

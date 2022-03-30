@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onSubmitHandler } from './loaders/Login';
     import { useFocus } from 'svelte-navigator';
-    import { colorThemeStore } from '../components/loaders/ColorThemeButton';
+    import { colorThemeStore } from '../components/loaders/ColorThemeButton';
     import { t } from '../translations';
 
     export const registerFocus = useFocus();
@@ -25,7 +25,7 @@
                 <div class="mb-3 form-floating">
                     <input type="password" id="password" class="form-control" bind:value={password} autocomplete="current-password" />
                     <label for="password">{$t({ key: 'password' })}</label>
-                    <div id="forgottenPassword" class="form-text">{@html $t({ key: 'login.forgotten.password' })}</div>
+                    <div id="forgottenPassword" class="form-text">{@html $t({ key: 'login.forgotten.password' })}</div>
                 </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-success">{$t({ key: 'login.action' })}</button>

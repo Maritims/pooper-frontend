@@ -14,7 +14,7 @@
     let animals: Array<AnimalRead> = [];
     let idToEdit: number | undefined;
     let idToInspect: number | undefined;
-    let idToRemove: number | undefined;
+    let idToRemove = 0;
     let animalCreate: AnimalCreate | undefined;
     let noteCreate = getNoteCreate();
 
@@ -43,16 +43,16 @@
     }
 
     async function handleOnConfirm(): Promise<void> {
-        await AnimalsService.deleteAnimalAnimalsIdDelete(idToRemove!);
+        await AnimalsService.deleteAnimalAnimalsIdDelete(idToRemove);
         animals = await AnimalsService.getAllAnimalsAnimalsGet(includeDeactivated);
-        idToRemove = undefined;
+        idToRemove = 0;
     }
 
-    $: isConfirmationVisible = !!idToRemove;
+    $: isConfirmationVisible = idToRemove > 0;
     $: animalToInspect = animals.find(animal => animal.id == idToInspect);
 </script>
 
-<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={handleOnConfirm} on:cancel={() => idToRemove = undefined}/>
+<Confirmation bind:isVisible={isConfirmationVisible} on:confirm={handleOnConfirm} on:cancel={() => idToRemove = 0}/>
 
 <EditAnimalModal bind:animal={animalCreate} on:submit={handleOnSubmit} />
 
