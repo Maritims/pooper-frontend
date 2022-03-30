@@ -53,7 +53,6 @@
         idToRemove = 0;
     }
 
-    $: isConfirmationVisible = idToRemove > 0;
     $: if(animal) AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id).then(animalWeightReads => weightHistory = animalWeightReads);
 </script>
 
