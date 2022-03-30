@@ -7,14 +7,12 @@
 	import Modal from '../components/Modal.svelte';
 	import TripAlert from '../components/TripAlert.svelte';
 	import { getAdditionalEventTypesCssClass } from './loaders/Home';
-	import Accordion from '../components/Accordion.svelte';
-	import AccordionItem from '../components/AccordionItem.svelte';
-	import { getEventsInChosenPeriod } from './loaders/Statistics';
 	import { t } from '../translations';
 	import NoteModal from '../components/NoteModal.svelte';
 	import { getEnrichedEventType } from '../models/EnrichedEventType';
 	import ConditionSwitch from '../components/ConditionSwitch.svelte';
 	import WeightModal from '../components/WeightModal.svelte';
+	import DailySummary from '../components/DailySummary.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let conditions: Array<ConditionRead> = [];
@@ -135,35 +133,7 @@
 								</div>
 								<div class="row mt-2">
 									<div class="col">
-										<Accordion>
-											<AccordionItem header={$t({ key: 'home.daily.summary.title' })}>
-												<table class="table table-striped">
-													<thead>
-														<tr>
-															<th></th>
-															<th class="text-center">{$t({ key: 'home.daily.summary.table.header.registered' })}</th>
-															<th class="text-center">{$t({ key: 'home.daily.summary.table.header.expected' })}</th>
-															<th class="text-center">{$t({ key: 'home.daily.summary.table.header.difference' })}</th>
-														</tr>
-													</thead>
-													<tbody>
-														{#each animal.tracked_event_types as animalEventTypeAssociation}
-															{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
-															{@const todaysEvents = getEventsInChosenPeriod(animal.tracked_events, eventType, 1).length}
-															{@const lastSevenDaysEvents = getEventsInChosenPeriod(animal.tracked_events, eventType, 7).length / 7}
-															<tr>
-																<td>
-																	<i class="fas {eventType.iconClass}"></i>
-																</td>
-																<td class="text-center">{todaysEvents}</td>
-																<td class="text-center">{lastSevenDaysEvents.toFixed(0)}</td>
-																<td class="text-center">{(todaysEvents - lastSevenDaysEvents).toFixed(0)}</td>
-															</tr>
-														{/each}
-													</tbody>
-												</table>
-											</AccordionItem>
-										</Accordion> 
+										<DailySummary {animal} events={events.filter(e => e.animal_id === animal.id)} />
 									</div>
 								</div>
 							{/if}
