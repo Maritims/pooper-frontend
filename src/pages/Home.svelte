@@ -4,15 +4,14 @@
 	import { onMount } from "svelte";
 	import { AnimalsService } from "../api";
 	import EventButton from '../components/EventButton.svelte';
-	import Modal from '../components/Modal.svelte';
 	import TripAlert from '../components/TripAlert.svelte';
 	import { getAdditionalEventTypesCssClass } from './loaders/Home';
-	import { t } from '../translations';
 	import NoteModal from '../components/NoteModal.svelte';
 	import { getEnrichedEventType } from '../models/EnrichedEventType';
 	import ConditionSwitch from '../components/ConditionSwitch.svelte';
 	import WeightModal from '../components/WeightModal.svelte';
-	import DailySummary from '../components/DailySummary.svelte';
+	import HomeDailySummary from '../components/HomeDailySummary.svelte';
+	import HomeEventButtonModal from '../components/HomeEventButtonModal.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let conditions: Array<ConditionRead> = [];
@@ -34,44 +33,16 @@
 		currentAnimal = undefined;
 	}
 
-	$: isModalVisible = !!currentAnimal;
 	$: animalToInspect = idToInspect ? animals.find(animal => animal.id === idToInspect) : undefined;
 	$: animalToAddWeightFor = idToAddWeightFor ? animals.find(animal => animal.id === idToAddWeightFor) : undefined;
+	//$: currentAnimalEvents = currentAnimal ? events.filter(e => e.animal_id === currentAnimal?.id) : [];
 </script>
 
-
-<Modal isVisible={isModalVisible}>
-	<span slot="title">{$t({ key: 'home.additional.event.types' })}</span>
-	<div slot="body" class="container-fluid p-0">
-		{#if currentAnimal}
-			{#if currentAnimal.tracked_event_types.length > 0}
-				{#each currentAnimal.tracked_event_types as animalEventTypeAssociation}
-					{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
-					{#if !eventType.showOnHomeScreen && currentAnimal}
-						<div class="row mb-2">
-							<div class="col">
-								<EventButton options={{
-									animalId: currentAnimal.id,
-									animalName: currentAnimal.name,
-									compact: false,
-									eventType: eventType,
-									events: events.filter(e => e.animal_id == currentAnimal?.id)
-								}} on:done={handleOnDone} />
-							</div>
-						</div>
-					{/if}
-				{/each}
-			{:else}
-				<div class="row mb-2">
-					<div class="col">{$t({ key: 'home.no.additional.event.types', substitutions: [currentAnimal.name] })}</div>
-				</div>
-			{/if}
-		{/if}
-	</div>
-	<span slot="footer">
-		<button type="button" class="btn btn-danger" on:click={() => isModalVisible = false}>{$t({ key: 'cancel' })}</button>
-	</span>
-</Modal>
+<HomeEventButtonModal animal={currentAnimal}
+	events={[...events]}
+	on:done={async () => await loadData()}
+	on:cancel={() => currentAnimal = undefined}
+/>
 
 <NoteModal animal={animalToInspect}
 	on:done={async () => await loadData()}
@@ -79,7 +50,9 @@
 	on:cancel={() => idToInspect = undefined}
 />
 
-<WeightModal animal={animalToAddWeightFor} on:cancel={() => idToAddWeightFor = undefined} />
+<WeightModal animal={animalToAddWeightFor}
+	on:cancel={() => idToAddWeightFor = undefined}
+/>
 
 <div class="container-fluid px-sm-4">
 	<div class="row mt-2">
@@ -133,7 +106,7 @@
 								</div>
 								<div class="row mt-2">
 									<div class="col">
-										<DailySummary {animal} events={events.filter(e => e.animal_id === animal.id)} />
+										<HomeDailySummary {animal} events={events.filter(e => e.animal_id === animal.id)} />
 									</div>
 								</div>
 							{/if}
