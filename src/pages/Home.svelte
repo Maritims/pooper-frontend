@@ -5,7 +5,7 @@
 	import { AnimalsService } from "../api";
 	import EventButton from '../components/EventButton.svelte';
 	import TripAlert from '../components/TripAlert.svelte';
-	import { getAdditionalEventTypesCssClass } from './loaders/Home';
+	import { getCssPostfixForEvents } from './loaders/Home';
 	import HomeNoteModal from '../components/NoteModal.svelte';
 	import { getEnrichedEventType } from '../models/EnrichedEventType';
 	import ConditionSwitch from '../components/ConditionSwitch.svelte';
@@ -80,7 +80,7 @@
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
 									<i class="fas fa-book"></i>
 								</button>
-								<button class="btn btn-primary btn-{getAdditionalEventTypesCssClass(events.filter(e => e.animal_id == animal.id))}" on:click={() => idToRegisterEventsFor = animal.id}>
+								<button class="btn btn-primary btn-{getCssPostfixForEvents(events.filter(e => e.animal_id == animal.id && !getEnrichedEventType(e.event_type).showOnHomeScreen))}" on:click={() => idToRegisterEventsFor = animal.id}>
 									<i class="fas fa-plus"></i>
 								</button>
 							</div>
