@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import type { AnimalRead, EventRead } from "../api";
+    import { EventsService, type AnimalRead, type EventRead } from "../api";
     import { getEnrichedEventType } from "../models/EnrichedEventType";
     import EventButton from "./EventButton.svelte";
     import Modal from "./Modal.svelte";
@@ -11,13 +11,14 @@
     export let isVisible = false;
     const dispatch = createEventDispatcher();
 
+    $: if(animal) EventsService.getAllEventsGet([animal.id], undefined, 1, undefined, 0, 10, undefined).then(eventReads => events = eventReads);
     $: isVisible = !!animal;
 </script>
 
 <Modal bind:isVisible={isVisible}>
 	<span slot="title">{$t({ key: 'home.additional.event.types' })}</span>
 	<div slot="body" class="container-fluid p-0">
-		{#if animal && animal.tracked_event_types.length > 0 && events.length > 0}
+		{#if animal && animal.tracked_event_types.length > 0}
 			{#if animal.tracked_event_types.length > 0}
 				{#each animal.tracked_event_types as animalEventTypeAssociation}
 					{@const eventType = getEnrichedEventType(animalEventTypeAssociation.event_type)}
@@ -43,6 +44,9 @@
 		{/if}
 	</div>
 	<span slot="footer">
-		<button type="button" class="btn btn-danger" on:click={() => dispatch('cancel')}>{$t({ key: 'cancel' })}</button>
+		<button type="button" class="btn btn-danger" on:click={() => {
+			events = [];
+			dispatch('cancel');
+		}}>{$t({ key: 'cancel' })}</button>
 	</span>
 </Modal>

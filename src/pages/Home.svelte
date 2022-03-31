@@ -6,51 +6,50 @@
 	import EventButton from '../components/EventButton.svelte';
 	import TripAlert from '../components/TripAlert.svelte';
 	import { getAdditionalEventTypesCssClass } from './loaders/Home';
-	import NoteModal from '../components/NoteModal.svelte';
+	import HomeNoteModal from '../components/NoteModal.svelte';
 	import { getEnrichedEventType } from '../models/EnrichedEventType';
 	import ConditionSwitch from '../components/ConditionSwitch.svelte';
-	import WeightModal from '../components/WeightModal.svelte';
+	import HomeWeightModal from '../components/HomeWeightModal.svelte';
 	import HomeDailySummary from '../components/HomeDailySummary.svelte';
 	import HomeEventButtonModal from '../components/HomeEventButtonModal.svelte';
 
 	let animals: Array<AnimalRead> = [];
 	let conditions: Array<ConditionRead> = [];
 	let events: Array<EventRead> = [];
-	let currentAnimal: AnimalRead | undefined;
 	let idToInspect: number | undefined;
 	let idToAddWeightFor: number | undefined;
+	let idToRegisterEventsFor: number | undefined;
 
 	async function loadData() {
 		animals = await AnimalsService.getAllAnimalsAnimalsGet();
 		conditions = await ConditionsService.getAllConditionsGet(animals.map(a => a.id));
-		events = await EventsService.getAllEventsGet(animals.map(a => a.id), undefined, undefined, false, undefined, undefined, 'desc');
+		events = [...await EventsService.getAllEventsGet(animals.map(a => a.id), undefined, undefined, false, undefined, undefined, 'desc')];
 	}
 	
 	onMount(async () => loadData());
 
 	async function handleOnDone(e: CustomEvent): Promise<void> {
 		if(e.detail.success) await loadData();
-		currentAnimal = undefined;
+		idToRegisterEventsFor = undefined;
 	}
 
 	$: animalToInspect = idToInspect ? animals.find(animal => animal.id === idToInspect) : undefined;
 	$: animalToAddWeightFor = idToAddWeightFor ? animals.find(animal => animal.id === idToAddWeightFor) : undefined;
-	//$: currentAnimalEvents = currentAnimal ? events.filter(e => e.animal_id === currentAnimal?.id) : [];
+	$: animalToRegisterEventsFor = idToRegisterEventsFor ? animals.find(animal => animal.id == idToRegisterEventsFor) : undefined;
 </script>
 
-<HomeEventButtonModal animal={currentAnimal}
-	events={[...events]}
+<HomeEventButtonModal animal={animalToRegisterEventsFor}
 	on:done={async () => await loadData()}
-	on:cancel={() => currentAnimal = undefined}
+	on:cancel={() => idToRegisterEventsFor = undefined}
 />
 
-<NoteModal animal={animalToInspect}
+<HomeNoteModal animal={animalToInspect}
 	on:done={async () => await loadData()}
 	on:remove={async () => await loadData()}
 	on:cancel={() => idToInspect = undefined}
 />
 
-<WeightModal animal={animalToAddWeightFor}
+<HomeWeightModal animal={animalToAddWeightFor}
 	on:cancel={() => idToAddWeightFor = undefined}
 />
 
@@ -81,7 +80,7 @@
 								<button class="btn btn-primary" on:click={() => idToInspect = animal.id}>
 									<i class="fas fa-book"></i>
 								</button>
-								<button class="btn btn-primary btn-{getAdditionalEventTypesCssClass(events.filter(e => e.animal_id == animal.id))}" on:click={() => currentAnimal = animal}>
+								<button class="btn btn-primary btn-{getAdditionalEventTypesCssClass(events.filter(e => e.animal_id == animal.id))}" on:click={() => idToRegisterEventsFor = animal.id}>
 									<i class="fas fa-plus"></i>
 								</button>
 							</div>
