@@ -87,7 +87,7 @@
                         yMin={0}
                         yMax={5}
                         yStep={1}
-                        datasets={getPoopRatingDataSets(days, currentAnimal ? events.filter(e => e.animal_id == currentAnimal?.id) : events, currentAnimal ? 1 : animals.length)}
+                        datasets={getPoopRatingDataSets(days, currentAnimal ? events.filter(e => e.animal_id == currentAnimal?.id) : events)}
                         labels={getLabels(days)}
                     />
             </div>

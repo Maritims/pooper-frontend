@@ -21,7 +21,7 @@ export function getEventMarkers(events: Array<EventRead>): Array<Marker> {
     });
 
     return eventMarkers;
-};
+}
 
 export function addRoute(mapboxMap: mapbox.Map, positions: Array<Position>): void {
     new Marker({

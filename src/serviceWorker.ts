@@ -1,4 +1,4 @@
-declare var self: ServiceWorkerGlobalScope;
+declare let self: ServiceWorkerGlobalScope;
 
 const CACHE_NAME = 'static-cache-v1';
 
@@ -13,7 +13,7 @@ function onInstall(e: ExtendableEvent) {
     );
     
     self.skipWaiting();
-};
+}
 
 function onActivate(e: ExtendableEvent) {
     //console.log('[ServiceWorker] Activate');
@@ -32,7 +32,7 @@ function onActivate(e: ExtendableEvent) {
     );
 
     self.clients.claim();
-};
+}
 
 function onFetch(e: FetchEvent): void {
     //console.log('[ServiceWorker] Fetch', e.request.url);
@@ -49,7 +49,7 @@ function onFetch(e: FetchEvent): void {
             return await cache.match('offline.html')
         }) as Promise<Response>
     );
-};
+}
 
 async function onPush(e: PushEvent) {    
     const data = e.data?.json();
@@ -58,7 +58,7 @@ async function onPush(e: PushEvent) {
         icon: '/gfx/pooper.png',
         tag: 'pooper'
     }));
-};
+}
 
 self.addEventListener('install', (e) => onInstall(e));
 self.addEventListener('activate', (e) => onActivate(e));

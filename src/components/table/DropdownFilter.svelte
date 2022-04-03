@@ -1,8 +1,8 @@
 <script lang="ts">
     import { t } from "../../translations";
 
-    export let selectedOption: {} = '';
-    export let options: Array<{description: string, value: {}}>;
+    export let selectedOption = '';
+    export let options: Array<{description: string, value: string}>;
     export function reset() {
         selectedOption = '';
     }

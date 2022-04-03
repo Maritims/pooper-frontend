@@ -6,12 +6,12 @@ import nb from './translations/nb';
 enum ISO3611_1_ALPHA_2 {
     GB = 'gb',
     NO = 'no'
-};
+}
 
 enum ISO639_1 {
     EN = 'en',
     NB = 'nb'
-};
+}
 
 export type Language = {
     iso639_1: ISO639_1
@@ -21,7 +21,7 @@ export type Language = {
 
 type Locale = {
     language: Language
-    translations: {}
+    translations: Record<string, unknown>
 };
 
 export const locale = writable<ISO639_1>(localStorage.getItem('locale') as ISO639_1 || ISO639_1.EN);
@@ -86,9 +86,9 @@ export const t = derived(locale, ($iso639_1) => (translationRequest: Translation
     return translation;
 });
 
-export const d = (date: Date | string | Number): string | undefined => {
+export const d = (date: Date | string | number): string | undefined => {
     if(date instanceof Date) return date.toLocaleString();
     if(typeof date === 'string') return new Date(Date.parse(date as string)).toLocaleString();
-    if(date instanceof Number) return new Date(date as number).toLocaleString();
+    if(typeof date === 'number') return new Date(date as number).toLocaleString();
     return
 };

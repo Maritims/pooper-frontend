@@ -9,7 +9,7 @@
     "generate": "openapi --input http://127.0.0.1:8000/openapi.json --output ./src/api --client xhr",
     "start": "sirv public -s --no-clear",
     "test": "jest",
-    "lint": "eslint"
+    "lint": "eslint --fix './src/**/*.svelte' './src/**/*.ts'"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.0",

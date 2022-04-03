@@ -3,7 +3,7 @@ export enum LogLevel {
     INFO = 1,
     WARN = 2,
     ERROR = 3
-};
+}
 
 export type LoggerConfiguration = {
     context: string
@@ -50,8 +50,8 @@ export class Logger {
     error(message: string): void {
         this.log(message, LogLevel.ERROR);
     }
-};
+}
 
 export function getLogger(configuration: LoggerConfiguration): Logger {
     return new Logger(configuration);
-};
+}

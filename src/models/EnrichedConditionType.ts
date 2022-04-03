@@ -16,4 +16,4 @@ export function getEnrichedConditionType(conditionType: ConditionType): Enriched
             iconClass: 'fa-home'
         };
     }
-};
+}

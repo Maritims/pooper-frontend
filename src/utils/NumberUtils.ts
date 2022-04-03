@@ -15,12 +15,12 @@ export function getMeanOfDifferences(nums: Array<number>): number {
 
     const meanOfDiffs = diffs.reduce((sum, diff) => sum += diff, 0) / diffs.length;
     return meanOfDiffs;
-};
+}
 
 export function getAverage(nums: Array<number | undefined>): number | undefined {
     nums = nums.filter(num => !!num);
     return nums.length ? nums.reduce<number>((sum, num) => sum += num as number, 0) / nums.length : undefined;
-};
+}
 
 export type NumberRange = {
     min: number
@@ -37,4 +37,4 @@ export function getFloorAndCeil(i: number, max: number, factor: number): NumberR
     if(range.max === i) range.max += factor;
 
     return range;
-};
+}

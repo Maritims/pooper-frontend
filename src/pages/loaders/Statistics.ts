@@ -40,7 +40,7 @@ export function getAllEventTypesDataSets(days: number, events: Array<EventRead>)
     return dataSets;
 }
 
-export function getPoopRatingDataSets(days: number, events: Array<EventRead>, divisionFactor: number): Array<ChartDataset> {
+export function getPoopRatingDataSets(days: number, events: Array<EventRead>): Array<ChartDataset> {
     if(!events?.length) return [];
 
     const counts = getDates(days).map(date => {
@@ -48,7 +48,7 @@ export function getPoopRatingDataSets(days: number, events: Array<EventRead>, di
             const eventDate = new Date(Date.parse(e.created));
             eventDate.setHours(0, 0, 0, 0);
             return e.event_type === EventType.POO && eventDate.getTime() === date.getTime();
-        }).map(e => e.rating!);
+        }).map(e => e.rating);
         return getAverage(ratings) || 0;
     });
 

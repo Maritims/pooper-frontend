@@ -8,8 +8,8 @@ export const fourthColumnClass = 'col-4 col-md-3 col-xxl-6 text-end';
 
 export function getAllEventTypes(): Array<EnrichedEventType> {
     return Object.values(EventType).map(eventType => getEnrichedEventType(eventType));
-};
+}
 
 export function getEventTypes(): Array<EventType> {
     return Object.values(EventType);
-};
+}

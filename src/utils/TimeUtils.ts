@@ -48,18 +48,18 @@ export function getTimeSpanFromDateOrNumber(ms: number | Date): TimeSpan {
         totalSeconds: getSecs(totalMs),
         totalMilliseconds: totalMs
     };
-};
+}
 
 export function getTimeSpanFromDatePair(dates: DatePair): TimeSpan {
     return getTimeSpanFromDateOrNumber(dates.latest.getTime() - dates.earliest.getTime());
-};
+}
 
 export function getTimeSpanString(
     timeSpan: TimeSpan,
-    includeDays: boolean = true,
-    includeHours: boolean = true,
-    includeMinutes: boolean = true,
-    includeSeconds: boolean = true
+    includeDays = true,
+    includeHours = true,
+    includeMinutes = true,
+    includeSeconds = true
     ): string {
         const parts = [];
     
@@ -69,13 +69,13 @@ export function getTimeSpanString(
         if(includeSeconds && timeSpan.seconds > 0) parts.push(`${timeSpan.seconds} secs`);
         
         return parts.join(', ').replace(/,\s([^,]+)$/, ' and $1');
-    };
+    }
 
 export function getTimeSpanStringFromMilliseconds(ms: number): string {
     const timeSpan = getTimeSpanFromDateOrNumber(ms);
     const timeSpanString = getTimeSpanString(timeSpan);
     return timeSpanString;
-};
+}
 
 export function getMostFrequentHourFromDates(dates: Array<Date>): number | undefined {
     type Count = {
@@ -92,10 +92,10 @@ export function getMostFrequentHourFromDates(dates: Array<Date>): number | undef
         }); 
         return acc;
     }, []).sort((a, b) => b.value - a.value)[0]?.key;
-};
+}
 
 export function isToday(milliseconds: number): boolean {
     const today = new Date().setHours(0, 0, 0, 0);
     const thatDay = new Date(milliseconds).setHours(0, 0, 0, 0);
     return today === thatDay;
-};
+}

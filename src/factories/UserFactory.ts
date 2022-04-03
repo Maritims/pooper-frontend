@@ -10,7 +10,7 @@ export function getUserCreate(): UserCreate {
         password: '',
         password_repeated: ''
     }
-};
+}
 
 export function getUserRead(): UserRead {
     return {
@@ -24,4 +24,4 @@ export function getUserRead(): UserRead {
         created: '',
         updated: ''
     }
-};
+}

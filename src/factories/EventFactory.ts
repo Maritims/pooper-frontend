@@ -7,7 +7,7 @@ export function getEventCreate(): EventCreate {
         latitude: 0,
         event_type: EventType.EAT
     }
-};
+}
 
 export function getEventRead(): EventRead {
     return {
@@ -22,4 +22,4 @@ export function getEventRead(): EventRead {
         animal_name: '',
         is_tracked: false
     }
-};
+}

@@ -63,7 +63,6 @@ export default [
 					output: `public/build/${style}.css`,
 					watch: `src/styles/${style}.scss`
 				}),
-				,
 				del({ targets: `public/build/${style}.js*` })
 			]
 		}
@@ -101,7 +100,8 @@ export default [
 			globalThis: JSON.stringify({
 				API_BASE_URL: process.env.API_BASE_URL,
 				VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY,
-				MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN
+				MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
+				VERSION: process.env.npm_package_version
 			})
 		}),
 		svelte({

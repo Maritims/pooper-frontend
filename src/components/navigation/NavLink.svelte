@@ -1,7 +1,6 @@
 <script>
-    import { getContext } from "svelte";
     import { Link } from "svelte-navigator";
-    import { navigationBarStore } from './loaders/NavigationBar';
+    import { navigationBarStore } from './loaders/NavigationBar';
   
     let clazz = "";
     export { clazz as class };

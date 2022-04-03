@@ -1,11 +1,17 @@
 import { NotificationsService } from "../api/services/NotificationsService";
+import { getLogger, LogLevel } from '../services/logger';
+
+const log = getLogger({
+    context: 'ServiceWorkerUtil',
+    level: LogLevel.ERROR
+});
 
 function arrayBufferToBase64(buffer: ArrayBuffer ): string {
     // https://stackoverflow.com/a/9458996
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
         binary += String.fromCharCode(bytes[i]);
     }
     return window.btoa(binary);
@@ -23,13 +29,25 @@ async function subscribeToPushNotifications(pushManager: PushManager): Promise<P
         applicationServerKey: vapidPublicKey
     });
 
+    const publicKey = subscription.getKey('p256dh');
+    if(!publicKey) {
+        log.error('Subscription does not contain a public key');
+        return null;
+    }
+
+    const authenticationSecret = subscription.getKey('auth');
+    if(!authenticationSecret) {
+        log.error('Subscription does not contain an authentication secret');
+        return null;
+    }
+
     const notificationSubscription = await NotificationsService.subscribeNotificationsSubscribePost({
         endpoint: subscription?.endpoint,
-        public_key: arrayBufferToBase64(subscription.getKey('p256dh')!),
-        authentication_secret: arrayBufferToBase64(subscription.getKey('auth')!)
+        public_key: arrayBufferToBase64(publicKey),
+        authentication_secret: arrayBufferToBase64(authenticationSecret)
     });
     if(!notificationSubscription) {
-        console.error('Unable to store notification subscription');
+        log.error('Unable to store notification subscription');
         return null;
     }
 

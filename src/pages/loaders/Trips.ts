@@ -28,7 +28,7 @@ export function getEventsInTrip(events: Array<EventRead>, maxMsBetweenEvents: nu
     events = events.sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
     const indexesToRemove: Array<number> = [];
 
-    let previousTimeInMs: number = 0;
+    let previousTimeInMs = 0;
     for(let i = 0; i < events.length; i++) {
         const currentTimeInMs = Date.parse(events[i].created);
         const differenceInMs = currentTimeInMs - previousTimeInMs;

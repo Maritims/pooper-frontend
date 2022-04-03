@@ -1,15 +1,16 @@
 <script lang="ts">
-    import { slide } from 'svelte/transition';
+    import { slide } from 'svelte/transition';
     import { authStore, logout } from '../../services/auth';
     import ColorThemeButton from '../ColorThemeButton.svelte';
     import NavLink from './NavLink.svelte';
     import { navigationBarStore } from './loaders/NavigationBar';
-    import { t } from '../../translations';
+    import { t } from '../../translations';
     import LanguageSelector from '../LanguageSelector.svelte';
+    import Version from '../Version.svelte';
 
     export let showBrand = true;
     export let showToggleButton = false;
-    let clazz: string = '';
+    let clazz = '';
     export { clazz as class };
 
     $: isVisible = showToggleButton ? $navigationBarStore.show : true;
@@ -91,6 +92,7 @@
                     </li>
                 </ul>
 
+                <Version class="d-none d-lg-block" />
                 <LanguageSelector class="d-none d-lg-block mx-2" />
                 <ColorThemeButton class="d-none d-lg-block" />
             </div>
@@ -104,6 +106,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="d-flex align-items-center">
+                <Version class="d-lg-none" />
                 <LanguageSelector class="d-lg-none mx-2" />
                 <ColorThemeButton />
             </div>

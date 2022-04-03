@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { AuthService, OpenAPI, type UserRead } from "../api";
 import { getUserRead } from "../factories/UserFactory";
 
-let accessToken = localStorage.getItem('accessToken');
+const accessToken = localStorage.getItem('accessToken');
 
 export const authStore = writable(accessToken);
 
@@ -27,7 +27,7 @@ export function getDecodedToken(): {
     return {
         user: JSON.parse(payload.user)
     };
-};
+}
 
 authStore.subscribe((value) => {
     if(value) {

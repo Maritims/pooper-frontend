@@ -7,7 +7,7 @@ export function getCssPostfix(millisecondsSincePreviousEvent: number, intervalIn
     if(millisecondsSincePreviousEvent > intervalInMilliseconds) return 'event-danger';
     if((millisecondsSincePreviousEvent / intervalInMilliseconds) >= 0.75) return 'event-warning';
     return 'event-success';
-};
+}
 
 export function getText(millisecondsSincePreviousEvent: number, intervalInMilliseconds: number): TranslationRequest {
     const timeSpan          = getTimeSpanFromDateOrNumber(intervalInMilliseconds - millisecondsSincePreviousEvent);
@@ -23,7 +23,7 @@ export function getText(millisecondsSincePreviousEvent: number, intervalInMillis
     } : {
         key: 'event.button.due.now'
     }
-};
+}
 
 export function getTimeSpanForNextEvent(events: Array<EventRead>, eventType: EnrichedEventType): TimeSpan | undefined {
     if(!events.length) return;
@@ -40,7 +40,7 @@ export function getTimeSpanForNextEvent(events: Array<EventRead>, eventType: Enr
         latest: new Date(),
         earliest: previousEventTimestamp
     });
-};
+}
 
 export type EventButtonOptions = {
     animalId: number
