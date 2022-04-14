@@ -42,18 +42,18 @@
 
         weightInGrams = undefined;
         dispatch('done');
-        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id);
+        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightGet([animal.id]);
     }
 
     async function handleOnConfirm() {
         if(!animal) return;
         
         await AnimalsService.deleteAnimalWeightAnimalsWeightIdDelete(idToRemove);
-        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id);
+        weightHistory = await AnimalsService.getAnimalWeightHistoryAnimalsWeightGet([animal.id]);
         idToRemove = 0;
     }
 
-    $: if(animal) AnimalsService.getAnimalWeightHistoryAnimalsWeightIdHistoryGet(animal.id).then(animalWeightReads => weightHistory = animalWeightReads);
+    $: if(animal) AnimalsService.getAnimalWeightHistoryAnimalsWeightGet([animal.id]).then(animalWeightReads => weightHistory = animalWeightReads);
 </script>
 
 <Modal isVisible={!!animal} size={ModalSize.ExtraLarge}>

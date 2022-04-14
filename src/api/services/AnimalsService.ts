@@ -84,6 +84,50 @@ export class AnimalsService {
     }
 
     /**
+     * Get Animal Weight History
+     * @param animalIds
+     * @param days
+     * @returns AnimalWeightRead Successful Response
+     * @throws ApiError
+     */
+    public static getAnimalWeightHistoryAnimalsWeightGet(
+        animalIds?: Array<number>,
+        days?: number,
+    ): CancelablePromise<Array<AnimalWeightRead>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/animals/weight',
+            query: {
+                'animal_ids': animalIds,
+                'days': days,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Create Animal Weight
+     * @param requestBody
+     * @returns AnimalWeightRead Successful Response
+     * @throws ApiError
+     */
+    public static createAnimalWeightAnimalsWeightPost(
+        requestBody: AnimalWeightCreate,
+    ): CancelablePromise<AnimalWeightRead> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/animals/weight',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
      * Get Animal By Id
      * @param id
      * @returns AnimalRead Successful Response
@@ -267,55 +311,6 @@ export class AnimalsService {
             path: {
                 '_id': id,
             },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Get Animal Weight History
-     * @param id
-     * @param page
-     * @param pageSize
-     * @returns AnimalWeightRead Successful Response
-     * @throws ApiError
-     */
-    public static getAnimalWeightHistoryAnimalsWeightIdHistoryGet(
-        id: number,
-        page?: number,
-        pageSize: number = 100,
-    ): CancelablePromise<Array<AnimalWeightRead>> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/animals/weight/{_id}/history',
-            path: {
-                '_id': id,
-            },
-            query: {
-                'page': page,
-                'page_size': pageSize,
-            },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Create Animal Weight
-     * @param requestBody
-     * @returns AnimalWeightRead Successful Response
-     * @throws ApiError
-     */
-    public static createAnimalWeightAnimalsWeightPost(
-        requestBody: AnimalWeightCreate,
-    ): CancelablePromise<AnimalWeightRead> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/animals/weight',
-            body: requestBody,
-            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

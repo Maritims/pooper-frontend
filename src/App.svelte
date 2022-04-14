@@ -55,7 +55,7 @@
 			<Route path="/profile">
 				<Profile />
 			</Route>
-			<Route path="/statistics">
+			<Route path="/statistics" primary={false}>
 				<Statistics />
 			</Route>
 			<Route path="/trips">
